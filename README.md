@@ -138,6 +138,8 @@ User's goals...
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+- https://www.youtube.com/watch?v=zOtxP7ahi4M - How To Make Responsive Navbar with Bootstrap 5 | Step by Step Tutorial - Web Dev Creative
+
 - Mentor Ben Kav - README structure
 
 # Acknowledgements
