@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Profile</h1>
+<h2>Role: {{ role }}</h2>
+<a href="{% url 'apply_role_change' %}">Apply to Register Shelter</a>
+{% endblock %}
