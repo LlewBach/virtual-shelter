@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>My Shelter</h2>
+
+{% if my_shelter %}
+<p><strong>Name:</strong> {{ my_shelter.name }}</p>
+<p><strong>Registration Number:</strong> {{ my_shelter.registration_number }}</p>
+<p><strong>Website:</strong> <a href="{{ my_shelter.charity_website }}">{{ my_shelter.website }}</a></p>
+<p><strong>Description:</strong> {{ my_shelter.description }}</p>
+{% else %}
+<p>No Shelter</p>
+{% endif %}
+
+{% endblock %}

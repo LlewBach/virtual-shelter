@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'home',
     'dashboard',
     'profiles',
+    'shelters',
 ]
 
 MIDDLEWARE = [
