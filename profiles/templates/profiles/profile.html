@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Profile</h1>
-<h2>Role: {{ role }}</h2>
+<p>Role: {{ profile.role }}</p>
+<p>Name: {{ profile.user.username }}</p>
 <a href="{% url 'apply_role_change' %}">Apply to Register Shelter</a>
 {% endblock %}

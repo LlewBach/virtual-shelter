@@ -6,7 +6,7 @@ from .forms import RoleChangeRequestForm
 @login_required
 def profile(request):
     user_profile = Profile.objects.get(user=request.user)
-    return render(request, 'profiles/profile.html', {'role': user_profile.role})
+    return render(request, 'profiles/profile.html', {'profile': user_profile})
 
 
 @login_required

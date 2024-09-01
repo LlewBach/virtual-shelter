@@ -6,6 +6,8 @@ from django.utils import timezone
 from .admin import ProfileAdmin, RoleChangeRequestAdmin
 from .forms import RoleChangeRequestForm
 
+
+# Views
 class ProfileViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
@@ -64,6 +66,7 @@ class ApplyForRoleChangeViewTest(TestCase):
         self.assertFalse(RoleChangeRequest.objects.filter(user=self.user).exists())  
 
 
+# Models
 class ProfileModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
@@ -101,6 +104,7 @@ class RoleChangeRequestModelTest(TestCase):
         self.assertEqual(str(self.role_change_request), expected_str)
 
 
+# Admins
 class ProfileAdminTest(TestCase):
     def test_profile_admin_registration(self):
         self.assertIn(Profile, site._registry)
@@ -162,6 +166,7 @@ class RoleChangeRequestAdminTest(TestCase):
         self.assertEqual(self.profile.role, 'user')
 
 
+# Forms
 class RoleChangeRequestFormTest(TestCase):
     def test_form_initialization(self):
         """Test if the form initializes without any errors"""
