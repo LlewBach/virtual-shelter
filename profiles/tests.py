@@ -1,8 +1,11 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from .models import Profile, RoleChangeRequest
 from django.contrib.admin.sites import site
 from django.utils import timezone
+from django.core import mail
+from django.conf import settings
+from .models import Profile, RoleChangeRequest
 from .admin import ProfileAdmin, RoleChangeRequestAdmin
 from .forms import RoleChangeRequestForm
 
@@ -202,3 +205,46 @@ class RoleChangeRequestFormTest(TestCase):
         """Test the widget configuration for charity_description field"""
         form = RoleChangeRequestForm()
         self.assertEqual(form.fields['charity_description'].widget.attrs['rows'], 4)
+
+
+# Signals
+class RoleChangeRequestSignalTest(TestCase):
+    def setUp(self):
+        # Create a superuser
+        self.superuser = get_user_model().objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='password'
+        )
+        # Create a regular user
+        self.user = get_user_model().objects.create_user(
+            username='testuser',
+            email='testuser@example.com',
+            password='password'
+        )
+
+    def test_notify_superuser_on_role_change_request(self):
+        # Before creating request, check no emails sent
+        self.assertEqual(len(mail.outbox), 0)
+        
+        # Create a role change request
+        RoleChangeRequest.objects.create(
+            user=self.user,
+            charity_name='Test Charity',
+            charity_registration_number='123456',
+            charity_website='http://testcharity.org',
+            charity_description='A test charity'
+        )
+        
+        # Check that an email has been sent
+        self.assertEqual(len(mail.outbox), 1)
+
+        # Verify the contents of the email
+        email = mail.outbox[0]
+        self.assertEqual(email.subject, 'New Shelter Admin Role Change Request')
+        self.assertIn('A new role change request has been submitted by testuser.', email.body)
+        self.assertIn('Test Charity', email.body)
+        self.assertIn('123456', email.body)
+        self.assertIn('http://testcharity.org', email.body)
+        self.assertIn('A test charity', email.body)
+        self.assertEqual(email.to, [self.superuser.email])
