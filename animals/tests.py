@@ -3,7 +3,6 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 from shelters.models import Shelter
 from .models import Animal
-from .forms import AnimalForm
 
 
 # Views
@@ -30,6 +29,35 @@ class AddAnimalViewTest(TestCase):
         self.assertRedirects(response, '/shelters/my-shelter/')
         self.assertEqual(Animal.objects.count(), 1)
         self.assertEqual(Animal.objects.first().shelter, self.shelter)
+
+
+class ProfileViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            adoption_status='available'
+        )
+
+    def test_profile_view_with_valid_id(self):
+        url = f'/animals/profile/{self.animal.id}/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/profile.html')
+        self.assertContains(response, self.animal.name)
+
+    def test_profile_view_with_invalid_id(self):
+        url = f'/animals/profile/999/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
        
 
 # Models

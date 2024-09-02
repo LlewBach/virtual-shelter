@@ -22,3 +22,12 @@ def add_animal(request):
         form = AnimalForm()
     
     return render(request, 'animals/add_animal.html', {'form': form})
+
+
+def profile(request, id):
+    try:
+        animal = Animal.objects.get(id=id)
+    except Animal.DoesNotExist:
+        return redirect('home')
+
+    return render(request, 'animals/profile.html', {'animal': animal})
