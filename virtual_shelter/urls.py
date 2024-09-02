@@ -24,4 +24,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('profiles/', include('profiles.urls')),
     path('shelters/', include('shelters.urls')),
+    path('animals/', include('animals.urls')),
 ]

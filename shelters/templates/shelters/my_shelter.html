@@ -34,4 +34,15 @@
   </div>
 </div>
 
+<a href="{% url 'add_animal' %}">Add Animal</a>
+
+<h3>Animals</h3>
+<ul>
+  {% for animal in animals %}
+  <li>{{ animal.name }} ({{ animal.species }}) - {{ animal.adoption_status }}</li>
+  {% empty %}
+  <li>No animals listed yet.</li>
+  {% endfor %}
+</ul>
+
 {% endblock %}

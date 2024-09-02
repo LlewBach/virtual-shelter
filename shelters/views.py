@@ -13,7 +13,9 @@ def my_shelter(request):
     except Shelter.DoesNotExist:
         return render(request, 'shelters/my_shelter.html')
     
-    return render(request, 'shelters/my_shelter.html', {'my_shelter': my_shelter})
+    animals = my_shelter.animals.all()
+    
+    return render(request, 'shelters/my_shelter.html', {'my_shelter': my_shelter, 'animals': animals})
 
 
 @login_required

@@ -52,6 +52,7 @@ class ApplyForRoleChangeViewTest(TestCase):
         response = self.client.post('/profiles/apply-role-change/', form_data)
         # Should redirect after successful submission
         self.assertEqual(response.status_code, 302)
+        # self.assertRedirects(response, '/shelters/my-shelter/')
         self.assertTrue(RoleChangeRequest.objects.filter(user=self.user).exists())
 
     def test_apply_for_role_change_invalid_submission(self):

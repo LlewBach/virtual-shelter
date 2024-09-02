@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from profiles.models import RoleChangeRequest
 from .models import Shelter
+from animals.models import Animal
 from .forms import ShelterForm
 
 
@@ -17,16 +18,25 @@ class MyShelterViewTest(TestCase):
             website='http://www.testshelter.com',
             description='This is a test shelter.'
         )
+        self.client.login(username='testuser', password='testpassword')
 
     def test_my_shelter_view_with_shelter(self):
-        self.client.login(username='testuser', password='testpassword')
         response = self.client.get('/shelters/my-shelter/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shelters/my_shelter.html')
-
         # Check that the shelter is in the context
         self.assertIn('my_shelter', response.context)
         self.assertEqual(response.context['my_shelter'], self.shelter)
+
+    def test_my_shelter_view_with_animals(self):        
+        # Add some animals to the shelter
+        Animal.objects.create(shelter=self.shelter, name="Test Animal 1", species="Dog", age=5, adoption_status="Available")
+        Animal.objects.create(shelter=self.shelter, name="Test Animal 2", species="Cat", age=1, adoption_status="Fostered")
+        
+        response = self.client.get('/shelters/my-shelter/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Test Animal 1")
+        self.assertContains(response, "Test Animal 2")
 
 
 class EditMyShelterViewTest(TestCase):

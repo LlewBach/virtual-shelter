@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dashboard',
     'profiles',
     'shelters',
+    'animals',
 ]
 
 MIDDLEWARE = [
