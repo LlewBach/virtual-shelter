@@ -92,6 +92,31 @@ class EditMyShelterViewTest(TestCase):
         self.assertRedirects(response, '/shelters/my-shelter/')
 
 
+class DeleteMyShelterViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter",
+            registration_number="12345",
+            website="http://example.com",
+            description="A test shelter."
+        )
+
+    def test_delete_my_shelter_post_request(self):
+        response = self.client.post('/shelters/my-shelter/delete/')
+        self.assertRedirects(response, '/')
+        self.assertFalse(User.objects.filter(username='testuser').exists())
+        self.assertFalse(Shelter.objects.filter(name='Test Shelter').exists())
+
+    def test_delete_my_shelter_get_request(self):
+        response = self.client.get('/shelters/my-shelter/delete/')
+        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertTemplateUsed(response, 'shelters/my_shelter.html')
+        self.assertEqual(response.status_code, 200)
+
+
 # Models
 class ShelterModelTest(TestCase):
     def setUp(self):

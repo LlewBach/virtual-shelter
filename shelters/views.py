@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth.models import User
 from .models import Shelter
 from .forms import ShelterForm
 
@@ -31,3 +33,13 @@ def edit_my_shelter(request):
     
     return render(request, 'shelters/edit_my_shelter.html', {'form': form})
 
+
+@login_required
+def delete_my_shelter(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        logout(request)
+        return redirect('home')
+    else:
+        return render(request, 'shelters/my_shelter.html')
