@@ -3,6 +3,7 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 from shelters.models import Shelter
 from .models import Animal
+from animals.forms import AnimalForm
 
 
 # Views
@@ -58,7 +59,75 @@ class ProfileViewTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/')
-       
+
+
+class EditProfileViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            description="A friendly dog",
+            adoption_status='available'
+        )
+        self.client.login(username='testuser', password='12345')
+
+    def test_edit_profile_view_unauthorized_user(self):
+        # Test that a user who is not the admin cannot edit the profile
+        other_user = User.objects.create_user(username='otheruser', password='12345')
+        self.client.login(username='otheruser', password='12345')
+        
+        response = self.client.get(f'/animals/edit-profile/{self.animal.id}/')
+        
+        self.assertRedirects(response, '/')
+    
+    def test_edit_profile_view_get(self):
+        # Test that the edit profile page renders correctly
+        url = f'/animals/edit-profile/{self.animal.id}/'
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/edit_profile.html')
+        self.assertIsInstance(response.context['form'], AnimalForm)
+        self.assertEqual(response.context['form'].instance, self.animal)
+    
+    def test_edit_profile_view_post_valid(self):
+        # Test POST request with valid data
+        data = {
+            'name': 'Updated Animal Name',
+            'species': 'Cat',
+            'age': 5,
+            'description': 'A friendly cat',
+            'adoption_status': 'fostered'
+        }
+        response = self.client.post(f'/animals/edit-profile/{self.animal.id}/', data)
+        
+        self.animal.refresh_from_db()
+        self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+        self.assertEqual(self.animal.name, 'Updated Animal Name')
+        self.assertEqual(self.animal.species, 'Cat')
+        self.assertEqual(self.animal.age, 5)
+        self.assertEqual(self.animal.description, 'A friendly cat')
+        self.assertEqual(self.animal.adoption_status, 'fostered')
+    
+    def test_edit_profile_view_with_invalid_data(self):
+        # Test POST request with invalid data
+        data = {
+            'name': '', # Name is required
+            'species': 'Dog',
+            'age': 4,
+        }
+        response = self.client.post(f'/animals/edit-profile/{self.animal.id}/', data)
+        
+        # Should rerender page
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/edit_profile.html')
+        self.assertFalse(response.context['form'].is_valid())
+        self.assertIn('name', response.context['form'].errors)
+
 
 # Models
 class AnimalModelTest(TestCase):

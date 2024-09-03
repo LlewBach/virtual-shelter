@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Animal
 from .forms import AnimalForm
@@ -31,3 +31,23 @@ def profile(request, id):
         return redirect('home')
 
     return render(request, 'animals/profile.html', {'animal': animal})
+
+
+
+@login_required
+def edit_profile(request, id):
+    animal = get_object_or_404(Animal, id=id)
+
+    # Check for animal shelter's admin
+    if animal.shelter.admin != request.user:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = AnimalForm(request.POST, instance=animal)
+        if form.is_valid():
+            form.save()
+            return redirect('animal_profile', id=animal.id)
+    else:
+        form = AnimalForm(instance=animal)
+
+    return render(request, 'animals/edit_profile.html', {'form': form, 'animal': animal})

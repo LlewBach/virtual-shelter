@@ -71,7 +71,6 @@ class EditMyShelterViewTest(TestCase):
         response = self.client.post('/shelters/my-shelter/edit/', data)
 
         self.shelter.refresh_from_db()
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/shelters/my-shelter/')
         self.assertEqual(self.shelter.name, 'Updated Test Shelter')
         self.assertEqual(self.shelter.registration_number, '987654321')
@@ -88,6 +87,7 @@ class EditMyShelterViewTest(TestCase):
         }
         response = self.client.post('/shelters/my-shelter/edit/', data)
 
+        # Should rerender page
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shelters/edit_my_shelter.html')
         self.assertFalse(response.context['form'].is_valid())

@@ -10,4 +10,8 @@
 <p><strong>Description:</strong> {{ animal.description }}</p>
 <p><strong>Foster status:</strong> {{ animal.adoption_status }}</p>
 
+{% if user == animal.shelter.admin %}
+<a href="{% url 'edit_animal_profile' animal.id %}">Edit Profile</a>
+{% endif %}
+
 {% endblock %}

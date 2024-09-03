@@ -42,6 +42,7 @@
   <li>
     <a href="{% url 'animal_profile' animal.id %}">{{ animal.name }}</a>
     ({{ animal.species }}) - {{ animal.adoption_status }}
+    <a href="{% url 'edit_animal_profile' animal.id %}">Edit Profile</a>
   </li>
   {% empty %}
   <li>No animals listed yet.</li>
