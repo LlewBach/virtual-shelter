@@ -33,11 +33,9 @@ def profile(request, id):
     return render(request, 'animals/profile.html', {'animal': animal})
 
 
-
 @login_required
 def edit_profile(request, id):
     animal = get_object_or_404(Animal, id=id)
-
     # Check for animal shelter's admin
     if animal.shelter.admin != request.user:
         return redirect('home')
@@ -51,3 +49,15 @@ def edit_profile(request, id):
         form = AnimalForm(instance=animal)
 
     return render(request, 'animals/edit_profile.html', {'form': form, 'animal': animal})
+
+
+@login_required
+def delete_profile(request, id):
+    animal = get_object_or_404(Animal, id=id)
+    if animal.shelter.admin != request.user:
+        return redirect('profile')
+    
+    if request.method == 'POST':
+        animal.delete()
+
+    return redirect('home')

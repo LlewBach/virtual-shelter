@@ -128,6 +128,37 @@ class EditProfileViewTest(TestCase):
         self.assertFalse(response.context['form'].is_valid())
         self.assertIn('name', response.context['form'].errors)
 
+class DeleteProfileViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            description="A friendly dog",
+            adoption_status='available'
+        )
+    
+    def test_delete_animal_profile_as_admin(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.post(f'/animals/delete-profile/{self.animal.id}/')
+        self.assertRedirects(response, '/')
+        self.assertFalse(Animal.objects.filter(id=self.animal.id).exists())
+
+    def test_delete_animal_profile_as_non_admin(self):
+        other_user = User.objects.create_user(username='otheruser', password='12345')
+        self.client.login(username='otheruser', password='12345')
+        response = self.client.post(f'/animals/delete-profile/{self.animal.id}/')
+        self.assertRedirects(response, '/profiles/')
+        self.assertTrue(Animal.objects.filter(id=self.animal.id).exists())
+
+    def test_delete_animal_profile_invalid_id(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.post('/animals/delete-profile/999/')
+        self.assertEqual(response.status_code, 404)
+
 
 # Models
 class AnimalModelTest(TestCase):

@@ -28,7 +28,10 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Confirm</button>
+        <form action="{% url 'delete_my_shelter' %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Confirm</button>
+        </form>
       </div>
     </div>
   </div>
@@ -43,6 +46,30 @@
     <a href="{% url 'animal_profile' animal.id %}">{{ animal.name }}</a>
     ({{ animal.species }}) - {{ animal.adoption_status }}
     <a href="{% url 'edit_animal_profile' animal.id %}">Edit Profile</a>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}">Delete Profile</a>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal{{ animal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Changes cannot be undone!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Delete Profile</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </li>
   {% empty %}
   <li>No animals listed yet.</li>
