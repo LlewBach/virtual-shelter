@@ -160,6 +160,34 @@ class DeleteProfileViewTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+class ViewAnimalsViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter1",
+            registration_number="12345",
+            website="http://example.com",
+            description="A test shelter1."
+        )
+        self.animal = Animal.objects.create(
+            shelter = self.shelter,
+            name = "Sky",
+            species = "Dog",
+            breed = "Collie",
+            age = 3,
+            description = "A honey bunny",
+            adoption_status = "available"
+        )
+    
+    def test_view(self):
+        response = self.client.get('/animals/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/view_animals.html')
+        self.assertIn('animals', response.context)
+        self.assertEqual(len(response.context['animals']), 1)
+
+
 # Models
 class AnimalModelTest(TestCase):
     def setUp(self):

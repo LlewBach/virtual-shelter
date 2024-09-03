@@ -61,3 +61,8 @@ def delete_profile(request, id):
         animal.delete()
 
     return redirect('home')
+
+
+def view_animals(request):
+    animals = Animal.objects.all()
+    return render(request, 'animals/view_animals.html', {'animals': animals})

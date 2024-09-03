@@ -130,8 +130,7 @@ class DeleteMyShelterViewTest(TestCase):
 class ViewSheltersViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
-        # self.client.login(username='testuser', password='12345')
-        self.shelter1 = Shelter.objects.create(
+        self.shelter = Shelter.objects.create(
             admin=self.user,
             name="Test Shelter1",
             registration_number="12345",
