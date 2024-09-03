@@ -127,6 +127,26 @@ class DeleteMyShelterViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class ViewSheltersViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        # self.client.login(username='testuser', password='12345')
+        self.shelter1 = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter1",
+            registration_number="12345",
+            website="http://example.com",
+            description="A test shelter1."
+        )
+
+    def test_view(self):
+        response = self.client.get('/shelters/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shelters/view_shelters.html')
+        self.assertIn('shelters', response.context)
+        self.assertEqual(len(response.context['shelters']), 1)
+
+
 # Models
 class ShelterModelTest(TestCase):
     def setUp(self):

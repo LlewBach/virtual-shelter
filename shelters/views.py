@@ -45,3 +45,8 @@ def delete_my_shelter(request):
         return redirect('home')
     else:
         return render(request, 'shelters/my_shelter.html')
+
+
+def view_shelters(request):
+    shelters = Shelter.objects.all()
+    return render(request, 'shelters/view_shelters.html', {'shelters': shelters})

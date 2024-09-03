@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>All Shelters</h1>
+<ul>
+  {% for shelter in shelters %}
+  <li>
+    <a href="">{{ shelter.name }}</a>
+    - Registration Number: {{ shelter.registration_number }}
+    <br>
+    Website: <a href="{{ shelter.website }}">{{ shelter.website }}</a>
+    <br>
+    Description: {{ shelter.description }}
+  </li>
+  {% empty %}
+  <li>No shelters available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
