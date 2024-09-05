@@ -104,3 +104,16 @@ def edit_update(request, id):
         form = UpdateForm(instance=update)
 
     return render(request, 'animals/edit_update.html', {'form': form, 'update': update})
+
+
+@login_required
+def delete_update(request, id):
+    update = get_object_or_404(Update, id=id)
+
+    if update.animal.shelter.admin != request.user:
+        return redirect('animal_profile', id=update.animal.id)
+
+    if request.method == 'POST':
+        update.delete()
+    
+    return redirect('animal_profile', id=update.animal.id)

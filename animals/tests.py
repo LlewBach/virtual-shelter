@@ -278,6 +278,37 @@ class EditUpdateViewTest(TestCase):
         self.assertRedirects(response, f'/animals/profile/{self.update.animal.id}/')
 
 
+class DeleteUpdateViewTest(TestCase):
+    def setUp(self):
+        self.admin_user = User.objects.create_user(username='adminuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.admin_user, name='Test Shelter', registration_number='12345', description='Test Shelter Description')
+        self.animal = Animal.objects.create(shelter=self.shelter, name='Test Animal', species='Dog', age=3)
+        self.update = Update.objects.create(animal=self.animal, text="This is an animal update.")
+        self.url = f'/animals/delete-update/{self.update.id}/'
+
+    def test_delete_update_as_admin(self):
+        self.client.login(username='adminuser', password='12345')
+        response = self.client.post(self.url)
+
+        self.assertRedirects(response, f'/animals/profile/{self.update.animal.id}/')
+        self.assertFalse(Update.objects.filter(id=self.update.id).exists())
+
+    def test_delete_update_as_non_admin(self):
+        self.other_user = User.objects.create_user(username='otheruser', password='12345')
+        self.client.login(username='otheruser', password='12345')
+        response = self.client.post(self.url)
+
+        self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+        self.assertTrue(Update.objects.filter(id=self.update.id).exists())  # Update still exists
+
+    def test_delete_update_with_get_request(self):
+        self.client.login(username='adminuser', password='12345')
+        response = self.client.get(self.url)
+
+        self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+        self.assertTrue(Update.objects.filter(id=self.update.id).exists())
+
+
 # Models
 class AnimalModelTest(TestCase):
     def setUp(self):

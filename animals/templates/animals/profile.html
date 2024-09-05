@@ -45,7 +45,32 @@
 <ul>
   {% for update in animal.updates.all %}
   <li>{{ update.created_at|date:"Y-m-d H:i" }}: {{ update.text }}
+    {% if user == animal.shelter.admin %}
     <a href="{% url 'edit_update' update.id %}">Edit Update</a>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteUpdateModal{{ update.id }}">Delete Update</a>
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteUpdateModal{{ update.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Changes cannot be undone!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <form action="{% url 'delete_update' update.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Confirm</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
   </li>
   {% empty %}
   <li>No updates yet.</li>
