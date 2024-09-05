@@ -37,6 +37,17 @@
   </div>
 </div>
 
+<a href="{% url 'add_update' animal.id %}">Add Update</a>
+
 {% endif %}
+
+<h2>Updates</h2>
+<ul>
+  {% for update in animal.updates.all %}
+  <li>{{ update.created_at|date:"Y-m-d H:i" }}: {{ update.text }}</li>
+  {% empty %}
+  <li>No updates yet.</li>
+  {% endfor %}
+</ul>
 
 {% endblock %}

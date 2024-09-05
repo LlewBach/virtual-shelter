@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Add Update for {{ animal.name }}</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Add Update</button>
+  <a href="{% url 'animal_profile' animal.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

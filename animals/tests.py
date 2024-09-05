@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 from shelters.models import Shelter
-from .models import Animal
-from animals.forms import AnimalForm
+from .models import Animal, Update
+from animals.forms import AnimalForm, UpdateForm
+from datetime import datetime
 
 
 # Views
@@ -188,6 +189,63 @@ class ViewAnimalsViewTest(TestCase):
         self.assertEqual(len(response.context['animals']), 1)
 
 
+class AddUpdateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter1",
+            registration_number="12345",
+            website="http://example.com",
+            description="A test shelter1."
+        )
+        self.animal = Animal.objects.create(
+            shelter = self.shelter,
+            name = "Sky",
+            species = "Dog",
+            breed = "Collie",
+            age = 3,
+            description = "A honey bunny",
+            adoption_status = "available"
+        )
+        self.url = f'/animals/add-update/{self.animal.id}/'
+        self.client.login(username='testuser', password='12345')
+
+    def test_add_update_view_get(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/add_update.html')
+        self.assertIsInstance(response.context['form'], UpdateForm)
+
+    def test_add_update_view_post_valid_data(self):
+        data = {
+            'text': 'The animal is healthy and doing well.',
+        }
+        response = self.client.post(self.url, data)
+        self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+
+        # Check that the update was created
+        self.assertEqual(Update.objects.count(), 1)
+        update = Update.objects.first()
+        self.assertEqual(update.animal, self.animal)
+        self.assertEqual(update.text, 'The animal is healthy and doing well.')
+
+    def test_add_update_view_post_invalid_data(self):
+        # Test POST request with invalid data
+        data = {
+            'text': '',
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+        # self.assertFormError(response, 'form', 'text', 'This field is required.')
+
+    def test_add_update_view_unauthorized_user(self):
+        other_user = User.objects.create_user(username='otheruser', password='12345')
+        self.client.login(username='otheruser', password='12345')
+        response = self.client.get(self.url)
+        self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+
+
 # Models
 class AnimalModelTest(TestCase):
     def setUp(self):
@@ -238,3 +296,51 @@ class AnimalModelTest(TestCase):
         with self.assertRaises(IntegrityError):
             Animal.objects.create(shelter=self.shelter)
 
+
+class UpdateModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter",
+            registration_number="123456789",
+            description="A test shelter"
+        )
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=3
+        )
+
+    def test_update_creation(self):
+        update = Update.objects.create(
+            animal=self.animal,
+            text="This is a test update."
+        )
+        self.assertEqual(update.animal, self.animal)
+        self.assertEqual(update.text, "This is a test update.")
+        self.assertTrue(isinstance(update.created_at, datetime))
+
+    def test_str_method(self):
+        update = Update.objects.create(
+            animal=self.animal,
+            text="This is a test update."
+        )
+        expected_str = f'Update for {self.animal.name} on {update.created_at.strftime("%Y-%m-%d")}'
+        self.assertEqual(str(update), expected_str)
+
+    def test_related_name(self):
+        update1 = Update.objects.create(
+            animal=self.animal,
+            text="First update."
+        )
+        update2 = Update.objects.create(
+            animal=self.animal,
+            text="Second update."
+        )
+        # Check that the animal has two updates
+        self.assertEqual(self.animal.updates.count(), 2)
+        # Check that the updates are correctly related to the animal
+        self.assertIn(update1, self.animal.updates.all())
+        self.assertIn(update2, self.animal.updates.all())

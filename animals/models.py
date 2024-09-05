@@ -13,3 +13,12 @@ class Animal(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.shelter}'
+
+
+class Update(models.Model):
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name='updates')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Update for {self.animal.name} on {self.created_at.strftime("%Y-%m-%d")}'
