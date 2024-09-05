@@ -246,6 +246,38 @@ class AddUpdateViewTest(TestCase):
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
 
 
+class EditUpdateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='admin', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name='Test Shelter', registration_number='123456789', description='A test shelter')
+        self.animal = Animal.objects.create(shelter=self.shelter, name='Test Animal', species='Dog', age=4)
+        self.update = Update.objects.create(animal=self.animal, text='Initial update')
+        self.url = f'/animals/edit-update/{self.update.id}/'
+
+    def test_edit_update_view_get(self):
+        self.client.login(username='admin', password='12345')
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/edit_update.html')
+        self.assertContains(response, 'Initial update')
+
+    def test_edit_update_view_as_other_user(self):
+        self.other_user = User.objects.create_user(username='other', password='12345')
+        self.client.login(username='other', password='12345')
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_edit_update_post(self):
+        self.client.login(username='admin', password='12345')
+        response = self.client.post(self.url, {'text': 'Updated text'})
+
+        self.update.refresh_from_db()
+        self.assertEqual(self.update.text, 'Updated text')
+        self.assertRedirects(response, f'/animals/profile/{self.update.animal.id}/')
+
+
 # Models
 class AnimalModelTest(TestCase):
     def setUp(self):

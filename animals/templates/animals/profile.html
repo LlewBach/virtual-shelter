@@ -44,7 +44,9 @@
 <h2>Updates</h2>
 <ul>
   {% for update in animal.updates.all %}
-  <li>{{ update.created_at|date:"Y-m-d H:i" }}: {{ update.text }}</li>
+  <li>{{ update.created_at|date:"Y-m-d H:i" }}: {{ update.text }}
+    <a href="{% url 'edit_update' update.id %}">Edit Update</a>
+  </li>
   {% empty %}
   <li>No updates yet.</li>
   {% endfor %}

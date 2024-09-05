@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Animal
+from .models import Animal, Update
 from .forms import AnimalForm, UpdateForm
 from shelters.models import Shelter
 
@@ -86,3 +86,21 @@ def add_update(request, id):
         form = UpdateForm()
 
     return render(request, 'animals/add_update.html', {'form': form, 'animal': animal})
+
+
+@login_required
+def edit_update(request, id):
+    update = get_object_or_404(Update, id=id)
+
+    if update.animal.shelter.admin != request.user:
+        return redirect('animal_profile', id=update.animal.id)
+
+    if request.method == 'POST':
+        form = UpdateForm(request.POST, instance=update)
+        if form.is_valid():
+            form.save()
+            return redirect('animal_profile', id=update.animal.id)
+    else:
+        form = UpdateForm(instance=update)
+
+    return render(request, 'animals/edit_update.html', {'form': form, 'update': update})
