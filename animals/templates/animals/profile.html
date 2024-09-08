@@ -41,6 +41,8 @@
 
 {% endif %}
 
+<a href="{% url 'select_sprite' animal.id %}">Foster</a>
+
 <h2>Updates</h2>
 <ul>
   {% for update in animal.updates.all %}

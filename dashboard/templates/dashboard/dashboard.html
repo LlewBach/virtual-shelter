@@ -4,4 +4,16 @@
 {% block content %}
 <h1>Dashboard</h1>
 <h2>Welcome, {{ request.user.username }}</h2>
+
+{% for sprite in sprites %}
+<div class="sprite">
+  <img src="{% static 'images/spritepics/'|add:sprite.sprite_sheet %}" alt="">
+  <p>Sprite Name: {{ sprite.animal.name }}</p> <!-- Assuming the Animal model has a 'name' attribute -->
+  <p>Created At: {{ sprite.created_at }}</p>
+</div>
+{% empty %}
+<p>You have no sprites yet.</p>
+{% endfor %}
+
+
 {% endblock %}
