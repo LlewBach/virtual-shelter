@@ -29,3 +29,14 @@ def select_sprite(request, id):
         form = SpriteForm()
 
     return render(request, 'dashboard/select_sprite.html', {'form': form})
+
+
+def delete_sprite(request, id):
+    sprite = get_object_or_404(Sprite, id=id)
+    
+    # needs to test if owner
+
+    if request.method == 'POST':
+        sprite.delete()
+
+    return redirect('dashboard')

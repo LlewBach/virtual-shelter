@@ -85,6 +85,34 @@ class SelectSpriteViewTests(TestCase):
         self.assertTemplateUsed(response, 'dashboard/select_sprite.html')
 
 
+class DeleteSpriteTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            description="A friendly dog",
+            adoption_status='available'
+        )
+        self.sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal
+        )
+
+    def test_sprite_deletion(self):
+        self.assertEqual(Sprite.objects.count(), 1)
+        
+        url = f'/dashboard/delete-sprite/{self.sprite.id}/'
+        response = self.client.post(url)
+        self.assertEqual(Sprite.objects.count(), 0)
+        self.assertRedirects(response, '/dashboard/')
+
+
+
 # Models
 class SpriteModelTests(TestCase):
     def setUp(self):

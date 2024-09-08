@@ -8,8 +8,31 @@
 {% for sprite in sprites %}
 <div class="sprite">
   <img src="{% static 'images/spritepics/'|add:sprite.sprite_sheet %}" alt="">
-  <p>Sprite Name: {{ sprite.animal.name }}</p> <!-- Assuming the Animal model has a 'name' attribute -->
+  <p>Sprite Name: {{ sprite.animal.name }}</p>
   <p>Created At: {{ sprite.created_at }}</p>
+  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteSpriteModal{{ sprite.id }}">Delete Sprite</a>
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteSpriteModal{{ sprite.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Changes cannot be undone!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form action="{% url 'delete_sprite' sprite.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% empty %}
 <p>You have no sprites yet.</p>
