@@ -4,5 +4,5 @@ from .models import Sprite
 class SpriteForm(forms.ModelForm):
     class Meta:
         model = Sprite
-        fields = ['sprite_sheet']
+        fields = ['breed', 'colour']
 

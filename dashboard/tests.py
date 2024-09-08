@@ -23,7 +23,9 @@ class DashboardViewTests(TestCase):
         self.sprite = Sprite.objects.create(
             user=self.user,
             animal=self.animal,
-            sprite_sheet=Sprite.SpriteSheet.ONE
+            breed=Sprite.BreedChoices.HUSKY,
+            colour=Sprite.ColourChoices.ONE,
+            url='husky/one'
         )
 
     def test_dashboard_view_get(self):
@@ -62,11 +64,11 @@ class SelectSpriteViewTests(TestCase):
         """
         url = f'/dashboard/select-sprite/{self.animal.id}/'
         data = {
-            'sprite_sheet': Sprite.SpriteSheet.ONE
+            'breed': Sprite.BreedChoices.HUSKY,
+            'colour': Sprite.ColourChoices.ONE
         }
         response = self.client.post(url, data)
         self.assertEqual(Sprite.objects.count(), 1)
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/dashboard/')
 
     def test_select_sprite_post_invalid(self):
@@ -75,7 +77,8 @@ class SelectSpriteViewTests(TestCase):
         """
         url = f'/dashboard/select-sprite/{self.animal.id}/'
         data = {
-            'sprite_sheet': 'nonexistent'  # Invalid choice
+            'breed': 'nonexistent',
+            'colour': 'nonexistent'
         }
         response = self.client.post(url, data)
         self.assertEqual(Sprite.objects.count(), 0)
@@ -100,7 +103,10 @@ class DeleteSpriteTests(TestCase):
         )
         self.sprite = Sprite.objects.create(
             user=self.user,
-            animal=self.animal
+            animal=self.animal,
+            breed=Sprite.BreedChoices.HUSKY,
+            colour=Sprite.ColourChoices.ONE,
+            url='husky/one'
         )
 
     def test_sprite_deletion(self):
@@ -132,35 +138,48 @@ class SpriteModelTests(TestCase):
         sprite = Sprite.objects.create(
             user=self.user,
             animal=self.animal,
-            sprite_sheet=Sprite.SpriteSheet.ONE
+            breed=Sprite.BreedChoices.HUSKY,
+            colour=Sprite.ColourChoices.ONE,
+            url='husky/one'
         )
 
         self.assertEqual(sprite.user, self.user)
         self.assertEqual(sprite.animal, self.animal)
-        self.assertEqual(sprite.sprite_sheet, Sprite.SpriteSheet.ONE)
+        self.assertEqual(sprite.breed, "husky")
+        self.assertEqual(sprite.colour, "one")
         self.assertIsNotNone(sprite.created_at)
 
     def test_sprite_sheet_choices(self):
         # Test creating sprites with all available choices.
-        for choice in Sprite.SpriteSheet.choices:
+        for choice in Sprite.BreedChoices.choices:
             sprite = Sprite.objects.create(
                 user=self.user,
                 animal=self.animal,
-                sprite_sheet=choice[0]
+                breed=choice[0],
+                colour="one"
             )
-            self.assertEqual(sprite.sprite_sheet, choice[0])
+            self.assertEqual(sprite.breed, choice[0])
+        
+        for choice in Sprite.ColourChoices.choices:
+            sprite = Sprite.objects.create(
+                user=self.user,
+                animal=self.animal,
+                breed="husky",
+                colour=choice[0]
+            )
+            self.assertEqual(sprite.colour, choice[0])
 
     def test_sprite_defaults(self):
         sprite = Sprite.objects.create(
             user=self.user,
             animal=self.animal
         )
-        self.assertEqual(sprite.sprite_sheet, Sprite.SpriteSheet.ONE)  # Default value check
+        self.assertEqual(sprite.breed, Sprite.BreedChoices.HUSKY)
+        self.assertEqual(sprite.colour, Sprite.ColourChoices.ONE)
 
     def test_string_representation(self):
         sprite = Sprite.objects.create(
             user=self.user,
-            animal=self.animal,
-            sprite_sheet=Sprite.SpriteSheet.ONE
+            animal=self.animal
         )
         self.assertEqual(str(sprite), f"Sprite {sprite.id} for {sprite.animal.name}")

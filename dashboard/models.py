@@ -3,18 +3,20 @@ from django.contrib.auth.models import User
 from animals.models import Animal
 
 class Sprite(models.Model):
-    class SpriteSheet(models.TextChoices):
-        ONE = 'husky/one.png', 'Husky Style 1'
-        TWO = 'husky/two.png', 'Husky Style 2'
-        THREE = 'husky/three.png', 'Husky Style 3'
+    class BreedChoices(models.TextChoices):
+        HUSKY = 'husky', 'Husky'
+        AFGHAN = 'afghan', 'Afghan'
+
+    class ColourChoices(models.TextChoices):
+        ONE = 'one', 'Colour 1'
+        TWO = 'two', 'Colour 2'
+        THREE = 'three', 'Colour 3'
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sprites')
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
-    sprite_sheet = models.CharField(
-        max_length=50,
-        choices=SpriteSheet.choices,
-        default=SpriteSheet.ONE
-    )
+    breed = models.CharField(max_length=50, choices=BreedChoices.choices, default=BreedChoices.HUSKY)
+    colour = models.CharField(max_length=50, choices=ColourChoices.choices, default=ColourChoices.ONE)
+    url = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     # last_checked = models.DateTimeField(auto_now=True)
     # hunger = models.IntegerField(default=50)

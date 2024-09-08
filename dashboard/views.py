@@ -22,7 +22,11 @@ def select_sprite(request, id):
             sprite.user = request.user
             animal = get_object_or_404(Animal, id=id)
             sprite.animal = animal
-            sprite.sprite_sheet = request.POST.get('sprite_sheet')
+            breed_choice = request.POST.get('breed')
+            sprite.breed = breed_choice
+            colour_choice = request.POST.get('colour')
+            sprite.colour = colour_choice
+            sprite.url = f'{breed_choice}/{colour_choice}'
             sprite.save()
             return redirect('dashboard')
     else:
