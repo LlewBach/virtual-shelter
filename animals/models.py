@@ -4,6 +4,7 @@ from shelters.models import Shelter
 
 class Animal(models.Model):
     shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='animals')
+    image = models.ImageField(upload_to='', blank=True, null=True)
     name = models.CharField(max_length=255)
     species = models.CharField(max_length=100)
     breed = models.CharField(max_length=100, blank=True, null=True)

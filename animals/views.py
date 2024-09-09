@@ -12,7 +12,7 @@ def add_animal(request):
         return redirect('my_shelter')
 
     if request.method == 'POST':
-        form = AnimalForm(request.POST)
+        form = AnimalForm(request.POST, request.FILES)
         if form.is_valid():
             animal = form.save(commit=False)
             animal.shelter = shelter

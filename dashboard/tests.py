@@ -118,7 +118,6 @@ class DeleteSpriteTests(TestCase):
         self.assertRedirects(response, '/dashboard/')
 
 
-
 # Models
 class SpriteModelTests(TestCase):
     def setUp(self):

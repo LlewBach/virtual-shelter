@@ -4,7 +4,7 @@ from .models import Animal, Update
 class AnimalForm(forms.ModelForm):
     class Meta:
         model = Animal
-        fields = ['name', 'species', 'breed', 'age', 'description', 'adoption_status']
+        fields = ['image', 'name', 'species', 'breed', 'age', 'description', 'adoption_status']
 
 
 class UpdateForm(forms.ModelForm):
