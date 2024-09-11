@@ -1,6 +1,6 @@
 import { Sprite } from '../sprite/sprite.js';
 
-class Game {
+export class Game {
   constructor(width, height, id) {
     this.width = width;
     this.height = height;
