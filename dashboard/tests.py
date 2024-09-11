@@ -1,4 +1,7 @@
+import os
+from django.conf import settings
 from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from shelters.models import Shelter
 from animals.models import Animal
@@ -12,13 +15,15 @@ class DashboardViewTests(TestCase):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.client.login(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.image = SimpleUploadedFile(name='test_image.jpg', content=b"dummy image data", content_type='image/jpeg')
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name="Test Animal",
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available'
+            adoption_status='available',
+            image=self.image
         )
         self.sprite = Sprite.objects.create(
             user=self.user,
@@ -33,6 +38,11 @@ class DashboardViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
         self.assertEqual(list(response.context['sprites']), [self.sprite])
+    
+    def tearDown(self):
+        if self.animal.image:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
+        super().tearDown()
 
 
 class SelectSpriteViewTests(TestCase):
@@ -40,13 +50,15 @@ class SelectSpriteViewTests(TestCase):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.client.login(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.image = SimpleUploadedFile(name='test_image.jpg', content=b"dummy image data", content_type='image/jpeg')
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name="Test Animal",
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available'
+            adoption_status='available',
+            image=self.image
         )
 
     def test_select_sprite_get(self):
@@ -86,6 +98,11 @@ class SelectSpriteViewTests(TestCase):
         self.assertTrue('form' in response.context)
         self.assertFalse(response.context['form'].is_valid())
         self.assertTemplateUsed(response, 'dashboard/select_sprite.html')
+    
+    def tearDown(self):
+        if self.animal.image:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
+        super().tearDown()
 
 
 class DeleteSpriteTests(TestCase):
