@@ -22,6 +22,7 @@ describe('Game class', () => {
     expect(game).toHaveProperty('width');
     expect(game).toHaveProperty('height');
     expect(game).toHaveProperty('id');
+    expect(game).toHaveProperty('url');
   });
 
   test('should initialize with class instances', () => {

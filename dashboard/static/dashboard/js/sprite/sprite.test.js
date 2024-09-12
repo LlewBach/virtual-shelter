@@ -1,5 +1,5 @@
-import { exportAllDeclaration } from '@babel/types';
 import { Sprite } from './sprite.js';
+import { Standing } from '../states/states.js';
 
 describe('Sprite class', () => {
   let game, sprite, mockContext
@@ -37,11 +37,19 @@ describe('Sprite class', () => {
     expect(sprite).toHaveProperty('fps');
     expect(sprite).toHaveProperty('frameInterval');
     expect(sprite).toHaveProperty('frameTimer');
+    expect(sprite).toHaveProperty('states');
+    expect(sprite).toHaveProperty('currentState');
   });
 
   test('should initialize with correct values', () => {
     expect(sprite.x).toBe((game.width - sprite.width) / 2);
     expect(sprite.y).toBe(game.height - sprite.height);
+  });
+
+  test('should start in the Standing state', () => {
+    expect(sprite.currentState).toBeInstanceOf(Standing);
+    expect(sprite.currentState).toBe(sprite.states[0]);
+    expect(sprite.frameY).toBe(9);
   });
 
   test('.update should increment frameTimer if less than frameInterval', () => {

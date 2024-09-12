@@ -1,10 +1,11 @@
 import { Sprite } from '../sprite/sprite.js';
 
 export class Game {
-  constructor(width, height, id) {
+  constructor(width, height, id, url) {
     this.width = width;
     this.height = height;
     this.id = id;
+    this.url = url;
     this.sprite = new Sprite(this);
   }
   update(deltaTime) {
@@ -22,7 +23,8 @@ window.addEventListener('load', function () {
     canvas.height = 200;
     const ctx = canvas.getContext('2d');
     const id = canvas.getAttribute('data-id');
-    const game = new Game(canvas.width, canvas.height, id);
+    const url = canvas.getAttribute('data-url');
+    const game = new Game(canvas.width, canvas.height, id, url);
     let lastTimeAnimate = 0;
 
     function animate(timestamp) {
