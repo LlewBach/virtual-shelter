@@ -25,18 +25,22 @@ export class Standing {
   }
 }
 
-// class Running {
-//   constructor(sprite, game) {
-//     this.sprite = sprite;
-//     this.game = game;
-//   }
-//   enter() {
-//     this.sprite.spriteWidth = 74;
-//     this.sprite.frameX = 0;
-//     this.maxFrame = 7;
-//     this.sprite.frameY = 6;
-//   }
-//   handleInput() {
+export class Running {
+  constructor(sprite, game) {
+    this.sprite = sprite;
+    this.game = game;
+  }
+  enter() {
+    if (["husky/one", "husky/two"].includes(this.game.url)) {
+      this.sprite.spriteWidth = 74;
+    } else {
+      this.sprite.spriteWidth = 76;
+    }
+    this.sprite.maxFrame = 7;
+    this.sprite.frameX = 0;
+    this.sprite.frameY = 6;
+  }
+  handleInput() {
 
-//   }
-// }
+  }
+}

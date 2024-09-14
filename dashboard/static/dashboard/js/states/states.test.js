@@ -1,4 +1,4 @@
-import { Standing } from './states.js';
+import { Standing, Running } from './states.js';
 
 const states = {
   STANDING: 0,
@@ -31,5 +31,21 @@ describe('Standing State', () => {
     expect(sprite.maxFrame).toBe(4);
     expect(sprite.frameX).toBe(0);
     expect(sprite.frameY).toBe(9);
+  });
+});
+
+describe('Running State', () => {
+  let runningState;
+
+  beforeEach(() => {
+    runningState = new Running(sprite, game);
+  });
+
+  test('should configure some sprite properties on enter', () => {
+    runningState.enter();
+    expect(sprite.spriteWidth).toBe(74);
+    expect(sprite.maxFrame).toBe(7);
+    expect(sprite.frameX).toBe(0);
+    expect(sprite.frameY).toBe(6);
   });
 });
