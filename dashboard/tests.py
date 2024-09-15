@@ -1,6 +1,8 @@
 import os
 from django.conf import settings
+from django.utils import timezone
 from django.test import TestCase
+from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from shelters.models import Shelter
@@ -135,6 +137,37 @@ class DeleteSpriteTests(TestCase):
         self.assertRedirects(response, '/dashboard/')
 
 
+class UpdateStatusViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            description="A friendly dog",
+            adoption_status='available'
+        )
+        self.sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal,
+            breed=Sprite.BreedChoices.HUSKY,
+            colour=Sprite.ColourChoices.ONE,
+            url='husky/one'
+        )
+    
+    @patch.object(Sprite, 'update_status')
+    def test_update_status_view(self, mock_update_status):
+        url = f'/dashboard/sprite/{self.sprite.id}/update-status/'
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content, {'satiation': self.sprite.satiation})
+        mock_update_status.assert_called_once()
+
+
 # Models
 class SpriteModelTests(TestCase):
     def setUp(self):
@@ -199,3 +232,52 @@ class SpriteModelTests(TestCase):
             animal=self.animal
         )
         self.assertEqual(str(sprite), f"Sprite {sprite.id} for {sprite.animal.name}")
+
+    def test_update_status(self):
+        sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal,
+            satiation=100,
+        )
+
+        Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=10))
+
+        # Doesn't work
+        # sprite.last_checked = timezone.now() - timezone.timedelta(minutes=10)
+        # sprite.save()
+
+        sprite.refresh_from_db()
+        sprite.update_status()
+
+        # Since 10 minutes have passed, satiation should decrease by 10
+        self.assertEqual(sprite.satiation, 90)
+
+        # Ensure last_checked is updated to now
+        self.assertAlmostEqual(sprite.last_checked, timezone.now(), delta=timezone.timedelta(seconds=1))
+
+    def test_update_status_no_negative_satiation(self):
+        sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal,
+            satiation=5,
+        )
+
+        Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=10))
+        sprite.refresh_from_db()
+
+        sprite.update_status()
+        # Satiation should not go below 0
+        self.assertEqual(sprite.satiation, 0)
+
+    def test_update_status_updates_last_checked(self):
+        now = timezone.now()
+        sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal,
+        )
+
+        Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=10))
+        sprite.refresh_from_db()
+
+        sprite.update_status()
+        self.assertEqual(sprite.last_checked, now)

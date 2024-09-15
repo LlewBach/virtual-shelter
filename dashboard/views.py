@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import SpriteForm
@@ -44,3 +45,9 @@ def delete_sprite(request, id):
         sprite.delete()
 
     return redirect('dashboard')
+
+
+def update_status(request, sprite_id):
+    sprite = get_object_or_404(Sprite, id=sprite_id)
+    sprite.update_status()
+    return JsonResponse({'satiation': sprite.satiation})

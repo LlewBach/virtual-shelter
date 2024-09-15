@@ -1,3 +1,4 @@
+import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
 
 export class Game {
@@ -6,12 +7,24 @@ export class Game {
     this.height = height;
     this.id = id;
     this.url = url;
+    this.satiation = 55;
+    this.userInterface = new UserInterface(this);
     this.sprite = new Sprite(this);
+
+    this.fetchStatus();
+  }
+  fetchStatus() {
+    fetch(`/dashboard/sprite/${this.id}/update-status/`)
+      .then(response => response.json())
+      .then(data => {
+        this.satiation = data.satiation;
+      })
   }
   update(deltaTime) {
     this.sprite.update(deltaTime);
   }
   draw(context) {
+    this.userInterface.draw(context);
     this.sprite.draw(context);
   }
 }

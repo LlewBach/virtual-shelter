@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from animals.models import Animal
@@ -18,8 +19,8 @@ class Sprite(models.Model):
     colour = models.CharField(max_length=50, choices=ColourChoices.choices, default=ColourChoices.ONE)
     url = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
-    # last_checked = models.DateTimeField(auto_now=True)
-    # hunger = models.IntegerField(default=50)
+    last_checked = models.DateTimeField(auto_now=True)
+    satiation = models.IntegerField(default=50)
     # energy = models.IntegerField(default=50)
     # current_state = models.CharField(
     #     max_length=10, 
@@ -31,24 +32,21 @@ class Sprite(models.Model):
     def __str__(self):
         return f"Sprite {self.id} for {self.animal.name}"
 
-    # def update_status(self):
-    #     """Update the status based on time elapsed since last check."""
-    #     now = timezone.now()
-    #     delta = now - self.last_checked
+    def update_status(self):
+        """Update the status based on time elapsed since last check."""
+        now = timezone.now()
+        delta = now - self.last_checked
 
-    #     # Decrease hunger by 1 point every hour
-    #     hours_passed = delta.seconds // 3600
-    #     self.hunger = max(self.hunger - hours_passed, 0)
+        # Decrease satiation by 1 point every min
+        mins_passed = delta.seconds // 60
+        # self.satiation = 97
 
-    #     # Check other attributes like health and happiness
-    #     if self.hunger == 0:
-    #         self.health = max(self.health - 5, 0)  # Health decreases if hunger is 0
-
-    #     self.last_checked = now
-    #     self.save()
+        self.satiation = max(self.satiation - mins_passed, 0)
+        self.last_checked = now
+        self.save()
 
     # def feed(self):
-    #     """Feed the Tamagotchi to increase hunger."""
+    #     """Feed the Tamagotchi to increase satiation."""
     #     self.hunger = min(100, self.hunger + 20)
     #     self.update_status()
 
