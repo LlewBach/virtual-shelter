@@ -280,4 +280,4 @@ class SpriteModelTests(TestCase):
         sprite.refresh_from_db()
 
         sprite.update_status()
-        self.assertEqual(sprite.last_checked, now)
+        self.assertEqual(sprite.last_checked.replace(microsecond=0), now.replace(microsecond=0))

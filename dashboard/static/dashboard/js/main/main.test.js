@@ -16,12 +16,17 @@ describe('Game class', () => {
   let game, mockContext;
 
   beforeEach(() => {
+    jest.useFakeTimers();
     game = new Game(200, 200, 1, "husky/one");
     mockContext = {
       drawImage: jest.fn(),
       fillText: jest.fn(),
       fillRect: jest.fn(),
     };
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
   });
 
   test('should create an instance of Game', () => {
@@ -53,6 +58,15 @@ describe('Game class', () => {
     await game.fetchStatus();
     expect(fetch).toHaveBeenCalledWith('/dashboard/sprite/1/update-status/');
     expect(game.satiation).toBe(75);
+  });
+
+  test('should call fetchStatus every 61 seconds', () => {
+    const mockFetchStatus = jest.spyOn(game, 'fetchStatus');
+    expect(mockFetchStatus).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(30000);
+    expect(mockFetchStatus).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(31000);
+    expect(mockFetchStatus).toHaveBeenCalledTimes(1);
   });
 
   test('.update should call .update on sprite', () => {

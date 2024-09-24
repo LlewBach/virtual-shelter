@@ -12,6 +12,7 @@ export class Game {
     this.sprite = new Sprite(this);
 
     this.fetchStatus();
+    this.statusInterval = setInterval(() => this.fetchStatus(), 61000);
   }
   fetchStatus() {
     fetch(`/dashboard/sprite/${this.id}/update-status/`)
@@ -20,6 +21,9 @@ export class Game {
         this.satiation = data.satiation;
       })
   }
+  // destroy() {
+  //   clearInterval(this.statusInterval);
+  // }
   update(deltaTime) {
     this.sprite.update(deltaTime);
   }
