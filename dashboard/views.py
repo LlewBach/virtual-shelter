@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from .forms import SpriteForm
 from .models import Sprite
 from animals.models import Animal
@@ -51,3 +52,16 @@ def update_status(request, sprite_id):
     sprite = get_object_or_404(Sprite, id=sprite_id)
     sprite.update_status()
     return JsonResponse({'satiation': sprite.satiation})
+
+
+def feed_sprite(request, sprite_id):
+    sprite = get_object_or_404(Sprite, id=sprite_id)
+
+    sprite.satiation = min(sprite.satiation + 2, 100)
+    sprite.save()
+
+    return JsonResponse({
+        'success': True,
+        'satiation': sprite.satiation
+    })
+

@@ -1,5 +1,6 @@
 import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
+// import { feedSprite } from '../AJAX/button1.js';
 
 export class Game {
   constructor(width, height, id, url) {
@@ -54,5 +55,11 @@ window.addEventListener('load', function () {
     }
 
     animate(0);
+
+    // const feedButton = document.querySelector(`#button1-${id}`);
+    // feedButton.addEventListener('click', () => {
+    //   feedSprite();
+    // });
   });
 });
+

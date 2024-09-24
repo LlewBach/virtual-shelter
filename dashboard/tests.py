@@ -168,6 +168,53 @@ class UpdateStatusViewTests(TestCase):
         mock_update_status.assert_called_once()
 
 
+class FeedSpriteTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal",
+            species="Dog",
+            age=4,
+            description="A friendly dog",
+            adoption_status='available'
+        )
+        self.sprite = Sprite.objects.create(
+            user=self.user,
+            animal=self.animal,
+            breed=Sprite.BreedChoices.HUSKY,
+            colour=Sprite.ColourChoices.ONE,
+            url='husky/one',
+            satiation=50,
+        )
+        self.url = f'/dashboard/sprite/{self.sprite.id}/feed/'
+
+    def test_feed_sprite_view(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+        self.assertTrue(response_data['success'])
+
+        # Check if the sprite's satiation was increased by 2
+        self.sprite.refresh_from_db()
+        self.assertEqual(self.sprite.satiation, 52)
+        self.assertEqual(response_data['satiation'], self.sprite.satiation)
+
+    def test_feed_sprite_max_satiation(self):
+        self.sprite.satiation = 99
+        self.sprite.save()
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+
+        # Check if the satiation is capped at 100
+        self.sprite.refresh_from_db()
+        self.assertEqual(self.sprite.satiation, 100)
+        self.assertEqual(response_data['satiation'], 100)
+
+
 # Models
 class SpriteModelTests(TestCase):
     def setUp(self):
