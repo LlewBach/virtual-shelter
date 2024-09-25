@@ -1,6 +1,6 @@
 import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
-// import { feedSprite } from '../AJAX/button1.js';
+import { feedSprite, getCSRFToken } from '../AJAX/button1.js';
 
 export class Game {
   constructor(width, height, id, url) {
@@ -45,6 +45,7 @@ window.addEventListener('load', function () {
     const game = new Game(canvas.width, canvas.height, id, url);
     let lastTimeAnimate = 0;
 
+    // Manual test
     function animate(timestamp) {
       ctx.clearRect(0, 0, game.width, game.height);
       const deltaTime = timestamp - lastTimeAnimate;
@@ -56,10 +57,12 @@ window.addEventListener('load', function () {
 
     animate(0);
 
-    // const feedButton = document.querySelector(`#button1-${id}`);
-    // feedButton.addEventListener('click', () => {
-    //   feedSprite();
-    // });
+    // Manual test
+    const feedButton = document.querySelector(`#button1-${id}`);
+    feedButton.addEventListener('click', async () => {
+      await feedSprite(id);
+      game.fetchStatus();
+    });
   });
 });
 

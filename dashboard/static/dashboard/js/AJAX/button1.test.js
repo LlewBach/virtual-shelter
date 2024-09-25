@@ -19,9 +19,9 @@ describe('feedSprite', () => {
     fetch.mockClear();
   });
 
-  test('should call fetch with the correct URL and headers', () => {
+  test('should call fetch with the correct URL and headers', async () => {
     const spriteId = 1;
-    feedSprite(spriteId);
+    await feedSprite(spriteId);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(`/dashboard/sprite/${spriteId}/feed/`, {
       method: 'POST',

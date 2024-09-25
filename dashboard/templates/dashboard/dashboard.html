@@ -17,7 +17,7 @@
       <canvas data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
       <img id="{{ sprite.id }}" class="spritesheet img-fluid"
         src="{% static 'images/spritesheets/'|add:sprite.url|add:'.png' %}" alt="">
-      <button onclick="feedSprite({{ sprite.id }})">Feed</button>
+      <button id="button1-{{ sprite.id }}">Feed</button>
     </div>
     <div class="col-4">
 
