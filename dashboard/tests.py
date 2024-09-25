@@ -164,7 +164,10 @@ class UpdateStatusViewTests(TestCase):
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'satiation': self.sprite.satiation})
+        self.assertJSONEqual(response.content, {
+            'satiation': self.sprite.satiation,
+            'current_state': self.sprite.current_state
+            })
         mock_update_status.assert_called_once()
 
 
@@ -284,8 +287,11 @@ class SpriteModelTests(TestCase):
         sprite = Sprite.objects.create(
             user=self.user,
             animal=self.animal,
-            satiation=100,
+            satiation=55,
         )
+        sprite.update_status()
+        # Since satiation is > 50, current state should be RUNNING
+        self.assertEqual(sprite.current_state, Sprite.States.RUNNING)
 
         Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=10))
 
@@ -297,7 +303,10 @@ class SpriteModelTests(TestCase):
         sprite.update_status()
 
         # Since 10 minutes have passed, satiation should decrease by 10
-        self.assertEqual(sprite.satiation, 90)
+        self.assertEqual(sprite.satiation, 45)
+
+        # Since satiation is < 50, current state should change to STANDING
+        self.assertEqual(sprite.current_state, Sprite.States.STANDING)
 
         # Ensure last_checked is updated to now
         self.assertAlmostEqual(sprite.last_checked, timezone.now(), delta=timezone.timedelta(seconds=1))
@@ -328,3 +337,22 @@ class SpriteModelTests(TestCase):
 
         sprite.update_status()
         self.assertEqual(sprite.last_checked.replace(microsecond=0), now.replace(microsecond=0))
+
+    # def test_update_status_state_change(self):
+    #     sprite = Sprite.objects.create(
+    #         user=self.user,
+    #         animal=self.animal,
+    #         satiation=52,
+    #     )
+
+    #     # Simulate last_checked 10 minutes ago
+    #     Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=4))
+    #     sprite.refresh_from_db()
+
+    #     sprite.update_status()
+
+    #     # Satiation should be reduced by 20 minutes
+    #     self.assertEqual(sprite.satiation, 40)  # 60 - 20 = 40
+
+    #     # Ensure the state is updated based on the new satiation level (< 50)
+    #     self.assertEqual(sprite.current_state, Sprite.States.STANDING)

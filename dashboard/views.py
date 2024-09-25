@@ -51,7 +51,10 @@ def delete_sprite(request, id):
 def update_status(request, sprite_id):
     sprite = get_object_or_404(Sprite, id=sprite_id)
     sprite.update_status()
-    return JsonResponse({'satiation': sprite.satiation})
+    return JsonResponse({
+        'satiation': sprite.satiation,
+        'current_state': sprite.current_state
+    })
 
 
 def feed_sprite(request, sprite_id):

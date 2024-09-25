@@ -9,7 +9,7 @@ describe('Sprite class', () => {
     game = {
       width: 200,
       height: 200,
-      id: 1
+      id: 1,
     };
     sprite = new Sprite(game);
     mockContext = {
@@ -50,6 +50,11 @@ describe('Sprite class', () => {
     expect(sprite.currentState).toBeInstanceOf(Standing);
     expect(sprite.currentState).toBe(sprite.states[0]);
     expect(sprite.frameY).toBe(9);
+  });
+
+  test('.setState should change state', () => {
+    sprite.setState('RUNNING');
+    expect(sprite.currentState).toBe(sprite.states[1]);
   });
 
   test('.update should increment frameTimer if less than frameInterval', () => {

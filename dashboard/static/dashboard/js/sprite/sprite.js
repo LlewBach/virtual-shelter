@@ -1,6 +1,11 @@
 // const husky = document.getElementById('husky');
 import { Standing, Running } from '../states/states.js';
 
+const states = {
+  STANDING: 0,
+  RUNNING: 1,
+}
+
 export class Sprite {
   constructor(game) {
     this.game = game;
@@ -21,6 +26,10 @@ export class Sprite {
     this.frameTimer = 0;
     this.states = [new Standing(this, this.game), new Running(this, this.game)];
     this.currentState = this.states[0];
+    this.currentState.enter();
+  }
+  setState(state) {
+    this.currentState = this.states[states[state]];
     this.currentState.enter();
   }
   update(deltaTime) {

@@ -8,9 +8,9 @@ export class Game {
     this.height = height;
     this.id = id;
     this.url = url;
-    this.satiation = 55;
     this.userInterface = new UserInterface(this);
     this.sprite = new Sprite(this);
+    this.satiation = 55;
 
     this.fetchStatus();
     this.statusInterval = setInterval(() => this.fetchStatus(), 61000);
@@ -20,6 +20,7 @@ export class Game {
       .then(response => response.json())
       .then(data => {
         this.satiation = data.satiation;
+        this.sprite.setState(data.current_state);
       })
   }
   // destroy() {

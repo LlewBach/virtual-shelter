@@ -8,7 +8,10 @@ jest.mock('../sprite/sprite.js');
 // Mock global fetch function
 global.fetch = jest.fn(() =>
   Promise.resolve({
-    json: () => Promise.resolve({ satiation: 75 })
+    json: () => Promise.resolve({
+      satiation: 75,
+      current_state: 'RUNNING'
+    })
   })
 );
 
@@ -51,13 +54,13 @@ describe('Game class', () => {
     expect(game.height).toBe(200);
     expect(game.id).toBe(1);
     expect(game.url).toBe("husky/one");
-    // expect(game.satiation).toBe(55);
   });
 
   test('.fetchStatus should update status', async () => {
     await game.fetchStatus();
     expect(fetch).toHaveBeenCalledWith('/dashboard/sprite/1/update-status/');
     expect(game.satiation).toBe(75);
+    expect(game.sprite.setState).toHaveBeenCalledWith('RUNNING');
   });
 
   test('should call fetchStatus every 61 seconds', () => {

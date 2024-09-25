@@ -12,6 +12,10 @@ class Sprite(models.Model):
         ONE = 'one', 'Colour 1'
         TWO = 'two', 'Colour 2'
         THREE = 'three', 'Colour 3'
+    
+    class States(models.TextChoices):
+        STANDING = 'STANDING', 'Standing'
+        RUNNING = 'RUNNING', 'Running'
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sprites')
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
@@ -21,12 +25,11 @@ class Sprite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_checked = models.DateTimeField(auto_now=True)
     satiation = models.IntegerField(default=50)
-    # energy = models.IntegerField(default=50)
-    # current_state = models.CharField(
-    #     max_length=10, 
-    #     choices=States.choices, 
-    #     default=States.SLEEPING
-    # )
+    current_state = models.CharField(
+        max_length=10, 
+        choices=States.choices, 
+        default=States.STANDING
+    )
 
 
     def __str__(self):
@@ -36,22 +39,15 @@ class Sprite(models.Model):
         """Update the status based on time elapsed since last check."""
         now = timezone.now()
         delta = now - self.last_checked
-
-        # Decrease satiation by 1 point every min
         mins_passed = delta.seconds // 60
-        # self.satiation = 97
+        # self.satiation = 46
 
         self.satiation = max(self.satiation - mins_passed, 0)
+
+        if self.satiation < 50:
+            self.current_state = self.States.STANDING
+        else:
+            self.current_state = self.States.RUNNING
+
         self.last_checked = now
         self.save()
-
-    # def feed(self):
-    #     """Feed the Tamagotchi to increase satiation."""
-    #     self.hunger = min(100, self.hunger + 20)
-    #     self.update_status()
-
-    # def play(self):
-    #     """Play with the Tamagotchi to increase happiness."""
-    #     if self.hunger > 20:  # Can only play if not too hungry
-    #         self.happiness = min(100, self.happiness + 10)
-    #     self.update_status()

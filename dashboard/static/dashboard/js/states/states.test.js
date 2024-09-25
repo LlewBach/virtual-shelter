@@ -1,9 +1,5 @@
 import { Standing, Running } from './states.js';
 
-const states = {
-  STANDING: 0,
-}
-
 let sprite, game;
 
 beforeEach(() => {

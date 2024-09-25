@@ -1,8 +1,3 @@
-const states = {
-  STANDING: 0,
-  RUNNING: 1,
-}
-
 export class Standing {
   constructor(sprite, game) {
     this.sprite = sprite;
@@ -16,12 +11,8 @@ export class Standing {
       this.sprite.spriteWidth = 64;
       this.sprite.maxFrame = 2;
     }
-
     this.sprite.frameX = 0;
     this.sprite.frameY = 9;
-  }
-  handleInput() {
-
   }
 }
 
@@ -39,8 +30,5 @@ export class Running {
     this.sprite.maxFrame = 7;
     this.sprite.frameX = 0;
     this.sprite.frameY = 6;
-  }
-  handleInput() {
-
   }
 }
