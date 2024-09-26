@@ -87,22 +87,18 @@
 
 <script>
   const STATIC_URL = "{% static 'images/spritepics/' %}";
-  // console.log(STATIC_URL);
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const breedCarousel = document.getElementById('breedCarousel');
     const breedItems = breedCarousel.querySelectorAll('.carousel-item');
     const spriteCarouselImages = document.querySelectorAll('#spriteCarousel .carousel-item img');
-    // console.log(spriteCarouselImages);
 
     function updateSpriteImages(breed) {
       spriteCarouselImages.forEach(img => {
         const colorStyle = img.dataset.value;
         // img.src = `/static/images/spritepics/${breed}/${colorStyle}.png`;
-        const imgSrc = `${STATIC_URL}${breed}/${colorStyle}.png`;
-        // console.log("Constructed Image URL:", imgSrc);
-        img.src = imgSrc;
+        img.src = `${STATIC_URL}${breed}/${colorStyle}.png`;
       });
       const breedInput = document.getElementById('breedInput');
       breedInput.value = breed;
