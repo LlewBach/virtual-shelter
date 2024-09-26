@@ -86,8 +86,8 @@
 </form>
 
 <script>
-  const STATIC_URL = "{{ STATIC_URL }}";
-  console.log(STATIC_URL);
+  const STATIC_URL = "{% static 'images/spritepics/' %}";
+  // console.log(STATIC_URL);
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -100,8 +100,8 @@
       spriteCarouselImages.forEach(img => {
         const colorStyle = img.dataset.value;
         // img.src = `/static/images/spritepics/${breed}/${colorStyle}.png`;
-        const imgSrc = `${STATIC_URL}images/spritepics/${breed}/${colorStyle}.png`;
-        console.log("Constructed Image URL:", imgSrc);
+        const imgSrc = `${STATIC_URL}${breed}/${colorStyle}.png`;
+        // console.log("Constructed Image URL:", imgSrc);
         img.src = imgSrc;
       });
       const breedInput = document.getElementById('breedInput');
