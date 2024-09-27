@@ -5,6 +5,7 @@ from django.test import TestCase
 from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from profiles.models import Profile
 from shelters.models import Shelter
 from animals.models import Animal
 from .models import Sprite
@@ -40,6 +41,7 @@ class DashboardViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
         self.assertEqual(list(response.context['sprites']), [self.sprite])
+        self.assertEqual(response.context['profile'], self.user.profile)
     
     def tearDown(self):
         if self.animal.image:

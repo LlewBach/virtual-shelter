@@ -11,6 +11,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=USER_ROLES, default='user')
+    tokens = models.PositiveIntegerField(default=0)
     # bio = models.TextField(blank=True)
     # profile_picture = models.ImageField(upload_to='profile_pics', blank=True, null=True)
 

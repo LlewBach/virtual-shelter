@@ -5,11 +5,14 @@ from django.views.decorators.http import require_POST
 from .forms import SpriteForm
 from .models import Sprite
 from animals.models import Animal
+from profiles.models import Profile
 
 @login_required
 def dashboard(request):
+    profile = Profile.objects.get(user=request.user)
     sprites = Sprite.objects.filter(user=request.user)
     context = {
+        'profile': profile,
         'sprites': sprites
     }
 
