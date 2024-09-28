@@ -5,6 +5,9 @@ from django.contrib.admin.sites import site
 from django.utils import timezone
 from django.core import mail
 from django.conf import settings
+from unittest.mock import patch, Mock
+import stripe
+import json
 from .models import Profile, RoleChangeRequest
 from .admin import ProfileAdmin, RoleChangeRequestAdmin
 from .forms import RoleChangeRequestForm
@@ -68,6 +71,121 @@ class ApplyForRoleChangeViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # Check that no request was created
         self.assertFalse(RoleChangeRequest.objects.filter(user=self.user).exists())  
+
+
+class TokensViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+    def test_tokens_view(self):
+        response = self.client.get('/profiles/tokens/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profiles/tokens.html')
+        self.assertEqual(response.context['profile'], self.user.profile)
+
+
+class CheckoutSessionTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+    
+    @patch('stripe.checkout.Session.create')
+    def test_create_checkout_session(self, mock_stripe_create):
+        # Mock the Stripe checkout session response
+
+        mock_stripe_create.return_value = Mock(
+            id='cs_test_session_id',
+            url='https://mock-checkout-url'
+        )
+
+        response = self.client.post('/profiles/create-checkout-session/')
+
+        # Check correct parameters for Stripe
+        mock_stripe_create.assert_called_with(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {'name': '100 Virtual Shelter Tokens'},
+                        'unit_amount': 500,
+                    },
+                    'quantity': 1,
+                }
+            ],
+            mode='payment',
+            success_url='http://127.0.0.1:8000/profiles/tokens/success/',
+            cancel_url='http://127.0.0.1:8000/profiles/tokens/cancel/',
+            metadata={'user_id': self.user.id},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], 'https://mock-checkout-url')
+
+
+class SuccessAndCancelViewsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+    
+    def test_success_view_authenticated(self):
+        response = self.client.get('/profiles/tokens/success/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_cancel_view_authenticated(self):
+        response = self.client.get('/profiles/tokens/cancel/')
+
+        self.assertEqual(response.status_code, 200)
+
+
+class StripeWebhookTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+    @patch('stripe.Webhook.construct_event')
+    def test_valid_webhook_event(self, mock_construct_event):
+        mock_event = {
+            'type': 'checkout.session.completed',
+            'data': {
+                'object': {
+                    'metadata': {
+                        'user_id': str(self.user.id),
+                    }
+                }
+            }
+        }
+
+        mock_construct_event.return_value = mock_event
+
+        response = self.client.post(
+            '/profiles/stripe-webhook/',
+            data=json.dumps({'dummy': 'data'}),
+            content_type='application/json',
+            HTTP_STRIPE_SIGNATURE='dummy_signature'
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.tokens, 10)
+
+    @patch('stripe.Webhook.construct_event')
+    def test_invalid_signature(self, mock_construct_event):
+        # Simulate SignatureVerificationError
+        mock_construct_event.side_effect = stripe.error.SignatureVerificationError('Invalid signature', 'some_header')
+
+        response = self.client.post(
+            '/profiles/stripe-webhook/',
+            data=json.dumps({'dummy': 'data'}),
+            content_type='application/json',
+            HTTP_STRIPE_SIGNATURE='dummy_signature'
+        )
+
+        # Assert 400 error for invalid signature
+        self.assertEqual(response.status_code, 400)
+        self.assertJSONEqual(response.content, {'status': 'Invalid signature'})
 
 
 # Models

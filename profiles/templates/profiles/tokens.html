@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Tokens</h1>
+<p>You have {{ profile.tokens }} tokens</p>
+<p>50 tokens - £4.99</p>
+<form action="{% url 'create_checkout_session' %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">Buy 100 Tokens for $5</button>
+</form>
+
+<script>
+
+</script>
+{% endblock %}
