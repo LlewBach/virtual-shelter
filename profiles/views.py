@@ -102,7 +102,7 @@ def stripe_webhook(request):
             try:
                 profile = Profile.objects.get(user_id=user_id)
                 # Add tokens to user's profile based on the payment
-                profile.tokens += 10
+                profile.tokens += 100
                 profile.save()
             except Profile.DoesNotExist:
                 return JsonResponse({'status': 'User profile not found'}, status=404)

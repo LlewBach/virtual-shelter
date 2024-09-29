@@ -64,7 +64,7 @@ def feed_sprite(request, sprite_id):
     sprite = get_object_or_404(Sprite, id=sprite_id)
     profile = request.user.profile
 
-    token_cost = 10
+    token_cost = 1
 
     # Check if the user has enough tokens
     if profile.tokens < token_cost:
