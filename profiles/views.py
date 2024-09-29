@@ -37,6 +37,7 @@ def tokens(request):
 stripe.api_key = settings.STRIPE_SECRET_KEY
 def create_checkout_session(request):
     token_cost = 500
+    domain = request.build_absolute_uri('/').strip('/')
 
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -53,10 +54,8 @@ def create_checkout_session(request):
                 }
             ],
             mode='payment',
-            # success_url=YOUR_DOMAIN + '/success.html',
-            # cancel_url=YOUR_DOMAIN + '/cancel.html',
-            success_url='http://127.0.0.1:8000/profiles/tokens/success/',
-            cancel_url='http://127.0.0.1:8000/profiles/tokens/cancel/',
+            success_url = f'{domain}/profiles/tokens/success/',
+            cancel_url = f'{domain}/profiles/tokens/cancel/',
             metadata={
                 'user_id': request.user.id
             }
