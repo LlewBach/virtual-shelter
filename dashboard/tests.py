@@ -5,7 +5,6 @@ from django.test import TestCase
 from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
-from profiles.models import Profile
 from shelters.models import Shelter
 from animals.models import Animal
 from .models import Sprite
@@ -195,6 +194,8 @@ class FeedSpriteTestCase(TestCase):
             satiation=50,
         )
         self.url = f'/dashboard/sprite/{self.sprite.id}/feed/'
+        self.user.profile.tokens = 100
+        self.user.profile.save()
 
     def test_feed_sprite_view(self):
         response = self.client.post(self.url)
@@ -202,10 +203,23 @@ class FeedSpriteTestCase(TestCase):
         response_data = response.json()
         self.assertTrue(response_data['success'])
 
-        # Check if the sprite's satiation was increased by 2
+        # Check if the sprite's satiation was increased by 5
         self.sprite.refresh_from_db()
-        self.assertEqual(self.sprite.satiation, 52)
+        self.assertEqual(self.sprite.satiation, 55)
         self.assertEqual(response_data['satiation'], self.sprite.satiation)
+
+        # Check if the tokens were deducted
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.tokens, 90)
+        self.assertEqual(response_data['tokens'], self.user.profile.tokens)
+    
+    def test_sufficient_tokens(self):
+        self.user.profile.tokens = 5
+        self.user.profile.save()
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 400)
+        response_data = response.json()
+        self.assertFalse(response_data['success'])
 
     def test_feed_sprite_max_satiation(self):
         self.sprite.satiation = 99

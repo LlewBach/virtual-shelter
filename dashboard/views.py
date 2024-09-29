@@ -62,12 +62,26 @@ def update_status(request, sprite_id):
 
 def feed_sprite(request, sprite_id):
     sprite = get_object_or_404(Sprite, id=sprite_id)
+    profile = request.user.profile
 
-    sprite.satiation = min(sprite.satiation + 2, 100)
+    token_cost = 10
+
+    # Check if the user has enough tokens
+    if profile.tokens < token_cost:
+        return JsonResponse({
+            'success': False,
+            'error': 'Not enough tokens to feed the sprite.'
+        }, status=400)
+    
+    profile.tokens -= token_cost
+    profile.save()
+
+    sprite.satiation = min(sprite.satiation + 5, 100)
     sprite.save()
 
     return JsonResponse({
         'success': True,
-        'satiation': sprite.satiation
+        'satiation': sprite.satiation,
+        'tokens': profile.tokens
     })
 

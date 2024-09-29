@@ -115,8 +115,8 @@ class CheckoutSessionTest(TestCase):
                 }
             ],
             mode='payment',
-            success_url='http://127.0.0.1:8000/profiles/tokens/success/',
-            cancel_url='http://127.0.0.1:8000/profiles/tokens/cancel/',
+            success_url='http://testserver/profiles/tokens/success/',
+            cancel_url='http://testserver/profiles/tokens/cancel/',
             metadata={'user_id': self.user.id},
         )
 

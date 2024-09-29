@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1 class="text-center">Dashboard</h1>
-<h2 class="text-center"><strong>{{ profile.tokens }} Tokens</strong></h2>
+<h2 class="text-center"><strong><span id="token-count">{{ profile.tokens }}</span> Tokens</strong></h2>
 <a href="{% url 'tokens' %}">Buy tokens here</a>
 <!-- <h2>Welcome, {{ request.user.username }}</h2> -->
 <img id="husky" class="spritesheet" src="{% static 'images/spritesheets/husky/one.png' %}">

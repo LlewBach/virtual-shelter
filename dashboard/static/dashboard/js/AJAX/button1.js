@@ -8,6 +8,9 @@ export async function feedSprite(spriteId) {
   });
 
   const data = await response.json();
+  if (data.success) {
+    updateTokenCount(data.tokens);
+  }
   return data;
 }
 
@@ -21,5 +24,11 @@ export function getCSRFToken() {
     }
   }
   return null;
+}
+
+
+function updateTokenCount(newTokenCount) {
+  const tokenCountElement = document.querySelector('#token-count');
+  tokenCountElement.textContent = `${newTokenCount}`;
 }
 
