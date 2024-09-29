@@ -169,7 +169,7 @@ class StripeWebhookTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.user.profile.refresh_from_db()
-        self.assertEqual(self.user.profile.tokens, 10)
+        self.assertEqual(self.user.profile.tokens, 100)
 
     @patch('stripe.Webhook.construct_event')
     def test_invalid_signature(self, mock_construct_event):

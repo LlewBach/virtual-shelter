@@ -210,11 +210,11 @@ class FeedSpriteTestCase(TestCase):
 
         # Check if the tokens were deducted
         self.user.profile.refresh_from_db()
-        self.assertEqual(self.user.profile.tokens, 90)
+        self.assertEqual(self.user.profile.tokens, 99)
         self.assertEqual(response_data['tokens'], self.user.profile.tokens)
     
     def test_sufficient_tokens(self):
-        self.user.profile.tokens = 5
+        self.user.profile.tokens = 0
         self.user.profile.save()
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 400)
