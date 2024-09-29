@@ -1,9 +1,11 @@
 import { Game } from './main.js';
 import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
+import { ChartClass } from '../chart/chart.js';
 
 // Mock dependencies
 jest.mock('../sprite/sprite.js');
+jest.mock('../chart/chart.js');
 
 // Mock global fetch function
 global.fetch = jest.fn(() =>
@@ -47,6 +49,7 @@ describe('Game class', () => {
   test('should initialize with class instances', () => {
     expect(game.userInterface).toBeInstanceOf(UserInterface);
     expect(game.sprite).toBeInstanceOf(Sprite);
+    expect(game.chartObj).toBeInstanceOf(ChartClass);
   });
 
   test('should initialize with correct values', () => {
@@ -61,6 +64,10 @@ describe('Game class', () => {
     expect(fetch).toHaveBeenCalledWith('/dashboard/sprite/1/update-status/');
     expect(game.satiation).toBe(75);
     expect(game.sprite.setState).toHaveBeenCalledWith('RUNNING');
+    expect(game.chartObj.updateChart).toHaveBeenCalledWith({
+      satiation: 75,
+      current_state: 'RUNNING'
+    });
   });
 
   test('should call fetchStatus every 61 seconds', () => {

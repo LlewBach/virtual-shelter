@@ -16,13 +16,13 @@
       <h2>{{ sprite.animal.name }}</h2>
     </div>
     <div class="col-4">
-      <canvas data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
+      <canvas class="sprite-canvas" data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
       <img id="{{ sprite.id }}" class="spritesheet img-fluid"
         src="{% static 'images/spritesheets/'|add:sprite.url|add:'.png' %}" alt="">
       <button id="button1-{{ sprite.id }}">Feed</button>
     </div>
     <div class="col-4">
-
+      <canvas class="chart-canvas" id="chart-canvas-{{ sprite.id }}"></canvas>
     </div>
   </div>
   {% empty %}
@@ -67,5 +67,7 @@
 
 <script type="module" src="{% static 'dashboard/js/main/main.js' %}"></script>
 <script src="{% static 'dashboard/js/AJAX/button1.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'dashboard/js/chart/chart.js' %}"></script>
 
 {% endblock %}

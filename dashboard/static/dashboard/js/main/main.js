@@ -1,6 +1,7 @@
 import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
 import { feedSprite, getCSRFToken } from '../AJAX/button1.js';
+import { ChartClass } from '../chart/chart.js';
 
 export class Game {
   constructor(width, height, id, url) {
@@ -11,6 +12,7 @@ export class Game {
     this.userInterface = new UserInterface(this);
     this.sprite = new Sprite(this);
     this.satiation = 55;
+    this.chartObj = new ChartClass(this.id, this.satiation);
 
     this.fetchStatus();
     this.statusInterval = setInterval(() => this.fetchStatus(), 61000);
@@ -21,6 +23,7 @@ export class Game {
       .then(data => {
         this.satiation = data.satiation;
         this.sprite.setState(data.current_state);
+        this.chartObj.updateChart(data);
       })
   }
   // destroy() {
@@ -36,8 +39,8 @@ export class Game {
 }
 
 window.addEventListener('load', function () {
-  const canvases = document.querySelectorAll('canvas');
-  canvases.forEach(canvas => {
+  const spriteCanvases = document.querySelectorAll('.sprite-canvas');
+  spriteCanvases.forEach(canvas => {
     canvas.width = 200;
     canvas.height = 200;
     const ctx = canvas.getContext('2d');

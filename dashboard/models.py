@@ -30,6 +30,8 @@ class Sprite(models.Model):
         choices=States.choices, 
         default=States.STANDING
     )
+    # time_standing = models.IntegerField(default=0)
+    # time_running = models.IntegerField(default=0)
 
 
     def __str__(self):
@@ -43,6 +45,10 @@ class Sprite(models.Model):
         # self.satiation = 46
 
         self.satiation = max(self.satiation - mins_passed, 0)
+        # if self.current_state == self.States.STANDING:
+        #     self.time_standing += mins_passed
+        # elif self.current_state == self.States.RUNNING:
+        #     self.time_running += mins_passed
 
         if self.satiation < 50:
             self.current_state = self.States.STANDING
