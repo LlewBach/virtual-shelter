@@ -116,6 +116,7 @@ User's goals...
 - Users can view fostered animals
 - Users can take care of fostered animals
 - Users can assess animal stats
+- Dashboard should update 'live'
 
 #### Tokens
 
@@ -123,6 +124,10 @@ User's goals...
 - Users can spend tokens on their fostered animals
 
 ### Content Requirements
+
+#### Media
+
+- Users can upload pictures for profiles
 
 #### Sprite Sheets
 
@@ -138,13 +143,27 @@ User's goals...
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+### UX Information Structure
+
+Logged in users will have the following navbar links: Virtual Shelter(Home), Dashboard, Profile/My Shelter, Shelters, Animals, Log Out. This will enable users to care for their fostered animals, manage their personal information and browse shelters and animals in need of support.
+
+### Application Information Flow
+
+As the dashboard needs to update itself 'live' and when accessed after extended periods of disuse, this project requires the use of AJAX to connect the front end to the backend.
+
 ## Skeleton
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
 ### Wireframes
 
+[Home page wireframe](static/wireframes/home-wireframe.png)
 
+[Dashboard page wireframe](static/wireframes/dashboard-wireframe.png)
+
+[Shelters page wireframe](static/wireframes/shelters-wireframe.png)
+
+[Animals page wireframe](static/wireframes/animals-wireframe.png)
 
 ### Database
 
