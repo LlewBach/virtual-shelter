@@ -56,7 +56,9 @@ def update_status(request, sprite_id):
     sprite.update_status()
     return JsonResponse({
         'satiation': sprite.satiation,
-        'current_state': sprite.current_state
+        'current_state': sprite.current_state,
+        'time_standing': sprite.time_standing,
+        'time_running': sprite.time_running,
     })
 
 

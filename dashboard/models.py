@@ -30,8 +30,8 @@ class Sprite(models.Model):
         choices=States.choices, 
         default=States.STANDING
     )
-    # time_standing = models.IntegerField(default=0)
-    # time_running = models.IntegerField(default=0)
+    time_standing = models.IntegerField(default=0)
+    time_running = models.IntegerField(default=0)
 
 
     def __str__(self):
@@ -44,11 +44,16 @@ class Sprite(models.Model):
         mins_passed = delta.seconds // 60
         # self.satiation = 46
 
+        # Reset time values if it's a new day
+        if self.last_checked.date() != now.date():
+            self.time_standing = 0
+            self.time_running = 0
+
         self.satiation = max(self.satiation - mins_passed, 0)
-        # if self.current_state == self.States.STANDING:
-        #     self.time_standing += mins_passed
-        # elif self.current_state == self.States.RUNNING:
-        #     self.time_running += mins_passed
+        if self.current_state == self.States.STANDING:
+            self.time_standing += mins_passed
+        elif self.current_state == self.States.RUNNING:
+            self.time_running += mins_passed
 
         if self.satiation < 50:
             self.current_state = self.States.STANDING

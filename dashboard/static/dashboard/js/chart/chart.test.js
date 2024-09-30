@@ -31,8 +31,8 @@ describe('ChartClass', () => {
   });
 
   test('should update chart data correctly', () => {
-    chartInstance.updateChart({ satiation: 75 });
+    chartInstance.updateChart({ time_standing: 15, time_running: 20 });
     expect(chartInstance.chart.update).toHaveBeenCalled();
-    expect(chartInstance.chart.data.datasets[0].data).toEqual([75]);
+    expect(chartInstance.chart.data.datasets[0].data).toEqual([15, 20]);
   });
 });
