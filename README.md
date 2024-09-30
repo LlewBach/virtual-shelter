@@ -131,7 +131,7 @@ User's goals...
 
 #### Sprite Sheets
 
-- A variety of sprite sheets for different animals
+- A variety of sprite sheets for different animals and colours
 
 #### Game play
 
@@ -179,6 +179,46 @@ As the dashboard needs to update itself 'live' and when accessed after extended 
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+### Website Structure
+
+Bootstrap provides elements such as the navbar, grid layouts and carousels, and also manages screen size responsiveness.
+
+### Accounts and Profiles
+
+Account management is enabled by the django-allauth package. This handles registration, confirmation emails, login, logout and forgotten password, verification.
+
+When a User is created, a signal is sent to create a Profile for that user. Profiles hold information such as role (User or Shelter Admin) and token count.
+
+The user can view, update and delete their profile. On the Profile page, there is a link to 'Apply to Register Shelter'. This provides a form to collect information about the charity. Upon submission, a signal triggers an email to the Superuser informing them of the request. The Superuser can then navigate to the site admin interface, review the request information and decide whether to approve or reject it. If approved, the user's profile role will be updated to that of Shelter Admin, and a signal will trigger an email to inform the request sender.
+
+A Shelter Admin will see a navbar option of 'My Shelter' in place of 'Profile'. The Shelter Admin can 'Edit Profile', 'Delete Profile' and 'Add Animal' to the shelter profile.
+
+An animal profile can be added to a shelter, and collect information such as a picture upload, name, species, breed, age, description and adoption status. Animal profiles can be edited and deleted. The Shelter Admin can also 'Add Update' about the dog to its profile. Users can choose to 'Foster' the animal.
+
+### Sprite Creation and Customization
+
+If the user chooses to foster an animal, they will be taken to a sprite creation page. Here a the user will be able to select the breed and colour of the animal from the available options.
+
+The user can edit and delete the sprite.
+
+### Dashboard
+
+For each animal, the user will see some details of the real animal, including a picture, the animated sprite canvas, an interact button, and a dynamic chart canvas that tracks the sprite's activity.
+
+The dashboard will update 'live' (once per minute, this might vary more on deployed site) without having to refresh the page.
+
+The sprite's state will change depending on its satiation level. (Below 50 => standing, else running).
+
+The user can feed the sprite if enough tokens are available.
+
+### Tokens
+
+Tokens can be bought via a link to a Stripe hosted checkout page. Upon successful 'payment', the user will be redirected to a 'success' page (otherwise a 'cancel' page) and a webhook will update the number of tokens associated with a user's profile.
+
+### Shelters and Animals Pages
+
+Users will be able to browse through shelter and animals profiles on these pages.
+
 ## Future Feature Considerations
 
 [Back to top](#milestone-4-project---virtual-shelter)
@@ -187,13 +227,67 @@ As the dashboard needs to update itself 'live' and when accessed after extended 
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
-# Testing
+## Development
+
+- VSCode - Development environment
+- Google Chrome Dev Tools - Debugging and analysis
+- GitHub - Code repository and version control
+- Windows PowerShell - Terminal
+- Virtual environment
+
+## HTML/CSS
+
+- HTML5
+- CSS3
+- Bootstrap 5
+- FontAwesome ?
+- Google Fonts?
+
+## Python
+
+- Python 3.12.1
+- Django 5.1 - Framework
+- Django-allauth - Authentication
+- Stripe - Payment service
+- Pillow - Image tool
+- Boto3 - AWS management
+- gunicorn - WSGI HTTP server
+- Psycopg2 - Postgres DB adapter
+
+List of packages
+
+## JavaScript
+
+- JavaScript ES6
+- Jest - Testing
+- Chart.js - Dynamic charts
+
+## Testing Technologies
+
+- W3C HTML Markup Validator
+- W3C Jigsaw CSS Validator
+- JSHint - JS validator
+- Pylint - Python validator
+- WebAIM - Accessibility
+- Chrome Dev Tools Lighthouse - Performance, accessibility, SEO, best practices
+
+## Hosting
+
+- CDNs (Bootstrap, Chart.js)
+- Heroku - App deployment platform
+- AWS S3 - Media file hosting
+
+## Database
+
+- Postgres
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
 # Deployment
 
 [Back to top](#milestone-4-project---virtual-shelter)
+
+
 
 # Credits
 
