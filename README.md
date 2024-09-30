@@ -28,6 +28,8 @@ By Gareth Llewelyn
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+Virtual Shelter is an app where animal rescue shelters can upload profiles of their animals for users to virtually foster them and contribute to their care.
+
 # UX
 
 [Back to top](#milestone-4-project---virtual-shelter)
@@ -90,7 +92,47 @@ User's goals...
 
 ### Functional Requirements
 
-- 
+#### Simple and intuitive interface
+
+- Users can navigate through the site easily
+- Users get feedback and confirmation for their actions
+- Users can use site on a range of device sizes
+
+#### Profile management
+
+- Users can register, login, logout and edit profile
+- Users can request to be made a Shelter Admin
+- Shelter Admins can manage a shelter's profile
+- Shelter Admins can upload and manage animal profiles
+- Shelter Admins can provide updates on animal profiles
+
+#### Virtual fostering
+
+- Users can browse animal profiles to choose which to virtually foster
+- Users can customize their own virtual animal from a choice of breeds and colours
+
+#### Dashboard
+
+- Users can view fostered animals
+- Users can take care of fostered animals
+- Users can assess animal stats
+
+#### Tokens
+
+- Users can purchase tokens securely via Stripe
+- Users can spend tokens on their fostered animals
+
+### Content Requirements
+
+#### Sprite Sheets
+
+- A variety of sprite sheets for different animals
+
+#### Game play
+
+- Sprites will have multiple states to boost interactivity
+- Users can interact with sprite via button(s)
+- Sprite stats will be shown and updated live
 
 ## Structure
 
