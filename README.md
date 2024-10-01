@@ -282,13 +282,17 @@ List of packages
 
 - Postgres
 
+# Testing
+
 [Back to top](#milestone-4-project---virtual-shelter)
+
+See [TESTING.md](TESTING.md) for testing documentation.
 
 # Deployment
 
-## Deployment to Heroku
-
 [Back to top](#milestone-4-project---virtual-shelter)
+
+## Deployment to Heroku
 
 This project was deployed to Heroku via the following steps...
 
@@ -384,14 +388,38 @@ os.environ.setdefault("STRIPE_WH_SECRET", 'your own value')
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
-- https://www.youtube.com/watch?v=zOtxP7ahi4M - How To Make Responsive Navbar with Bootstrap 5 | Step by Step Tutorial - Web Dev Creative
+## README
 
-- Mentor Ben Kav - README structure
+- Ben Kavanagh - I referred to the README of my mentor, Ben Kavanagh, to structure my own.
+
+## Media
+
+- [GirlyPixels](https://girlypixels.itch.io/) - The creator of the purchased spritesheets.
+
+## Code
+
+### GPT-4
+
+Helped with / taught me about the following:
+- Debugging errors
+- How to use Django signals and forms
+- How to go implement AJAX fetch requests
+- Formatting the Chart.js pie chart
+- Setting up the Stripe webhook view
+- Testing
+
+### YouTube
+
+- Web Dev Creative - [How To Make Responsive Navbar with Bootstrap 5 | Step by Step Tutorial](https://www.youtube.com/watch?v=zOtxP7ahi4M)
 
 # Acknowledgements
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+
+
 # Disclaimer
 
 [Back to top](#milestone-4-project---virtual-shelter)
+
+This website is for educational purposes only. The Stripe account will therefore remain in Test Mode.
