@@ -2,5 +2,46 @@
 {% load static %}
 
 {% block content %}
-<h1>Home</h1>
+
+<div class="container">
+  <div class="row mt-5 mb-5">
+    <div class="col-6 d-flex align-items-center justify-content-center">
+      <h1>Foster a virtual animal...</h1>
+    </div>
+    <div class="col-6 d-flex align-items-center justify-content-center">
+      <img src="{% static 'images/dog-and-fence.jpg' %}" width="200">
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-6 d-flex align-items-center justify-content-center">
+      <img src="{% static 'images/Running.gif' %}" width="200">
+    </div>
+    <div class="col-6 d-flex align-items-center justify-content-center">
+      <h1>...to help a real one</h1>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-6">
+      <ul class="text-center">
+        <p class="mb-4">Browse real shelters and animals</p>
+        <p class="mb-4">Choose which animals to foster</p>
+        <p class="mb-4">Buy tokens to spend on your virtual pets</p>
+        <p class="mb-4">Your donations go to the animals' shelter</p>
+        <p class="mb-4">Keep track of your pets' stats in the dashboard</p>
+        <p class="mb-4">Get updates on your animals from the shelter</p>
+        <p class="mb-4">Play to make a real difference</p>
+      </ul>
+      <div class="text-center mb-5">
+        <p>If you run a shelter, you can sign up and request a Shelter Admin profile</p>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'view_animals' %}">View Animals</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}

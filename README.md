@@ -394,6 +394,10 @@ os.environ.setdefault("STRIPE_WH_SECRET", 'your own value')
 
 ## Media
 
+### Unsplash Images
+- [Margarita Kosior](https://unsplash.com/photos/white-and-brown-short-coated-dog-standing-on-brown-field-during-daytime-WVGGBALwXPE)
+
+### Sprite Sheets
 - [GirlyPixels](https://girlypixels.itch.io/) - The creator of the purchased spritesheets.
 
 ## Code
