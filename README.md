@@ -234,6 +234,7 @@ Users will be able to browse through shelter and animals profiles on these pages
 - GitHub - Code repository and version control
 - Windows PowerShell - Terminal
 - Virtual environment
+- GPT-4 - Debugging, guidance
 
 ## HTML/CSS
 
@@ -285,9 +286,99 @@ List of packages
 
 # Deployment
 
+## Deployment to Heroku
+
 [Back to top](#milestone-4-project---virtual-shelter)
 
+This project was deployed to Heroku via the following steps...
 
+### Initial Deployment
+
+1) Sign in to your Heroku account, having created one.
+2) Click 'Create new app'.
+3) Enter app name and region.
+4) Click 'Create app'.
+5) In the 'Deploy' tab, in the 'Deployment method' section, select the 'GitHub' option.
+6) In the 'Connect to GitHub' section below, search for the relevant code repository and click 'Connect'.
+
+### Automatic Deployment
+
+Automatic deployment was enabled such that whenever the GitHub repository is updated, the new code would automatically update the Heroku app. This was set up as follows...
+
+7) Still on the Deploy tab, in the 'Automatic deploys' section, click 'Enable Automatic Deploys'.
+
+### Environment Variables
+
+These environment variables must be set on Heroku for the app to work. 
+
+8) On the Settings tab, in the 'Config Vars' section, click 'Reveal Config Vars'.
+9) Enter the following variables:
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+  - These keys can be obtained by creating an S3 Bucket on AWS.
+- DATABASE_URL
+  - This was obtained from a PostgreSQL data base provided by Code Institute.
+- EMAIL_HOST_PASS
+- EMAIL_HOST_USER
+  - The email address and password for an email account.
+- SECRET_KEY
+  - For cryptographic purposes in Django.
+- STRIPE_PUBLIC_KEY
+- STRIPE_SECRET_KEY
+- STRIPE_WH_SECRET
+  - These keys can be obtained by creating a Stripe account.
+  - In the dashboard, click 'Developers'.
+  - Under 'API keys', you will find your Public and Secret keys.
+  - Under 'Webhooks', click 'Add endpoint'.
+  - For the URL, put DOMAIN + 'profiles/stripe-webhook/'
+  - Under 'Select events to listen to', click '+ Select events'.
+  - Tick 'Select all events' then press 'Add events'.
+  - Set the STRIPE_WH_SECRET as the Signing Secret generated as a result.
+- USE_AWS
+  - Set as True.
+
+### Database Migration
+
+10) Open the Heroku Terminal and run the following command to migrate the database schema.
+
+- `heroku run python manage.py migrate`
+
+## Local Deployment
+
+### Cloning the Repository
+
+1) Go to the project's GitHub repository.
+2) Click the 'Code' dropdown and copy the HTTPS link.
+3) Create a local directory to keep the repository. 
+4) In the terminal of your IDE, ensure your IDE supports git, such as by running 
+ - `git init`.
+5) In the terminal, use the copied link in the following command
+- `git clone https://github.com/LlewBach/virtual-shelter.git`
+
+### Local Setup
+
+6) Create a Python [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) and activate it.
+7) To install the required packages, run
+- `pip3 install requirements.txt`
+8) To migrate the database, run
+- `python manage.py migrate`
+9) Open the directory in your IDE.
+10) Create a file called 'env.py' in the 'virtual_shelter' folder.
+11) In this file, provide the local environment variables. Here is a template.
+
+```python
+import os
+
+os.environ.setdefault("SECRET_KEY", "your own value")
+os.environ.setdefault("DEVELOPMENT", 'True')
+os.environ.setdefault("EMAIL_HOST_PASS", "your own value")
+os.environ.setdefault("EMAIL_HOST_USER", "your own value")
+
+os.environ.setdefault("STRIPE_PUBLIC_KEY", 'your own value')
+os.environ.setdefault("STRIPE_SECRET_KEY", 'your own value')
+os.environ.setdefault("STRIPE_WH_SECRET", 'your own value')
+```
 
 # Credits
 
