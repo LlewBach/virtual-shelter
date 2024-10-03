@@ -1,83 +1,105 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Animal Profile</h2>
-<img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:200px; height:auto;">
-<p><strong>Shelter:</strong> {{ animal.shelter }}</p>
-<p><strong>Name:</strong> {{ animal.name }}</p>
-<p><strong>Species:</strong> {{ animal.species }}</p>
-<p><strong>Breed:</strong> {{ animal.breed }}</p>
-<p><strong>Age:</strong> {{ animal.age }}</p>
-<p><strong>Description:</strong> {{ animal.description }}</p>
-<p><strong>Foster status:</strong> {{ animal.adoption_status }}</p>
+<h1 class="text-center mt-3 mb-4">{{ animal.name }}</h1>
 
-{% if user == animal.shelter.admin %}
-<a href="{% url 'edit_animal_profile' animal.id %}">Edit Profile</a>
-<a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}">Delete Profile</a>
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-6">
+      <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:400px; height:auto;">
+    </div>
+    <div class="col-4">
+      <p>Shelter: {{ animal.shelter }}</p>
+      <p>Species: {{ animal.species }}</p>
+      <p>Breed: {{ animal.breed }}</p>
+      <p>Age: {{ animal.age }}</p>
+      <p>Foster status: <strong>{{ animal.adoption_status }}</strong></p>
+    </div>
+    <div class="col-2 d-flex flex-column justify-content-between">
+      {% if user == animal.shelter.admin %}
+      <a href="{% url 'edit_animal_profile' animal.id %}" class="btn btn-primary">Edit Profile</a>
+      <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}">Delete
+        Profile</a>
 
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteModal{{ animal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteModal{{ animal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Changes cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Delete Profile</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>Changes cannot be undone!</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-secondary">Delete Profile</button>
-        </form>
-      </div>
+
+      <a href="{% url 'add_update' animal.id %}" class="btn btn-primary">Add Update</a>
+
+      {% else %}
+
+      <a href="{% url 'select_sprite' animal.id %}" class="btn btn-primary">Foster</a>
+
+      {% endif %}
     </div>
   </div>
 </div>
 
-<a href="{% url 'add_update' animal.id %}">Add Update</a>
+<section class="container mb-4">
+  <h2 class="mb-4">Description</h2>
+  <p>{{ animal.description }}</p>
+</section>
 
-{% endif %}
-
-<a href="{% url 'select_sprite' animal.id %}">Foster</a>
-
-<h2>Updates</h2>
-<ul>
+<section class="container mb-4">
+  <h2 class="mb-4">Updates</h2>
   {% for update in animal.updates.all %}
-  <li>{{ update.created_at|date:"Y-m-d H:i" }}: {{ update.text }}
-    {% if user == animal.shelter.admin %}
-    <a href="{% url 'edit_update' update.id %}">Edit Update</a>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteUpdateModal{{ update.id }}">Delete Update</a>
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteUpdateModal{{ update.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Changes cannot be undone!</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <form action="{% url 'delete_update' update.id %}" method="POST">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-secondary">Confirm</button>
-            </form>
+  <div class="d-flex justify-content-between">
+    <p><strong>{{ update.created_at|date:"Y-m-d H:i" }}</strong></p>
+    <div>
+      {% if user == animal.shelter.admin %}
+      <a href="{% url 'edit_update' update.id %}">Edit</a>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#deleteUpdateModal{{ update.id }}">Delete</a>
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteUpdateModal{{ update.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Changes cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form action="{% url 'delete_update' update.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Confirm</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
-    {% endif %}
-  </li>
+  </div>
+
+  <p>{{ update.text }}</p>
   {% empty %}
-  <li>No updates yet.</li>
+  <p>No updates yet</p>
   {% endfor %}
-</ul>
+
+</section>
 
 {% endblock %}
