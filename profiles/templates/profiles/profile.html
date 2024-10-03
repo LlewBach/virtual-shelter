@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Profile</h1>
-<p>Role: {{ profile.role }}</p>
-<p>Name: {{ profile.user.username }}</p>
-<a href="{% url 'apply_role_change' %}">Apply to Register Shelter</a>
+<h1 class="text-center mt-3 mb-4">{{ profile.user.username }}</h1>
+<div class="text-center">
+  <p>Role: {{ profile.role }}</p>
+</div>
+
+
+<!-- Fostered Animal Profiles -->
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <!-- dog profile card -->
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <a href="{% url 'apply_role_change' %}">Apply to Register Shelter</a>
+</div>
+
+
+
 {% endblock %}
