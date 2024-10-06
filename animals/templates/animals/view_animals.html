@@ -16,6 +16,10 @@
       <p>{{ animal.age }} year old {{ animal.breed }}</p>
       <p><strong>{{ animal.adoption_status }}</strong></p>
     </div>
+    {% empty %}
+    <div class="col-12">
+      <h3 class="text-center">No animals available</h3>
+    </div>
     {% endfor %}
   </div>
 </div>
