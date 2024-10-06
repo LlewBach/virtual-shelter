@@ -23,7 +23,7 @@ def edit_shelter(request, id):
     try:
         shelter = Shelter.objects.get(id=id)
     except Shelter.DoesNotExist:
-        return redirect('shelter_profile')
+        return redirect('home')
     
     if request.method == 'POST':
         form = ShelterForm(request.POST, request.FILES, instance=shelter)

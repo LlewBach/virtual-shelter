@@ -9,7 +9,7 @@ def add_animal(request):
     try:
         shelter = Shelter.objects.get(admin=request.user)
     except Shelter.DoesNotExist:
-        return redirect('my_shelter')
+        return redirect('home')
 
     if request.method == 'POST':
         form = AnimalForm(request.POST, request.FILES)
@@ -17,7 +17,7 @@ def add_animal(request):
             animal = form.save(commit=False)
             animal.shelter = shelter
             animal.save()
-            return redirect('my_shelter')
+            return redirect('shelter_profile', shelter.id)
     else:
         form = AnimalForm()
     

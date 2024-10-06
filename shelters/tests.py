@@ -20,19 +20,19 @@ class ShelterViewTest(TestCase):
         self.client.login(username='testuser', password='testpassword')
 
     def test_shelter_view_with_shelter(self):
-        response = self.client.get('/shelters/my-shelter/')
+        response = self.client.get(f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'shelters/my_shelter.html')
+        self.assertTemplateUsed(response, 'shelters/shelter.html')
         # Check that the shelter is in the context
-        self.assertIn('my_shelter', response.context)
-        self.assertEqual(response.context['my_shelter'], self.shelter)
+        self.assertIn('shelter', response.context)
+        self.assertEqual(response.context['shelter'], self.shelter)
 
-    def test_my_shelter_view_with_animals(self):        
+    def test_shelter_view_with_animals(self):        
         # Add some animals to the shelter
         Animal.objects.create(shelter=self.shelter, name="Test Animal 1", species="Dog", age=5, adoption_status="Available")
         Animal.objects.create(shelter=self.shelter, name="Test Animal 2", species="Cat", age=1, adoption_status="Fostered")
         
-        response = self.client.get('/shelters/my-shelter/')
+        response = self.client.get(f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Animal 1")
         self.assertContains(response, "Test Animal 2")
@@ -50,16 +50,16 @@ class EditMyShelterViewTest(TestCase):
         )
         self.client.login(username='testuser', password='testpass')
 
-    def test_edit_my_shelter_view_get(self):
+    def test_edit_shelter_view_get(self):
         # Test GET request to the edit_my_shelter view
-        response = self.client.get('/shelters/my-shelter/edit/')
+        response = self.client.get(f'/shelters/profile/edit/{self.shelter.id}/')
         
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'shelters/edit_my_shelter.html')
+        self.assertTemplateUsed(response, 'shelters/edit_shelter.html')
         self.assertIsInstance(response.context['form'], ShelterForm)
         self.assertEqual(response.context['form'].instance, self.shelter)
 
-    def test_edit_my_shelter_view_post_valid(self):
+    def test_edit_shelter_view_post_valid(self):
         # Test POST request with valid data
         data = {
             'name': 'Updated Test Shelter',
@@ -67,16 +67,16 @@ class EditMyShelterViewTest(TestCase):
             'website': 'https://www.updatedshelter.com',
             'description': 'An updated description.'
         }
-        response = self.client.post('/shelters/my-shelter/edit/', data)
+        response = self.client.post(f'/shelters/profile/edit/{self.shelter.id}/', data)
 
         self.shelter.refresh_from_db()
-        self.assertRedirects(response, '/shelters/my-shelter/')
+        self.assertRedirects(response, f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(self.shelter.name, 'Updated Test Shelter')
         self.assertEqual(self.shelter.registration_number, '987654321')
         self.assertEqual(self.shelter.website, 'https://www.updatedshelter.com')
         self.assertEqual(self.shelter.description, 'An updated description.')
 
-    def test_edit_my_shelter_view_post_invalid(self):
+    def test_edit_shelter_view_post_invalid(self):
         # Test POST request with invalid data
         data = {
             'name': '',  # Name is required
@@ -84,21 +84,22 @@ class EditMyShelterViewTest(TestCase):
             'website': 'https://www.updatedshelter.com',
             'description': 'An updated description.'
         }
-        response = self.client.post('/shelters/my-shelter/edit/', data)
+        response = self.client.post(f'/shelters/profile/edit/{self.shelter.id}/', data)
 
         # Should rerender page
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'shelters/edit_my_shelter.html')
+        self.assertTemplateUsed(response, 'shelters/edit_shelter.html')
         self.assertFalse(response.context['form'].is_valid())
         self.assertIn('name', response.context['form'].errors)
 
-    def test_edit_my_shelter_view_no_shelter(self):
+    def test_edit_shelter_view_no_shelter(self):
         # Test when the user has no shelter
+        id = self.shelter.id
         self.shelter.delete()
-        response = self.client.get('/shelters/my-shelter/edit/')
+        response = self.client.get(f'/shelters/profile/edit/{id}/')
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/shelters/my-shelter/')
+        self.assertRedirects(response, '/')
 
 
 class DeleteMyShelterViewTest(TestCase):
@@ -113,16 +114,16 @@ class DeleteMyShelterViewTest(TestCase):
             description="A test shelter."
         )
 
-    def test_delete_my_shelter_post_request(self):
-        response = self.client.post('/shelters/my-shelter/delete/')
+    def test_delete_shelter_post_request(self):
+        response = self.client.post('/shelters/profile/delete/')
         self.assertRedirects(response, '/')
         self.assertFalse(User.objects.filter(username='testuser').exists())
         self.assertFalse(Shelter.objects.filter(name='Test Shelter').exists())
 
-    def test_delete_my_shelter_get_request(self):
-        response = self.client.get('/shelters/my-shelter/delete/')
+    def test_delete_shelter_get_request(self):
+        response = self.client.get('/shelters/profile/delete/')
         self.assertTrue(User.objects.filter(username='testuser').exists())
-        self.assertTemplateUsed(response, 'shelters/my_shelter.html')
+        self.assertTemplateUsed(response, 'shelters/shelter.html')
         self.assertEqual(response.status_code, 200)
 
 

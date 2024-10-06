@@ -20,7 +20,7 @@ class AddAnimalViewTest(TestCase):
     def test_redirect_if_no_shelter(self):
         self.shelter.delete()
         response = self.client.get('/animals/add/')
-        self.assertRedirects(response, '/shelters/my-shelter/')
+        self.assertRedirects(response, '/')
     
     def test_add_animal_post_request(self):
         data = {
@@ -31,7 +31,7 @@ class AddAnimalViewTest(TestCase):
         }
         response = self.client.post('/animals/add/', data)
 
-        self.assertRedirects(response, '/shelters/my-shelter/')
+        self.assertRedirects(response, f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(Animal.objects.count(), 1)
         self.assertEqual(Animal.objects.first().shelter, self.shelter)
 
