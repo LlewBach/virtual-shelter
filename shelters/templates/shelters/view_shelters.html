@@ -1,19 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="text-center">All Shelters</h1>
-<ul>
-  {% for shelter in shelters %}
-  <li>
-    <a href="">{{ shelter.name }}</a>
-    - Registration Number: {{ shelter.registration_number }}
-    <br>
-    Website: <a href="{{ shelter.website }}">{{ shelter.website }}</a>
-    <br>
-    Description: {{ shelter.description }}
-  </li>
-  {% empty %}
-  <li>No shelters available.</li>
-  {% endfor %}
-</ul>
+<h1 class="text-center mt-3 mb-4">All Shelters</h1>
+
+<div class="container mb-4">
+  <div class="row">
+    {% for shelter in shelters %}
+    <div class="col-4 d-flex flex-column align-items-center">
+      <a href="">
+        <img src="" alt="Image of {{ shelter.name }}" style="width:200px; height:auto;">
+      </a>
+      <a href="">
+        <h3>{{ shelter.name }}</h3>
+      </a>
+      <a href="{{ shelter.website }}" target="_blank">Link to Website</a>
+      <p>FYI {{ shelter.registration_number }}</p>
+      <p>{{ shelter.description }}</p>
+    </div>
+    {% empty %}
+    <h3 class="text-center">No shelters registered</h3>
+    {% endfor %}
+  </div>
+</div>
+
 {% endblock %}
