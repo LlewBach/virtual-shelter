@@ -41,7 +41,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form action="{% url 'delete_my_shelter' %}" method="POST">
+              <form action="{% url 'delete_shelter' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Confirm</button>
               </form>

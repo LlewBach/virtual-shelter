@@ -33,18 +33,18 @@ def edit_shelter(request, id):
     else:
         form = ShelterForm(instance=shelter)
     
-    return render(request, 'shelters/edit_my_shelter.html', {'form': form, 'shelter': shelter})
+    return render(request, 'shelters/edit_shelter.html', {'form': form, 'shelter': shelter})
 
 
 @login_required
-def delete_my_shelter(request):
+def delete_shelter(request):
     if request.method == 'POST':
         user = request.user
         user.delete()
         logout(request)
         return redirect('home')
     else:
-        return render(request, 'shelters/my_shelter.html')
+        return render(request, 'shelters/shelter.html')
 
 
 def view_shelters(request):

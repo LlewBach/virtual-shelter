@@ -7,10 +7,9 @@ from .forms import ShelterForm
 
 
 # Views
-class MyShelterViewTest(TestCase):
+class ShelterViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        # Create a shelter associated with the test user
         self.shelter = Shelter.objects.create(
             admin=self.user,
             name='Test Shelter',
@@ -20,7 +19,7 @@ class MyShelterViewTest(TestCase):
         )
         self.client.login(username='testuser', password='testpassword')
 
-    def test_my_shelter_view_with_shelter(self):
+    def test_shelter_view_with_shelter(self):
         response = self.client.get('/shelters/my-shelter/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shelters/my_shelter.html')
