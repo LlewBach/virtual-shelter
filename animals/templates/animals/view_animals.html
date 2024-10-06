@@ -7,9 +7,11 @@
   <div class="row">
     {% for animal in animals %}
     <div class="col-4 d-flex flex-column align-items-center">
+      {% if animal.image %}
       <a href="{% url 'animal_profile' animal.id %}">
         <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:200px; height:auto;">
       </a>
+      {% endif %}
       <a href="{% url 'animal_profile' animal.id %}">
         <h3>{{ animal.name }}</h3>
       </a>

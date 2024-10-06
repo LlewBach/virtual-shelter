@@ -7,9 +7,11 @@
   <div class="row">
     {% for shelter in shelters %}
     <div class="col-4 d-flex flex-column align-items-center">
+      {% if shelter.image %}
       <a href="">
-        <img src="" alt="Image of {{ shelter.name }}" style="width:200px; height:auto;">
+        <img src="{{ shelter.image.url }}" alt="Image of {{ shelter.name }}" style="width:200px; height:auto;">
       </a>
+      {% endif %}
       <a href="">
         <h3>{{ shelter.name }}</h3>
       </a>

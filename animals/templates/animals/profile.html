@@ -6,7 +6,9 @@
 <div class="container mb-4">
   <div class="row">
     <div class="col-6">
+      {% if animal.image %}
       <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:400px; height:auto;">
+      {% endif %}
     </div>
     <div class="col-4">
       <p>Shelter: {{ animal.shelter }}</p>

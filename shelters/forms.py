@@ -4,4 +4,4 @@ from .models import Shelter
 class ShelterForm(forms.ModelForm):
     class Meta:
         model = Shelter
-        fields = ['name', 'registration_number', 'website', 'description']
+        fields = ['image', 'name', 'registration_number', 'website', 'description']

@@ -41,7 +41,7 @@ def edit_profile(request, id):
         return redirect('home')
 
     if request.method == 'POST':
-        form = AnimalForm(request.POST, instance=animal)
+        form = AnimalForm(request.POST, request.FILES, instance=animal)
         if form.is_valid():
             form.save()
             return redirect('animal_profile', id=animal.id)
