@@ -7,7 +7,11 @@
   <div class="row">
     <div class="col-4">
       <!-- image -->
+      {% if my_shelter.image %}
       <img src="{{ my_shelter.image.url }}" alt="Image of {{ animal.name }}" style="width:200px; height:auto;">
+      {% else %}
+      <p>Click Edit Profile to add logo</p>
+      {% endif %}
     </div>
     <div class="col-6 d-flex flex-column">
       <div>
