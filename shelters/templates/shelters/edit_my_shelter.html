@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h1 class="text-center mt-3 mb-4">Edit My Shelter</h1>
+<h1 class="text-center mt-3 mb-4">Edit Shelter Profile</h1>
 
 <div class="container mb-5">
   <div class="row">
@@ -13,6 +13,7 @@
           {{ form|crispy }}
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'shelter_profile' id=shelter.id %}" class="btn btn-primary">Cancel</a>
           </div>
         </form>
       </div>

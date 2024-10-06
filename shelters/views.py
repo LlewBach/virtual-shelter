@@ -19,21 +19,21 @@ def profile(request, id):
 
 
 @login_required
-def edit_my_shelter(request):
+def edit_shelter(request, id):
     try:
-        my_shelter = Shelter.objects.get(admin=request.user)
+        shelter = Shelter.objects.get(id=id)
     except Shelter.DoesNotExist:
-        return redirect('my_shelter')
+        return redirect('shelter_profile')
     
     if request.method == 'POST':
-        form = ShelterForm(request.POST, request.FILES, instance=my_shelter)
+        form = ShelterForm(request.POST, request.FILES, instance=shelter)
         if form.is_valid():
             form.save()
-            return redirect('my_shelter')
+            return redirect('shelter_profile', id=shelter.id)
     else:
-        form = ShelterForm(instance=my_shelter)
+        form = ShelterForm(instance=shelter)
     
-    return render(request, 'shelters/edit_my_shelter.html', {'form': form})
+    return render(request, 'shelters/edit_my_shelter.html', {'form': form, 'shelter': shelter})
 
 
 @login_required
