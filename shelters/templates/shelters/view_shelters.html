@@ -8,16 +8,17 @@
     {% for shelter in shelters %}
     <div class="col-4 d-flex flex-column align-items-center">
       {% if shelter.image %}
-      <a href="">
+      <a href="{% url 'shelter_profile' shelter.id %}">
         <img src="{{ shelter.image.url }}" alt="Image of {{ shelter.name }}" style="width:200px; height:auto;">
       </a>
       {% endif %}
-      <a href="">
-        <h3>{{ shelter.name }}</h3>
+      <a href="{% url 'shelter_profile' shelter.id %}">
+        <h2>{{ shelter.name }}</h2>
       </a>
       <a href="{{ shelter.website }}" target="_blank">Link to Website</a>
       <p>FYI {{ shelter.registration_number }}</p>
       <p>{{ shelter.description }}</p>
+      <p>{{ shelter.id }}</p>
     </div>
     {% empty %}
     <h3 class="text-center">No shelters registered</h3>

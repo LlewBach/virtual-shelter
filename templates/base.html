@@ -44,7 +44,7 @@
             <a class="nav-link" href="{% url 'profile' %}">Profile</a>
             {% endif %}
             {% if user.profile.role == 'shelter_admin' %}
-            <a class="nav-link" href="{% url 'my_shelter' %}">My Shelter</a>
+            <a class="nav-link" href="{% url 'shelter_profile' user.shelter.id %}">My Shelter</a>
             {% endif %}
             <a class="nav-link" href="{% url 'view_shelters' %}">Shelters</a>
             <a class="nav-link" href="{% url 'view_animals' %}">Animals</a>

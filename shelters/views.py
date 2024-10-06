@@ -7,15 +7,15 @@ from .forms import ShelterForm
 
 
 @login_required
-def my_shelter(request):
+def profile(request, id):
     try:
-        my_shelter = Shelter.objects.get(admin=request.user)
+        shelter = Shelter.objects.get(id=id)
     except Shelter.DoesNotExist:
-        return render(request, 'shelters/my_shelter.html')
+        return render(request, 'shelters/shelter.html')
     
-    animals = my_shelter.animals.all()
+    animals = shelter.animals.all()
     
-    return render(request, 'shelters/my_shelter.html', {'my_shelter': my_shelter, 'animals': animals})
+    return render(request, 'shelters/shelter.html', {'shelter': shelter, 'animals': animals})
 
 
 @login_required
