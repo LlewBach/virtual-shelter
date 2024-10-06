@@ -26,7 +26,7 @@ def edit_my_shelter(request):
         return redirect('my_shelter')
     
     if request.method == 'POST':
-        form = ShelterForm(request.POST, instance=my_shelter)
+        form = ShelterForm(request.POST, request.FILES, instance=my_shelter)
         if form.is_valid():
             form.save()
             return redirect('my_shelter')
