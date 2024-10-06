@@ -60,7 +60,7 @@ class SelectSpriteViewTests(TestCase):
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available',
+            adoption_status='Available',
             image=self.image
         )
 
@@ -83,7 +83,9 @@ class SelectSpriteViewTests(TestCase):
             'colour': Sprite.ColourChoices.ONE
         }
         response = self.client.post(url, data)
+        self.animal.refresh_from_db()
         self.assertEqual(Sprite.objects.count(), 1)
+        self.assertEqual(self.animal.adoption_status, 'Fostered')
         self.assertRedirects(response, '/dashboard/')
 
     def test_select_sprite_post_invalid(self):
@@ -119,7 +121,7 @@ class DeleteSpriteTests(TestCase):
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available'
+            adoption_status='Available'
         )
         self.sprite = Sprite.objects.create(
             user=self.user,

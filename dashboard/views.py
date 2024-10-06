@@ -33,6 +33,10 @@ def select_sprite(request, id):
             sprite.colour = colour_choice
             sprite.url = f'{breed_choice}/{colour_choice}'
             sprite.save()
+
+            animal.fosterer = request.user.profile
+            animal.adoption_status = 'Fostered'
+            animal.save()
             return redirect('dashboard')
     else:
         form = SpriteForm()

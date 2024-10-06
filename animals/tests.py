@@ -27,7 +27,7 @@ class AddAnimalViewTest(TestCase):
             'name': 'Test Animal',
             'species': 'Dog',
             'age': 4,
-            'adoption_status': 'available',
+            'adoption_status': 'Available',
         }
         response = self.client.post('/animals/add/', data)
 
@@ -47,7 +47,7 @@ class ProfileViewTest(TestCase):
             name="Test Animal",
             species="Dog",
             age=4,
-            adoption_status='available',
+            adoption_status='Available',
             image=self.image
         )
 
@@ -85,7 +85,7 @@ class EditProfileViewTest(TestCase):
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available',
+            adoption_status='Available',
             image=self.image
         )
         self.client.login(username='testuser', password='12345')
@@ -116,7 +116,7 @@ class EditProfileViewTest(TestCase):
             'species': 'Cat',
             'age': 5,
             'description': 'A friendly cat',
-            'adoption_status': 'fostered'
+            'adoption_status': 'Fostered'
         }
         response = self.client.post(f'/animals/edit-profile/{self.animal.id}/', data)
         
@@ -126,7 +126,7 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(self.animal.species, 'Cat')
         self.assertEqual(self.animal.age, 5)
         self.assertEqual(self.animal.description, 'A friendly cat')
-        self.assertEqual(self.animal.adoption_status, 'fostered')
+        self.assertEqual(self.animal.adoption_status, 'Fostered')
     
     def test_edit_profile_view_with_invalid_data(self):
         # Test POST request with invalid data
@@ -160,7 +160,7 @@ class DeleteProfileViewTest(TestCase):
             species="Dog",
             age=4,
             description="A friendly dog",
-            adoption_status='available'
+            adoption_status='Available'
         )
     
     def test_delete_animal_profile_as_admin(self):
@@ -199,7 +199,7 @@ class ViewAnimalsViewTest(TestCase):
             breed = "Collie",
             age = 3,
             description = "A honey bunny",
-            adoption_status = "available"
+            adoption_status = "Available"
         )
     
     def test_view(self):
@@ -228,7 +228,7 @@ class AddUpdateViewTest(TestCase):
             breed = "Collie",
             age = 3,
             description = "A honey bunny",
-            adoption_status = "available",
+            adoption_status = "Available",
             image = self.image
         )
         self.url = f'/animals/add-update/{self.animal.id}/'
@@ -367,7 +367,7 @@ class AnimalModelTest(TestCase):
             breed="Labrador",
             age=3,
             description="A friendly dog",
-            adoption_status="available",
+            adoption_status="Available",
             image = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
     
         )
@@ -376,7 +376,7 @@ class AnimalModelTest(TestCase):
         self.assertEqual(self.animal.breed, "Labrador")
         self.assertEqual(self.animal.age, 3)
         self.assertEqual(self.animal.description, "A friendly dog")
-        self.assertEqual(self.animal.adoption_status, "available")
+        self.assertEqual(self.animal.adoption_status, "Available")
         self.assertEqual(self.animal.shelter, self.shelter)
         self.assertTrue(self.animal.image)
 
@@ -398,9 +398,10 @@ class AnimalModelTest(TestCase):
             species="Cat",
             age=2
         )
+        self.assertIsNone(self.animal.fosterer)
         self.assertIsNone(self.animal.breed)
         self.assertIsNone(self.animal.description)
-        self.assertEqual(self.animal.adoption_status, "available")  # Default status
+        self.assertEqual(self.animal.adoption_status, "Available")  # Default status
 
     # def test_animal_missing_required_fields(self):
     #     with self.assertRaises(IntegrityError):

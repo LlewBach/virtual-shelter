@@ -11,7 +11,8 @@ from .forms import RoleChangeRequestForm
 @login_required
 def profile(request):
     user_profile = Profile.objects.get(user=request.user)
-    return render(request, 'profiles/profile.html', {'profile': user_profile})
+    animals = user_profile.animals.all()
+    return render(request, 'profiles/profile.html', {'profile': user_profile, 'animals': animals})
 
 
 @login_required

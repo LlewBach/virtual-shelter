@@ -8,6 +8,8 @@ from django.conf import settings
 from unittest.mock import patch, Mock
 import stripe
 import json
+from shelters.models import Shelter
+from animals.models import Animal
 from .models import Profile, RoleChangeRequest
 from .admin import ProfileAdmin, RoleChangeRequestAdmin
 from .forms import RoleChangeRequestForm
@@ -18,19 +20,30 @@ class ProfileViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.client.login(username='testuser', password='12345')
+        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.animal = Animal.objects.create(
+            shelter=self.shelter,
+            name='Buddy',
+            species='Dog',
+            age=3,
+            description='Good doggo',
+            adoption_status='Available',
+            fosterer=self.user.profile
+        )
 
     def test_profile_view(self):
         response = self.client.get('/profiles/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profiles/profile.html')
         self.assertContains(response, 'Role: user')
+        self.assertIn(self.animal, response.context['animals'])
 
     def test_profile_requires_login(self):
         response = self.client.get('/profiles/')
         self.assertEqual(response.status_code, 200)
         self.client.logout()
         response = self.client.get('/profiles/')
-        self.assertNotEqual(response.status_code, 200)        
+        self.assertNotEqual(response.status_code, 200)
 
 
 class ApplyForRoleChangeViewTest(TestCase):
