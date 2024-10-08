@@ -34,6 +34,18 @@ img {
 
 .wrapper {
   max-width: 50%;
+  border: 1px solid red;
+}
+
+/* SPRITE SELECTOR */
+
+.col-6 {
+  border: 1px solid purple;
+}
+
+.carousel {
+  border: 1px solid green;
+  width: 40%;
 }
 
 /* DASHBOARD */

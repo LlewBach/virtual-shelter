@@ -2,87 +2,96 @@
 {% load static %}
 
 {% block content %}
-<h1>Select Sprite</h1>
+<h1 class="text-center mt-3 mb-4">Select Sprite</h1>
 
 <form method="POST">
   {% csrf_token %}
-  <!-- Breed Choice -->
-  <div class="wrapper">
-    <div id="breedCarousel" class="carousel slide">
-      <!-- Indicators -->
-      <div class="carousel-indicators">
-        {% for value, name in form.fields.breed.choices %}
-        {% if forloop.first %}
-        <button type="button" data-bs-target="#breedCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="active"
-          aria-current="true" aria-label="Slide {{ forloop.counter1 }}"></button>
-        {% else %}
-        <button type="button" data-bs-target="#breedCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
-          aria-label="Slide {{ forloop.counter1 }}"></button>
-        {% endif %}
-        {% endfor %}
-      </div>
-
-      <div class="carousel-inner">
-        {% for value, name in form.fields.breed.choices %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-value="{{ value }}">
-          <img src="{% static 'images/spritepics/'|add:value|add:'/one.png' %}" class="d-block w-100 breed-option"
-            alt="{{ name }}">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
+  <div class="container mb-3">
+    <div class="row">
+      <div class="col-6 d-flex flex-column align-items-center">
+        <h2 class="text-center">Choose Breed</h2>
+        <!-- Breed Choice -->
+        <div id="breedCarousel" class="carousel slide">
+          <!-- Indicators -->
+          <div class="carousel-indicators">
+            {% for value, name in form.fields.breed.choices %}
+            {% if forloop.first %}
+            <button type="button" data-bs-target="#breedCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+              class="active" aria-current="true" aria-label="Slide {{ forloop.counter1 }}"></button>
+            {% else %}
+            <button type="button" data-bs-target="#breedCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+              aria-label="Slide {{ forloop.counter1 }}"></button>
+            {% endif %}
+            {% endfor %}
           </div>
+
+          <div class="carousel-inner">
+            {% for value, name in form.fields.breed.choices %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-value="{{ value }}">
+              <img src="{% static 'images/spritepics/'|add:value|add:'/one.png' %}" class="d-block w-100 breed-option"
+                alt="{{ name }}">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>First slide label</h5>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#breedCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#breedCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-        {% endfor %}
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#breedCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#breedCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+      <div class="col-6 d-flex flex-column align-items-center">
+        <h2 class="text-center">Choose Colour</h2>
+        <!-- Colour Choice -->
+        <div id="spriteCarousel" class="carousel slide">
+          <!-- Indicators -->
+          <div class="carousel-indicators">
+            {% for value, name in form.fields.colour.choices %}
+            {% if forloop.first %}
+            <button type="button" data-bs-target="#spriteCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+              class="active" aria-current="true" aria-label="Slide {{ forloop.counter1 }}"></button>
+            {% else %}
+            <button type="button" data-bs-target="#spriteCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+              aria-label="Slide {{ forloop.counter1 }}"></button>
+            {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="carousel-inner">
+            {% for value, name in form.fields.colour.choices %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="" class="d-block w-100 sprite-option" data-value="{{ value }}" alt="{{ name }}">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>First slide label</h5>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#spriteCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#spriteCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Colour Choice -->
-  <div class="wrapper">
-    <div id="spriteCarousel" class="carousel slide">
-      <!-- Indicators -->
-      <div class="carousel-indicators">
-        {% for value, name in form.fields.colour.choices %}
-        {% if forloop.first %}
-        <button type="button" data-bs-target="#spriteCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="active"
-          aria-current="true" aria-label="Slide {{ forloop.counter1 }}"></button>
-        {% else %}
-        <button type="button" data-bs-target="#spriteCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
-          aria-label="Slide {{ forloop.counter1 }}"></button>
-        {% endif %}
-        {% endfor %}
-      </div>
-
-      <div class="carousel-inner">
-        {% for value, name in form.fields.colour.choices %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <img src="" class="d-block w-100 sprite-option" data-value="{{ value }}" alt="{{ name }}">
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#spriteCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#spriteCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
+  <div class=text-center>
+    <button type="submit" class="btn btn-primary">Submit</button>
   </div>
+
   <input type="hidden" name="breed" id="breedInput">
   <input type="hidden" name="colour" id="colourInput">
-  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <script>
