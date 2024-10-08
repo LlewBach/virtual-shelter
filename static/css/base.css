@@ -39,13 +39,11 @@ img {
 
 /* SPRITE SELECTOR */
 
-.col-6 {
-  border: 1px solid purple;
-}
-
 .carousel {
   border: 1px solid green;
-  width: 40%;
+  border-radius: 20px;
+  width: 60%;
+  padding: 30px;
 }
 
 /* DASHBOARD */
