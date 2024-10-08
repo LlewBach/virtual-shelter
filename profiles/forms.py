@@ -5,7 +5,7 @@ from .models import Profile, RoleChangeRequest
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio']
+        fields = ['profile_picture', 'bio']
 
 
 class RoleChangeRequestForm(forms.ModelForm):
