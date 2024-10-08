@@ -46,10 +46,15 @@ def select_sprite(request, id):
 
 def delete_sprite(request, id):
     sprite = get_object_or_404(Sprite, id=id)
-    
-    # needs to test if owner
+
+    if sprite.user != request.user:
+        return redirect('dashboard')
 
     if request.method == 'POST':
+        animal = sprite.animal
+        animal.fosterer = None
+        animal.adoption_status = 'Available'
+        animal.save()
         sprite.delete()
 
     return redirect('dashboard')

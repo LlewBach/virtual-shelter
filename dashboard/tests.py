@@ -133,10 +133,11 @@ class DeleteSpriteTests(TestCase):
 
     def test_sprite_deletion(self):
         self.assertEqual(Sprite.objects.count(), 1)
-        
         url = f'/dashboard/delete-sprite/{self.sprite.id}/'
         response = self.client.post(url)
         self.assertEqual(Sprite.objects.count(), 0)
+        self.assertEqual(self.animal.fosterer, None)
+        self.assertEqual(self.animal.adoption_status, 'Available')
         self.assertRedirects(response, '/dashboard/')
 
 
