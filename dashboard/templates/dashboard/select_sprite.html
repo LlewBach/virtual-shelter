@@ -30,9 +30,6 @@
             <div class="carousel-item {% if forloop.first %}active{% endif %}" data-value="{{ value }}">
               <img src="{% static 'images/spritepics/'|add:value|add:'/one.png' %}" class="d-block w-100 breed-option"
                 alt="{{ name }}">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>First slide label</h5>
-              </div>
             </div>
             {% endfor %}
           </div>
@@ -67,9 +64,6 @@
             {% for value, name in form.fields.colour.choices %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
               <img src="" class="d-block w-100 sprite-option" data-value="{{ value }}" alt="{{ name }}">
-              <div class="carousel-caption d-none d-md-block">
-                <h5>First slide label</h5>
-              </div>
             </div>
             {% endfor %}
           </div>
@@ -99,36 +93,40 @@
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const breedCarousel = document.getElementById('breedCarousel');
-    const breedItems = breedCarousel.querySelectorAll('.carousel-item');
+
     const spriteCarouselImages = document.querySelectorAll('#spriteCarousel .carousel-item img');
 
     function updateSpriteImages(breed) {
       spriteCarouselImages.forEach(img => {
         const colorStyle = img.dataset.value;
-        // img.src = `/static/images/spritepics/${breed}/${colorStyle}.png`;
         img.src = `${STATIC_URL}${breed}/${colorStyle}.png`;
       });
       const breedInput = document.getElementById('breedInput');
       breedInput.value = breed;
+
+      // Set the initial color input value based on the first shown image
+      const activeColorItem = spriteCarousel.querySelector('.carousel-item.active img');
+      const colourInput = document.getElementById('colourInput');
+      colourInput.value = activeColorItem.dataset.value;
     }
 
-    // Listen for slide change events in the breed carousel
+    const breedCarousel = document.getElementById('breedCarousel');
+    const initialActiveBreedItem = breedCarousel.querySelector('.carousel-item.active');
+    const initialSelectedBreed = initialActiveBreedItem.dataset.value;
+    updateSpriteImages(initialSelectedBreed);
+
     breedCarousel.addEventListener('slid.bs.carousel', function (event) {
       const activeBreedItem = breedCarousel.querySelector('.carousel-item.active');
       const selectedBreed = activeBreedItem.dataset.value;
-      console.log(selectedBreed);
       const breedInput = document.getElementById('breedInput');
       breedInput.value = selectedBreed;
       updateSpriteImages(selectedBreed);
     });
 
-    // Setup click listeners for each sprite image to update the hidden input
-    spriteCarouselImages.forEach(img => {
-      img.addEventListener('click', function () {
-        const colourInput = document.getElementById('colourInput');
-        colourInput.value = this.dataset.value;
-      });
+    spriteCarousel.addEventListener('slid.bs.carousel', function () {
+      const activeColorItem = spriteCarousel.querySelector('.carousel-item.active img');
+      const colourInput = document.getElementById('colourInput');
+      colourInput.value = activeColorItem.dataset.value;
     });
   });
 </script>
