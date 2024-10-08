@@ -1,10 +1,13 @@
+/* GENERAL */
+
 body {
   background-color: #0b0b32;
 }
 
 h1,
 h2,
-h3 {
+h3,
+hr {
   color: #d8d9f7;
 }
 
@@ -15,26 +18,19 @@ label {
   font-size: 1.25rem;
 }
 
-/* NAVBAR */
-
-/* .navbar {
-  background-color: #080925;
-} */
-
-/* HOME PAGE */
-
-.home-section {
-  background-color: #080925;
-  border-radius: 20px;
-}
-
 img {
   border-radius: 10px;
 }
 
 .wrapper {
   max-width: 50%;
-  border: 1px solid red;
+}
+
+/* HOME PAGE */
+
+.home-section {
+  background-color: #080925;
+  border-radius: 20px;
 }
 
 /* SPRITE SELECTOR */
