@@ -1,6 +1,7 @@
 import stripe
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
@@ -31,6 +32,17 @@ def edit_profile(request):
         form = ProfileForm(instance=user_profile)
 
     return render(request, 'profiles/edit_profile.html', {'form': form})
+
+
+@login_required
+def delete_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        logout(request)
+        return redirect('home')
+    else:
+        return render(request, 'profiles/profile.html')
 
 
 @login_required

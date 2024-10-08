@@ -74,6 +74,25 @@ class EditProfileViewTest(TestCase):
         self.assertRedirects(response, '/profiles/')
 
 
+class DeleteProfileViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+        self.user.profile.bio = 'Test bio'
+
+    def test_delete_profile_post_request(self):
+        response = self.client.post('/profiles/delete/')
+        self.assertRedirects(response, '/')
+        self.assertFalse(User.objects.filter(username='testuser').exists())
+        self.assertFalse(Profile.objects.filter(bio='Test bio').exists())
+
+    def test_delete_profile_get_request(self):
+        response = self.client.get('/profiles/delete/')
+        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertTemplateUsed(response, 'profiles/profile.html')
+        self.assertEqual(response.status_code, 200)
+
+
 class ApplyForRoleChangeViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')

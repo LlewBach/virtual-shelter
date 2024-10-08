@@ -25,8 +25,8 @@
     </div>
     <div class="col-2 d-flex flex-column justify-content-between">
       {% if request.user == shelter.admin %}
-      <a href="{% url 'edit_shelter' shelter.id %}" class="btn btn-primary">Edit Profile</a>
-      <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Profile</a>
+      <a href="{% url 'edit_shelter' shelter.id %}" class="btn btn-primary mb-3">Edit Profile</a>
+      <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Profile</a>
 
       <!-- Delete Modal -->
       <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
