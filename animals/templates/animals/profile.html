@@ -48,7 +48,7 @@
 
       <a href="{% url 'add_update' animal.id %}" class="btn btn-primary">Add Update</a>
 
-      {% else %}
+      {% elif user.profile.role == 'user' %}
 
       <a href="{% url 'select_sprite' animal.id %}" class="btn btn-primary">Foster</a>
 
