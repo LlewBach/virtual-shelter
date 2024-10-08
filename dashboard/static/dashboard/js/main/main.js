@@ -41,7 +41,7 @@ export class Game {
 window.addEventListener('load', function () {
   const spriteCanvases = document.querySelectorAll('.sprite-canvas');
   spriteCanvases.forEach(canvas => {
-    canvas.width = 200;
+    canvas.width = 300;
     canvas.height = 200;
     const ctx = canvas.getContext('2d');
     const id = canvas.getAttribute('data-id');

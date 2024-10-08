@@ -2,26 +2,82 @@
 {% load static %}
 
 {% block content %}
-<h1 class="text-center">Dashboard</h1>
-<h2 class="text-center"><strong><span id="token-count">{{ profile.tokens }}</span> Tokens</strong></h2>
-<h3 class="text-center"><a href="{% url 'tokens' %}">Buy tokens here</a></h3>
-<!-- <h2>Welcome, {{ request.user.username }}</h2> -->
-<img id="husky" class="spritesheet" src="{% static 'images/spritesheets/husky/one.png' %}">
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <h1 class="text-center">Dashboard</h1>
+    </div>
+    <div class="col-3">
+      <p class="text-center mt-2">
+        <strong><span id="token-count">{{ profile.tokens }}</span> Tokens </strong>
+        <a class="btn btn-primary" href="{% url 'tokens' %}">Top Up</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between">
+  <div></div>
+  <div>
+
+  </div>
+  <div>
+
+  </div>
+</div>
+
+
+<h3 class="text-center"></h3>
 
 <div class="container">
   {% for sprite in sprites %}
+  <h2>{{ sprite.animal.name }}</h2>
   <div class="row">
-    <div class="col-4">
-      <img src="{{ sprite.animal.image.url }}" alt="{{ sprite.animal.name }}" class="img-fluid">
-      <h2>{{ sprite.animal.name }}</h2>
+    <div class="col-3">
+      <div class="text-center">
+        <img src="{{ sprite.animal.image.url }}" alt="{{ sprite.animal.name }}" class="dash-img img-fluid">
+      </div>
+      <div class="text-center">
+        <a class="btn btn-primary mt-3" href="#" data-bs-toggle="modal"
+          data-bs-target="#deleteSpriteModal{{ sprite.id }}">End
+          Foster</a>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteSpriteModal{{ sprite.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Changes cannot be undone!</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'delete_sprite' sprite.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">Confirm</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-4">
-      <canvas class="sprite-canvas" data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
-      <img id="{{ sprite.id }}" class="spritesheet img-fluid"
-        src="{% static 'images/spritesheets/'|add:sprite.url|add:'.png' %}" alt="">
-      <button id="button1-{{ sprite.id }}">Feed</button>
+    <div class="col-6">
+      <div class="text-center">
+        <canvas class="sprite-canvas" data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
+        <img id="{{ sprite.id }}" class="spritesheet img-fluid"
+          src="{% static 'images/spritesheets/'|add:sprite.url|add:'.png' %}" alt="">
+      </div>
+      <div class="text-center">
+        <button id="button1-{{ sprite.id }}" class="btn btn-primary mt-2">Feed</button>
+      </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <canvas class="chart-canvas" id="chart-canvas-{{ sprite.id }}"></canvas>
     </div>
   </div>
@@ -29,40 +85,6 @@
   <p>You have no sprites yet.</p>
   {% endfor %}
 </div>
-
-
-{% for sprite in sprites %}
-<div class="sprite">
-  <img src="{% static 'images/spritepics/'|add:sprite.url|add:'.png' %}" alt="" class="img-fluid">
-  <p>Sprite Name: {{ sprite.animal.name }}</p>
-  <p>Created At: {{ sprite.created_at }}</p>
-  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteSpriteModal{{ sprite.id }}">Delete Sprite</a>
-  <!-- Delete Modal -->
-  <div class="modal fade" id="deleteSpriteModal{{ sprite.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Changes cannot be undone!</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <form action="{% url 'delete_sprite' sprite.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary">Confirm</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% empty %}
-<p>You have no sprites yet.</p>
-{% endfor %}
 
 
 <script type="module" src="{% static 'dashboard/js/main/main.js' %}"></script>

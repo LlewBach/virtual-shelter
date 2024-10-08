@@ -13,7 +13,7 @@ export class Sprite {
     // this.sheet = husky;
     this.spriteWidth = 64;
     this.spriteHeight = 64;
-    this.sizeFactor = 1;
+    this.sizeFactor = 2;
     this.width = this.spriteWidth * this.sizeFactor;
     this.height = this.spriteHeight * this.sizeFactor;
     this.x = (this.game.width - this.width) / 2;

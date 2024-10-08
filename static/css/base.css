@@ -32,11 +32,16 @@ img {
   border-radius: 10px;
 }
 
-
-
-
 .wrapper {
   max-width: 50%;
+}
+
+/* DASHBOARD */
+
+.dash-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 
 canvas {
@@ -45,4 +50,8 @@ canvas {
 
 .spritesheet {
   display: none;
+}
+
+.chart-canvas {
+  width: 200px;
 }
