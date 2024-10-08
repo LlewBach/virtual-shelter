@@ -1,5 +1,12 @@
 from django import forms
-from .models import RoleChangeRequest
+from .models import Profile, RoleChangeRequest
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio']
+
 
 class RoleChangeRequestForm(forms.ModelForm):
     class Meta:

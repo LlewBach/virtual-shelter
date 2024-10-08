@@ -12,7 +12,7 @@ from shelters.models import Shelter
 from animals.models import Animal
 from .models import Profile, RoleChangeRequest
 from .admin import ProfileAdmin, RoleChangeRequestAdmin
-from .forms import RoleChangeRequestForm
+from .forms import ProfileForm, RoleChangeRequestForm
 
 
 # Views
@@ -44,6 +44,34 @@ class ProfileViewTest(TestCase):
         self.client.logout()
         response = self.client.get('/profiles/')
         self.assertNotEqual(response.status_code, 200)
+
+
+class EditProfileViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+    def test_edit_profile_get(self):
+        """
+        Test accessing the edit profile page with a GET request.
+        """
+        response = self.client.get('/profiles/edit/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profiles/edit_profile.html')
+        self.assertIsInstance(response.context['form'], ProfileForm)
+
+    def test_edit_profile_post_valid(self):
+        """
+        Test submitting valid data with a POST request to update the profile.
+        """
+        url = '/profiles/edit/'
+        data = {
+            'bio': 'Hello there!',
+        }
+        response = self.client.post(url, data)
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.bio, 'Hello there!')
+        self.assertRedirects(response, '/profiles/')
 
 
 class ApplyForRoleChangeViewTest(TestCase):

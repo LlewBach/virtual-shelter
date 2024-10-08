@@ -14,9 +14,11 @@
     </div>
     <div class="col-4">
       <p>Role: {{ profile.role }}</p>
+      <p>Bio: {{ profile.bio }}</p>
     </div>
     <div class="col-2">
       {% if profile == user.profile %}
+      <a href="{% url 'edit_profile' %}" class="btn btn-primary mb-3">Edit Profile</a>
       <a href="{% url 'apply_role_change' %}" class="btn btn-primary">Apply to Register Shelter</a>
       {% endif %}
     </div>

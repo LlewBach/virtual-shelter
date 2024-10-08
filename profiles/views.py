@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from .models import Profile
-from .forms import RoleChangeRequestForm
+from .forms import ProfileForm, RoleChangeRequestForm
 
 
 @login_required
@@ -13,6 +13,24 @@ def profile(request):
     user_profile = Profile.objects.get(user=request.user)
     animals = user_profile.animals.all()
     return render(request, 'profiles/profile.html', {'profile': user_profile, 'animals': animals})
+
+
+@login_required
+def edit_profile(request):
+    try:
+        user_profile = Profile.objects.get(user=request.user)
+    except:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=user_profile)
+
+    return render(request, 'profiles/edit_profile.html', {'form': form})
 
 
 @login_required
