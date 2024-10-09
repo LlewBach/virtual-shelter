@@ -98,8 +98,8 @@ def create_checkout_session(request):
                 }
             ],
             mode='payment',
-            success_url = f'{domain}/profiles/tokens/success/',
-            cancel_url = f'{domain}/profiles/tokens/cancel/',
+            success_url = f'{domain}/dashboard/?payment_status=success',
+            cancel_url = f'{domain}/dashboard/?payment_status=cancel',
             metadata={
                 'user_id': request.user.id
             }
@@ -108,16 +108,6 @@ def create_checkout_session(request):
     except Exception as e:
         print("Stripe session creation error:", e)
         return JsonResponse({'error': str(e)}, status=500)
-    
-
-@login_required
-def success_view(request):
-    return HttpResponse("Payment successful! Tokens have been added to your account.")
-
-
-@login_required
-def cancel_view(request):
-    return HttpResponse("Payment canceled. No tokens were added.")
 
     
 @csrf_exempt

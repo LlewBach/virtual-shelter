@@ -217,29 +217,13 @@ class CheckoutSessionTest(TestCase):
                 }
             ],
             mode='payment',
-            success_url='http://testserver/profiles/tokens/success/',
-            cancel_url='http://testserver/profiles/tokens/cancel/',
+            success_url='http://testserver/dashboard/?payment_status=success',
+            cancel_url='http://testserver/dashboard/?payment_status=cancel',
             metadata={'user_id': self.user.id},
         )
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], 'https://mock-checkout-url')
-
-
-class SuccessAndCancelViewsTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='12345')
-        self.client.login(username='testuser', password='12345')
-    
-    def test_success_view_authenticated(self):
-        response = self.client.get('/profiles/tokens/success/')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_cancel_view_authenticated(self):
-        response = self.client.get('/profiles/tokens/cancel/')
-
-        self.assertEqual(response.status_code, 200)
 
 
 class StripeWebhookTest(TestCase):

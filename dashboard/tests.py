@@ -41,6 +41,28 @@ class DashboardViewTests(TestCase):
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
         self.assertEqual(list(response.context['sprites']), [self.sprite])
         self.assertEqual(response.context['profile'], self.user.profile)
+
+    def test_dashboard_view_with_success_payment_status(self):
+        """Test accessing the dashboard with a successful payment status."""
+        response = self.client.get('/dashboard/?payment_status=success')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
+
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].message, "Payment successful! Received 100 tokens.")
+        self.assertEqual(messages[0].tags, "success")
+
+    def test_dashboard_view_with_cancel_payment_status(self):
+        """Test accessing the dashboard with a canceled payment status."""
+        response = self.client.get('/dashboard/?payment_status=cancel')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
+
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].message, "Payment canceled. No tokens added.")
+        self.assertEqual(messages[0].tags, "error")
     
     def tearDown(self):
         if self.animal.image:

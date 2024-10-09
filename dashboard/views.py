@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .forms import SpriteForm
@@ -15,6 +16,15 @@ def dashboard(request):
         'profile': profile,
         'sprites': sprites
     }
+
+    # If redirected from checkout session
+    payment_status = request.GET.get('payment_status')
+
+    if payment_status == 'success':
+        messages.success(request, "Payment successful! Received 100 tokens.")
+    
+    elif payment_status == 'cancel':
+        messages.error(request, "Payment canceled. No tokens added.")
 
     return render(request, 'dashboard/dashboard.html', context)
 
