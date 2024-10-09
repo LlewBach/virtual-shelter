@@ -1,6 +1,7 @@
 import stripe
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -27,6 +28,7 @@ def edit_profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
+            messages.success(request, "Profile saved")
             return redirect('profile')
     else:
         form = ProfileForm(instance=user_profile)

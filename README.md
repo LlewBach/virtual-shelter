@@ -416,6 +416,9 @@ Helped with / taught me about the following:
 
 - Web Dev Creative - [How To Make Responsive Navbar with Bootstrap 5 | Step by Step Tutorial](https://www.youtube.com/watch?v=zOtxP7ahi4M)
 
+- Lun Dev Code - [How To Make Toast Notification In Javascript](https://www.youtube.com/watch?v=6XRmvSdTvMo)
+  - This is how I made my toasts, with only small changes by myself.
+
 # Acknowledgements
 
 [Back to top](#milestone-4-project---virtual-shelter)
