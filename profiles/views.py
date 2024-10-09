@@ -21,7 +21,8 @@ def profile(request):
 def edit_profile(request):
     try:
         user_profile = Profile.objects.get(user=request.user)
-    except:
+    except Profile.DoesNotExist:
+        messages.error(request, "Profile not found")
         return redirect('home')
 
     if request.method == 'POST':
@@ -30,6 +31,8 @@ def edit_profile(request):
             form.save()
             messages.success(request, "Profile saved")
             return redirect('profile')
+        else:
+            messages.error(request, "Error saving - Check the form")
     else:
         form = ProfileForm(instance=user_profile)
 
@@ -39,10 +42,15 @@ def edit_profile(request):
 @login_required
 def delete_profile(request):
     if request.method == 'POST':
-        user = request.user
-        user.delete()
-        logout(request)
-        return redirect('home')
+        try:
+            user = request.user
+            user.delete()
+            messages.success(request, "Profile deleted")
+            logout(request)
+            return redirect('home')
+        except Exception as e:
+            messages.error(request, "Error deleting profile")
+            return redirect('profile')
     else:
         return render(request, 'profiles/profile.html')
 
@@ -55,7 +63,10 @@ def apply_for_role_change(request):
             role_request = form.save(commit=False)
             role_request.user = request.user
             role_request.save()
+            messages.success(request, "Request submitted")
             return redirect('dashboard')
+        else:
+            messages.error(request, "Error with request")
     else:
         form = RoleChangeRequestForm()
     return render(request, 'profiles/apply_role_change.html', {'form': form})

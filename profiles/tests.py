@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import site
+from django.contrib.messages import get_messages
 from django.utils import timezone
 from django.core import mail
 from django.conf import settings
@@ -73,6 +74,22 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(self.user.profile.bio, 'Hello there!')
         self.assertRedirects(response, '/profiles/')
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Profile saved")
+
+    def test_profile_not_found(self):
+        """
+        Test behavior when profile is not found.
+        """
+        self.user.profile.delete()
+        response = self.client.get('/profiles/edit/')
+        self.assertRedirects(response, '/')
+        
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Profile not found")
+
 
 class DeleteProfileViewTest(TestCase):
     def setUp(self):
@@ -85,6 +102,25 @@ class DeleteProfileViewTest(TestCase):
         self.assertRedirects(response, '/')
         self.assertFalse(User.objects.filter(username='testuser').exists())
         self.assertFalse(Profile.objects.filter(bio='Test bio').exists())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Profile deleted")
+    
+    def test_delete_profile_post_request_error(self):
+        """
+        Test if an error occurs during profile deletion and shows the correct error message.
+        """
+        # Simulate an error in deletion by mocking the delete method
+        with patch('django.contrib.auth.models.User.delete', side_effect=Exception('Deletion error')):
+            response = self.client.post('/profiles/delete/')
+            self.assertRedirects(response, '/profiles/')
+            
+            # Check if error message was added
+            messages = list(get_messages(response.wsgi_request))
+            self.assertEqual(len(messages), 1)
+            self.assertEqual(str(messages[0]), "Error deleting profile")
+
 
     def test_delete_profile_get_request(self):
         response = self.client.get('/profiles/delete/')
@@ -113,10 +149,14 @@ class ApplyForRoleChangeViewTest(TestCase):
             'charity_description': 'A charity description.',
         }
         response = self.client.post('/profiles/apply-role-change/', form_data)
-        # Should redirect after successful submission
         self.assertEqual(response.status_code, 302)
-        # self.assertRedirects(response, '/shelters/my-shelter/')
+        self.assertRedirects(response, '/dashboard/')
+   
         self.assertTrue(RoleChangeRequest.objects.filter(user=self.user).exists())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Request submitted")
 
     def test_apply_for_role_change_invalid_submission(self):
         # Simulate an invalid form submission (e.g., missing required fields)
@@ -127,10 +167,12 @@ class ApplyForRoleChangeViewTest(TestCase):
             'charity_description': '',
         }
         response = self.client.post('/profiles/apply-role-change/', form_data)
-        # Should re-render the form with errors
         self.assertEqual(response.status_code, 200)
-        # Check that no request was created
         self.assertFalse(RoleChangeRequest.objects.filter(user=self.user).exists())  
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error with request")
 
 
 class TokensViewTest(TestCase):
