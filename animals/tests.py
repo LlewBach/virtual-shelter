@@ -3,6 +3,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from shelters.models import Shelter
 from .models import Animal, Update
@@ -21,6 +22,11 @@ class AddAnimalViewTest(TestCase):
         self.shelter.delete()
         response = self.client.get('/animals/add/')
         self.assertRedirects(response, '/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You aren't a shelter admin")
+        self.assertEqual(messages[0].tags, 'error')
     
     def test_add_animal_post_request(self):
         data = {
@@ -34,6 +40,31 @@ class AddAnimalViewTest(TestCase):
         self.assertRedirects(response, f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(Animal.objects.count(), 1)
         self.assertEqual(Animal.objects.first().shelter, self.shelter)
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Animal 'Test Animal' added")
+        self.assertEqual(messages[0].tags, 'success')
+
+    def test_invalid_add_animal_post_request(self):
+        """
+        Test an invalid POST request (e.g., missing required fields) to ensure the form is re-rendered with errors.
+        """
+        data = {
+            'name': '',
+            'species': 'Dog',
+            'age': 4,
+            'adoption_status': 'Available',
+        }
+        response = self.client.post('/animals/add/', data)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Animal.objects.count(), 0)
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error adding animal. Check form")
+        self.assertEqual(messages[0].tags, 'error')
 
 
 class ProfileViewTest(TestCase):
@@ -66,6 +97,11 @@ class ProfileViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/')
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Animal not found")
+        self.assertEqual(messages[0].level_tag, 'error')
+
     def tearDown(self):
         # Delete the file after test
         if self.animal.image:
@@ -96,8 +132,11 @@ class EditProfileViewTest(TestCase):
         self.client.login(username='otheruser', password='12345')
         
         response = self.client.get(f'/animals/edit-profile/{self.animal.id}/')
-        
         self.assertRedirects(response, '/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Only shelter admin can edit animal")
     
     def test_edit_profile_view_get(self):
         # Test that the edit profile page renders correctly
@@ -127,6 +166,10 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(self.animal.age, 5)
         self.assertEqual(self.animal.description, 'A friendly cat')
         self.assertEqual(self.animal.adoption_status, 'Fostered')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Animal saved")
     
     def test_edit_profile_view_with_invalid_data(self):
         # Test POST request with invalid data
@@ -142,6 +185,10 @@ class EditProfileViewTest(TestCase):
         self.assertTemplateUsed(response, 'animals/edit_profile.html')
         self.assertFalse(response.context['form'].is_valid())
         self.assertIn('name', response.context['form'].errors)
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error saving animal - Check the form")
     
     def tearDown(self):
         # Delete the file after test
@@ -169,12 +216,18 @@ class DeleteProfileViewTest(TestCase):
         self.assertRedirects(response, '/')
         self.assertFalse(Animal.objects.filter(id=self.animal.id).exists())
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), f"Animal '{self.animal.name}' deleted.")
+
     def test_delete_animal_profile_as_non_admin(self):
         other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.post(f'/animals/delete-profile/{self.animal.id}/')
         self.assertRedirects(response, '/profiles/')
         self.assertTrue(Animal.objects.filter(id=self.animal.id).exists())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), "Only shelter admin can delete animal")
 
     def test_delete_animal_profile_invalid_id(self):
         self.client.login(username='testuser', password='12345')
@@ -247,11 +300,14 @@ class AddUpdateViewTest(TestCase):
         response = self.client.post(self.url, data)
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
 
-        # Check that the update was created
         self.assertEqual(Update.objects.count(), 1)
         update = Update.objects.first()
         self.assertEqual(update.animal, self.animal)
         self.assertEqual(update.text, 'The animal is healthy and doing well.')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), f"Update added for '{self.animal.name}'.")
 
     def test_add_update_view_post_invalid_data(self):
         # Test POST request with invalid data
@@ -260,13 +316,20 @@ class AddUpdateViewTest(TestCase):
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
-        # self.assertFormError(response, 'form', 'text', 'This field is required.')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error adding update - Check the form")
 
     def test_add_update_view_unauthorized_user(self):
         other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.get(self.url)
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Only shelter admin can add update")
 
     def tearDown(self):
         if self.animal.image:
@@ -296,16 +359,36 @@ class EditUpdateViewTest(TestCase):
         self.other_user = User.objects.create_user(username='other', password='12345')
         self.client.login(username='other', password='12345')
         response = self.client.get(self.url)
-
         self.assertEqual(response.status_code, 302)
 
-    def test_edit_update_post(self):
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Only shelter admin can edit this update")
+
+    def test_edit_update_post_valid(self):
         self.client.login(username='admin', password='12345')
         response = self.client.post(self.url, {'text': 'Updated text'})
 
         self.update.refresh_from_db()
         self.assertEqual(self.update.text, 'Updated text')
         self.assertRedirects(response, f'/animals/profile/{self.update.animal.id}/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), f"Update for '{self.animal.name}' edited")
+
+    def test_edit_update_post_invalid(self):
+        self.client.login(username='admin', password='12345')
+        response = self.client.post(self.url, {'text': ''})  # Invalid data
+
+        # Should rerender the form
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'animals/edit_update.html')
+        self.assertFalse(response.context['form'].is_valid())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error editing update - Check the form")
     
     def tearDown(self):
         if self.animal.image:
@@ -330,13 +413,23 @@ class DeleteUpdateViewTest(TestCase):
         self.assertRedirects(response, f'/animals/profile/{self.update.animal.id}/')
         self.assertFalse(Update.objects.filter(id=self.update.id).exists())
 
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), f"Update for '{self.animal.name}' deleted")
+        self.assertEqual(messages[0].level_tag, 'success')
+
     def test_delete_update_as_non_admin(self):
         self.other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.post(self.url)
 
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
-        self.assertTrue(Update.objects.filter(id=self.update.id).exists())  # Update still exists
+        self.assertTrue(Update.objects.filter(id=self.update.id).exists())
+
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Only shelter admin can delete this update")
+        self.assertEqual(messages[0].level_tag, 'error')
 
     def test_delete_update_with_get_request(self):
         self.client.login(username='adminuser', password='12345')
