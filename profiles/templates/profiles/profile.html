@@ -1,53 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="text-center mt-3 mb-4">{{ profile.user.username }}</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <h1 class="text-center mt-3 mb-4">{{ profile.user.username }}</h1>
+    </div>
+    <div class="col-4 d-flex justify-content-end align-items-center">
+      <p><strong>{{ profile.tokens }} Tokens</strong></p>
+    </div>
+  </div>
+</div>
 
 <div class="container mb-4">
   <div class="row">
-    <div class="col-6">
+    <div class="col-md-5 text-center mb-3">
       {% if profile.profile_picture %}
-      <img src="{{ profile.profile_picture.url }}" alt="Image of {{ profile.name }}" style="width:400px; height:auto;">
+      <img src="{{ profile.profile_picture.url }}" alt="Image of {{ profile.name }}" class="img-fluid profile-image">
       {% else %}
       <p>Click Edit Profile to add photo</p>
       {% endif %}
     </div>
-    <div class="col-4">
-      <p>Role: {{ profile.role }}</p>
-      <p>Tokens: {{ profile.tokens }}</p>
+    <div class="col-md-5 text-center">
       <p>Bio: {{ profile.bio }}</p>
+      <!-- 300 characters fits well -->
     </div>
-    <div class="col-2">
+    <div class="col-md-2 d-flex flex-column justify-content-between text-center">
       {% if profile == user.profile %}
-      <a href="{% url 'edit_profile' %}" class="btn btn-primary mb-3">Edit Profile</a>
-      <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Profile</a>
 
-      <!-- Delete Modal -->
-      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>Changes cannot be undone!</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form action="{% url 'delete_profile' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Confirm</button>
-              </form>
+      <div class="row">
+        <div class="col-6 col-md-12">
+          <a href="{% url 'edit_profile' %}" class="btn btn-primary mb-3 me-2">Edit Profile</a>
+        </div>
+        <div class="col-6 col-md-12">
+          <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete
+            Profile</a>
+
+          <!-- Delete Modal -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Changes cannot be undone!</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <form action="{% url 'delete_profile' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary">Confirm</button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="col-12">
+          <a href="{% url 'apply_role_change' %}" class="btn btn-primary mb-3">Apply to Register Shelter</a>
+        </div>
       </div>
-
-      <a href="{% url 'apply_role_change' %}" class="btn btn-primary">Apply to Register Shelter</a>
       {% endif %}
     </div>
   </div>
+  <hr>
 </div>
 
 {% if animals %}
@@ -58,7 +77,7 @@
 <div class="container mb-4">
   <div class="row">
     {% for animal in animals %}
-    <div class="col-4 d-flex flex-column align-items-center">
+    <div class="col-md-4 d-flex flex-column align-items-center">
       {% if animal.image %}
       <a href="{% url 'animal_profile' animal.id %}">
         <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:200px; height:auto;">

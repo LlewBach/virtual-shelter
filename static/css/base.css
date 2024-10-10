@@ -22,6 +22,16 @@ img {
   border-radius: 10px;
 }
 
+.profile-image {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+}
+
+.btn {
+  max-width: 200px;
+}
+
 .wrapper {
   max-width: 50%;
 }
