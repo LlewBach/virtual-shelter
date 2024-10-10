@@ -278,6 +278,12 @@ List of packages
 - Heroku - App deployment platform
 - AWS S3 - Media file hosting
 
+## Images
+
+- [Font Awesome](https://fontawesome.com/) - Icons
+- [ImageResizer.com](https://imageresizer.com/image-compressor) - Image compressor
+- [favicon.io](https://favicon.io/favicon-converter/) - png to favicon generator
+
 ## Database
 
 - Postgres
@@ -399,6 +405,9 @@ os.environ.setdefault("STRIPE_WH_SECRET", 'your own value')
 
 ### Sprite Sheets
 - [GirlyPixels](https://girlypixels.itch.io/) - The creator of the purchased spritesheets.
+
+### Logo and favicon
+- GPT-4
 
 ## Code
 
