@@ -5,28 +5,27 @@
 
 <div class="container mb-4">
   <div class="row">
-    <div class="col-4">
+    <div class="col-md-4 text-center mb-3">
       {% if shelter.image %}
-      <img src="{{ shelter.image.url }}" alt="Logo of {{ shelter.name }}" style="width:200px; height:auto;">
+      <img src="{{ shelter.image.url }}" alt="Logo of {{ shelter.name }}" class="profile-image">
       {% else %}
       <p>Click Edit Profile to add logo</p>
       {% endif %}
     </div>
-    <div class="col-6 d-flex flex-column">
-      <div>
-        {% if shelter %}
-        <p><strong>Registration Number:</strong> {{ shelter.registration_number }}</p>
-        <p><strong>Website:</strong> <a href="{{ shelter.charity_website }}">{{ shelter.website }}</a></p>
-        <p><strong>Description:</strong> {{ shelter.description }}</p>
-        {% else %}
-        <p>No Shelter</p>
-        {% endif %}
-      </div>
+    <div class="col-md-6">
+      {% if shelter %}
+      <p><strong>Registration Number:</strong> {{ shelter.registration_number }}</p>
+      <p><strong>Website:</strong> <a href="{{ shelter.charity_website }}">{{ shelter.website }}</a></p>
+      <p><strong>Description:</strong> {{ shelter.description }}</p>
+      {% else %}
+      <p>No Shelter</p>
+      {% endif %}
     </div>
-    <div class="col-2 d-flex flex-column justify-content-between">
+    <div class="col-md-2 d-flex flex-md-column justify-content-between align-items-center">
       {% if request.user == shelter.admin %}
       <a href="{% url 'edit_shelter' shelter.id %}" class="btn btn-primary mb-3">Edit Profile</a>
-      <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Profile</a>
+      <a href="#" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete
+        Profile</a>
 
       <!-- Delete Modal -->
       <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -54,50 +53,56 @@
       {% endif %}
     </div>
   </div>
+  <hr>
 </div>
 
 <h2 class="text-center mb-4">Animals</h2>
 <div class="container mb-4">
   <div class="row">
     {% for animal in animals %}
-    <div class="col-4 d-flex flex-column align-items-center">
+    <div class="col-md-4 d-flex flex-column align-items-center">
       {% if animal.image %}
       <a href="{% url 'animal_profile' animal.id %}">
-        <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" style="width:200px; height:auto;">
+        <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" class="sub-profile-image">
       </a>
       {% endif %}
       <a href="{% url 'animal_profile' animal.id %}">
-        <h3>{{ animal.name }}</h3>
+        <h3 class="text-center">{{ animal.name }}</h3>
       </a>
-      <p>Age: {{ animal.age }}</p>
-      <p>Breed: {{ animal.breed }}</p>
+      <p>{{ animal.age }} year old {{ animal.breed }}</p>
       <p>Foster status: <strong>{{ animal.adoption_status }}</strong></p>
-      <a href="{% url 'edit_animal_profile' animal.id %}">Edit Profile</a>
-      <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}">Delete Profile</a>
+      {% if request.user == shelter.admin %}
+      <div class="d-flex">
+        <a href="{% url 'edit_animal_profile' animal.id %}" class="btn btn-primary btn-sm mb-3 me-3">Edit</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}"
+          class="btn btn-primary btn-sm mb-3">Delete</a>
 
-      <!-- Delete Modal -->
-      <div class="modal fade" id="deleteModal{{ animal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>Changes cannot be undone!</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Delete Profile</button>
-              </form>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal{{ animal.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Changes cannot be undone!</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">Delete Profile</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
+    <hr class="d-md-none">
     {% endfor %}
   </div>
 </div>

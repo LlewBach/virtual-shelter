@@ -9,14 +9,15 @@
     <div class="col-md-4 d-flex flex-column align-items-center">
       {% if shelter.image %}
       <a href="{% url 'shelter_profile' shelter.id %}">
-        <img src="{{ shelter.image.url }}" alt="Image of {{ shelter.name }}" style="width:200px; height:auto;">
+        <img src="{{ shelter.image.url }}" alt="Image of {{ shelter.name }}" class="sub-profile-image">
       </a>
       {% endif %}
       <a href="{% url 'shelter_profile' shelter.id %}">
         <h2 class="text-center">{{ shelter.name }}</h2>
       </a>
-      <a href="{{ shelter.website }}" target="_blank">Link to Website</a>
+      <a href="{{ shelter.website }}" target="_blank" class="mb-3">Link to Website</a>
     </div>
+    <hr class="d-md-none">
     {% empty %}
     <h3 class="text-center">No shelters registered</h3>
     {% endfor %}
