@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.test import TestCase
 from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from shelters.models import Shelter
 from animals.models import Animal
@@ -111,6 +112,10 @@ class SelectSpriteViewTests(TestCase):
         self.assertEqual(self.animal.fosterer, self.user.profile)
         self.assertRedirects(response, '/dashboard/')
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), f"'{self.animal.name}' fostered")
+
     def test_select_sprite_post_invalid(self):
         """
         Test an invalid POST request to ensure the sprite is not created and errors are shown.
@@ -127,6 +132,10 @@ class SelectSpriteViewTests(TestCase):
         self.assertFalse(response.context['form'].is_valid())
         self.assertTemplateUsed(response, 'dashboard/select_sprite.html')
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error fostering - Check the form")
+
     def test_redirect_if_user_is_shelter_admin(self):
         """
         Test that a shelter admin cannot foster an animal.
@@ -136,9 +145,9 @@ class SelectSpriteViewTests(TestCase):
         response = self.client.get(f'/dashboard/select-sprite/{self.animal.id}/')
         self.assertRedirects(response, '/animals/')
 
-        # messages = list(response.wsgi_request._messages)
-        # self.assertEqual(len(messages), 1)
-        # self.assertEqual(str(messages[0]), "Shelter admins cannot foster animals.")
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You cannot foster this animal")
 
     def test_redirect_if_user_is_already_fosterer(self):
         """
@@ -149,9 +158,10 @@ class SelectSpriteViewTests(TestCase):
         response = self.client.get(f'/dashboard/select-sprite/{self.animal.id}/')
         self.assertRedirects(response, '/animals/')
 
-        # messages = list(response.wsgi_request._messages)
-        # self.assertEqual(len(messages), 1)
-        # self.assertEqual(str(messages[0]), "You are already fostering this animal.")
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You cannot foster this animal")
+
     
     def tearDown(self):
         if self.animal.image:
@@ -188,6 +198,24 @@ class DeleteSpriteTests(TestCase):
         self.assertEqual(self.animal.fosterer, None)
         self.assertEqual(self.animal.adoption_status, 'Available')
         self.assertRedirects(response, '/dashboard/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "'Test Animal' returned to shelter")
+
+    def test_unauthorized_sprite_deletion(self):
+        other_user = User.objects.create_user(username='otheruser', password='12345')
+        self.client.login(username='otheruser', password='12345')
+
+        url = f'/dashboard/delete-sprite/{self.sprite.id}/'
+        response = self.client.post(url)
+
+        self.assertEqual(Sprite.objects.count(), 1)
+        self.assertRedirects(response, '/dashboard/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Not authorized to delete this sprite")        
 
 
 class UpdateStatusViewTests(TestCase):

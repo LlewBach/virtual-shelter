@@ -32,6 +32,7 @@ def dashboard(request):
 def select_sprite(request, id):
     animal = get_object_or_404(Animal, id=id)
     if request.user.profile.role == 'shelter_admin' or animal.fosterer == request.user.profile:
+        messages.warning(request, "You cannot foster this animal")
         return redirect('view_animals')
 
     if request.method == 'POST':
@@ -50,7 +51,11 @@ def select_sprite(request, id):
             animal.fosterer = request.user.profile
             animal.adoption_status = 'Fostered'
             animal.save()
+
+            messages.success(request, f"'{animal.name}' fostered")
             return redirect('dashboard')
+        else:
+            messages.error(request, "Error fostering - Check the form")
     else:
         form = SpriteForm()
 
@@ -61,14 +66,19 @@ def delete_sprite(request, id):
     sprite = get_object_or_404(Sprite, id=id)
 
     if sprite.user != request.user:
+        messages.error(request, "Not authorized to delete this sprite")
         return redirect('dashboard')
 
     if request.method == 'POST':
-        animal = sprite.animal
-        animal.fosterer = None
-        animal.adoption_status = 'Available'
-        animal.save()
-        sprite.delete()
+        try:
+            animal = sprite.animal
+            animal.fosterer = None
+            animal.adoption_status = 'Available'
+            animal.save()
+            sprite.delete()
+            messages.success(request, f"'{animal.name}' returned to shelter")
+        except Exception as e:
+            messages.error(request, f"Error removing '{animal.name}' from foster")
 
     return redirect('dashboard')
 
