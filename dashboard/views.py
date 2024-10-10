@@ -31,8 +31,8 @@ def dashboard(request):
 
 def select_sprite(request, id):
     animal = get_object_or_404(Animal, id=id)
-    # if request.user.profile.role == 'shelter_admin' or animal.fosterer == request.user.profile:
-    #     return redirect('view_animals')
+    if request.user.profile.role == 'shelter_admin' or animal.fosterer == request.user.profile:
+        return redirect('view_animals')
 
     if request.method == 'POST':
         form = SpriteForm(request.POST)

@@ -108,6 +108,7 @@ class SelectSpriteViewTests(TestCase):
         self.animal.refresh_from_db()
         self.assertEqual(Sprite.objects.count(), 1)
         self.assertEqual(self.animal.adoption_status, 'Fostered')
+        self.assertEqual(self.animal.fosterer, self.user.profile)
         self.assertRedirects(response, '/dashboard/')
 
     def test_select_sprite_post_invalid(self):
@@ -125,6 +126,32 @@ class SelectSpriteViewTests(TestCase):
         self.assertTrue('form' in response.context)
         self.assertFalse(response.context['form'].is_valid())
         self.assertTemplateUsed(response, 'dashboard/select_sprite.html')
+
+    def test_redirect_if_user_is_shelter_admin(self):
+        """
+        Test that a shelter admin cannot foster an animal.
+        """
+        self.user.profile.role = 'shelter_admin'
+        self.user.profile.save()
+        response = self.client.get(f'/dashboard/select-sprite/{self.animal.id}/')
+        self.assertRedirects(response, '/animals/')
+
+        # messages = list(response.wsgi_request._messages)
+        # self.assertEqual(len(messages), 1)
+        # self.assertEqual(str(messages[0]), "Shelter admins cannot foster animals.")
+
+    def test_redirect_if_user_is_already_fosterer(self):
+        """
+        Test that a user who is already the fosterer cannot foster the same animal again.
+        """
+        self.animal.fosterer = self.user.profile
+        self.animal.save()
+        response = self.client.get(f'/dashboard/select-sprite/{self.animal.id}/')
+        self.assertRedirects(response, '/animals/')
+
+        # messages = list(response.wsgi_request._messages)
+        # self.assertEqual(len(messages), 1)
+        # self.assertEqual(str(messages[0]), "You are already fostering this animal.")
     
     def tearDown(self):
         if self.animal.image:
