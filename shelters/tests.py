@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from profiles.models import RoleChangeRequest
 from .models import Shelter
@@ -23,12 +24,10 @@ class ShelterViewTest(TestCase):
         response = self.client.get(f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shelters/shelter.html')
-        # Check that the shelter is in the context
         self.assertIn('shelter', response.context)
         self.assertEqual(response.context['shelter'], self.shelter)
 
     def test_shelter_view_with_animals(self):        
-        # Add some animals to the shelter
         Animal.objects.create(shelter=self.shelter, name="Test Animal 1", species="Dog", age=5, adoption_status="Available")
         Animal.objects.create(shelter=self.shelter, name="Test Animal 2", species="Cat", age=1, adoption_status="Fostered")
         
@@ -36,6 +35,16 @@ class ShelterViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Animal 1")
         self.assertContains(response, "Test Animal 2")
+
+    def test_shelter_view_shelter_does_not_exist(self):
+        non_existent_id = 999
+        response = self.client.get(f'/shelters/profile/{non_existent_id}/')
+
+        self.assertRedirects(response, '/shelters/')
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "The shelter you are looking for does not exist.")
 
 
 class EditMyShelterViewTest(TestCase):
@@ -76,6 +85,10 @@ class EditMyShelterViewTest(TestCase):
         self.assertEqual(self.shelter.website, 'https://www.updatedshelter.com')
         self.assertEqual(self.shelter.description, 'An updated description.')
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), f"'{self.shelter.name}' updated")
+
     def test_edit_shelter_view_post_invalid(self):
         # Test POST request with invalid data
         data = {
@@ -92,15 +105,20 @@ class EditMyShelterViewTest(TestCase):
         self.assertFalse(response.context['form'].is_valid())
         self.assertIn('name', response.context['form'].errors)
 
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error updating shelter - Check the form")
+
     def test_edit_shelter_view_no_shelter(self):
         # Test when the user has no shelter
         id = self.shelter.id
         self.shelter.delete()
         response = self.client.get(f'/shelters/profile/edit/{id}/')
+        self.assertRedirects(response, '/shelters/')
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/')
-
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Shelter not found")
 
 class DeleteMyShelterViewTest(TestCase):
     def setUp(self):
@@ -120,11 +138,29 @@ class DeleteMyShelterViewTest(TestCase):
         self.assertFalse(User.objects.filter(username='testuser').exists())
         self.assertFalse(Shelter.objects.filter(name='Test Shelter').exists())
 
-    def test_delete_shelter_get_request(self):
-        response = self.client.get('/shelters/profile/delete/')
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Account deleted")
+
+    def test_delete_shelter_error(self):
+        """
+        Test what happens when there's an error deleting the user or shelter.
+        """
+        # Simulate an error by overriding the delete method temporarily
+        original_delete = User.delete
+        User.delete = lambda self: (_ for _ in ()).throw(Exception("Deletion error"))
+
+        response = self.client.post('/shelters/profile/delete/')
+
         self.assertTrue(User.objects.filter(username='testuser').exists())
-        self.assertTemplateUsed(response, 'shelters/shelter.html')
-        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Shelter.objects.filter(name='Test Shelter').exists())
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Error deleting account")
+
+        # Revert the User.delete method to its original state
+        User.delete = original_delete
 
 
 class ViewSheltersViewTest(TestCase):
