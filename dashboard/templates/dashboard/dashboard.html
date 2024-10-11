@@ -10,8 +10,8 @@
     </div>
     <div class="col-3">
       <p class="text-center mt-2">
-        <strong><span id="token-count">{{ profile.tokens }}</span> Tokens </strong>
-        <a class="btn btn-primary" href="{% url 'tokens' %}">Top Up</a>
+        <strong><span id="token-count">{{ profile.tokens }}</span> Tokens</strong>
+        <a class="btn btn-primary ms-3" href="{% url 'tokens' %}">Top Up</a>
       </p>
     </div>
   </div>
@@ -19,12 +19,10 @@
 
 <div class="container">
   {% for sprite in sprites %}
-  <h2 class="mb-3">{{ sprite.animal.name }}</h2>
+  <h2 class="ms-md-5 mb-3 text-center text-md-start">{{ sprite.animal.name }}</h2>
   <div class="row mb-4">
-    <div class="col-3">
-      <div class="text-center">
-        <img src="{{ sprite.animal.image.url }}" alt="{{ sprite.animal.name }}" class="dash-img img-fluid">
-      </div>
+    <div class="col-md-3 text-center mb-3">
+      <img src=" {{ sprite.animal.image.url }}" alt="{{ sprite.animal.name }}" class="dash-img img-fluid">
       <div class="text-center">
         <a class="btn btn-primary mt-3" href="#" data-bs-toggle="modal"
           data-bs-target="#deleteSpriteModal{{ sprite.id }}">End
@@ -53,7 +51,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="col-md-6 mb-3">
       <div class="text-center">
         <canvas class="sprite-canvas" data-id="{{ sprite.id }}" data-url="{{ sprite.url }}"></canvas>
         <img id="{{ sprite.id }}" class="spritesheet img-fluid"
@@ -63,7 +61,7 @@
         <button id="button1-{{ sprite.id }}" class="btn btn-primary mt-2">Feed</button>
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-md-3 d-flex justify-content-center">
       <canvas class="chart-canvas" id="chart-canvas-{{ sprite.id }}"></canvas>
     </div>
   </div>
