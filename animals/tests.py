@@ -152,9 +152,9 @@ class EditProfileViewTest(TestCase):
         # Test POST request with valid data
         data = {
             'name': 'Updated Animal Name',
-            'species': 'Cat',
+            'species': 'Dog',
             'age': 5,
-            'description': 'A friendly cat',
+            'description': 'A friendly dog',
             'adoption_status': 'Fostered'
         }
         response = self.client.post(f'/animals/edit-profile/{self.animal.id}/', data)
@@ -162,9 +162,9 @@ class EditProfileViewTest(TestCase):
         self.animal.refresh_from_db()
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
         self.assertEqual(self.animal.name, 'Updated Animal Name')
-        self.assertEqual(self.animal.species, 'Cat')
+        self.assertEqual(self.animal.species, 'Dog')
         self.assertEqual(self.animal.age, 5)
-        self.assertEqual(self.animal.description, 'A friendly cat')
+        self.assertEqual(self.animal.description, 'A friendly dog')
         self.assertEqual(self.animal.adoption_status, 'Fostered')
 
         messages = list(get_messages(response.wsgi_request))

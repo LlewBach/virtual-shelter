@@ -36,7 +36,7 @@ class ProfileViewTest(TestCase):
         response = self.client.get('/profiles/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profiles/profile.html')
-        self.assertContains(response, 'Role: user')
+        self.assertEqual(self.user.profile, response.context['profile'])
         self.assertIn(self.animal, response.context['animals'])
 
     def test_profile_requires_login(self):
