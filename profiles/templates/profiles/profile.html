@@ -37,17 +37,17 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+              <h1 class="modal-title fs-5 text-dark" id="deleteModalLabel">Are you sure?</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p>Changes cannot be undone!</p>
+              <p class="text-dark">Changes cannot be undone!</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <form action="{% url 'delete_profile' %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Confirm</button>
+                <button type="submit" class="btn btn-danger">Confirm</button>
               </form>
             </div>
           </div>
