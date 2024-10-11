@@ -8,6 +8,8 @@
     <div class="col-md-4 text-center mb-3">
       {% if animal.image %}
       <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" class="profile-image">
+      {% else %}
+      <p>No image provided</p>
       {% endif %}
     </div>
     <div class="col-md-6 text-center">
