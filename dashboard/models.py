@@ -42,19 +42,27 @@ class Sprite(models.Model):
         now = timezone.now()
         delta = now - self.last_checked
         mins_passed = delta.seconds // 60
+
+        self.satiation = max(self.satiation - mins_passed, 0)
         # self.satiation = 46
 
         # Reset time values if it's a new day
         if self.last_checked.date() != now.date():
+            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            self.last_checked = midnight
             self.time_standing = 0
             self.time_running = 0
 
-        self.satiation = max(self.satiation - mins_passed, 0)
+            delta = now - self.last_checked
+            mins_passed = delta.seconds // 60
+
+        # State time setters
         if self.current_state == self.States.STANDING:
             self.time_standing += mins_passed
         elif self.current_state == self.States.RUNNING:
             self.time_running += mins_passed
 
+        # State change handlers
         if self.satiation < 50:
             self.current_state = self.States.STANDING
         else:

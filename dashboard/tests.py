@@ -394,10 +394,6 @@ class SpriteModelTests(TestCase):
 
         Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(minutes=10))
 
-        # Doesn't work
-        # sprite.last_checked = timezone.now() - timezone.timedelta(minutes=10)
-        # sprite.save()
-
         sprite.refresh_from_db()
         sprite.update_status()
 
@@ -439,9 +435,11 @@ class SpriteModelTests(TestCase):
 
     def test_update_status_resets_state_timers(self):
         now = timezone.now()
+
         sprite = Sprite.objects.create(
             user=self.user,
             animal=self.animal,
+            current_state='RUNNING',
             time_standing=30,
             time_running=20
         )
@@ -449,7 +447,12 @@ class SpriteModelTests(TestCase):
         Sprite.objects.filter(id=sprite.id).update(last_checked=timezone.now() - timezone.timedelta(days=1))
         sprite.refresh_from_db()
 
+        # Calculate time since midnight for test
+        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        delta = now - midnight
+        mins_passed = delta.seconds // 60
+
         sprite.update_status()
 
         self.assertEqual(sprite.time_standing, 0)
-        self.assertEqual(sprite.time_running, 0)
+        self.assertEqual(sprite.time_running, mins_passed)
