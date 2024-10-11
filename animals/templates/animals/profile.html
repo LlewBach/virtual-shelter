@@ -17,8 +17,9 @@
       <p>Age: {{ animal.age }}</p>
       <p>Foster status: <strong>{{ animal.adoption_status }}</strong></p>
     </div>
+    {% if user == animal.shelter.admin %}
     <div class="col-md-2 d-flex flex-md-column justify-content-between">
-      {% if user == animal.shelter.admin %}
+
       <a href="{% url 'edit_animal_profile' animal.id %}" class="btn btn-primary">Edit Profile</a>
       <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}">Delete
         Profile</a>
@@ -47,13 +48,15 @@
       </div>
 
       <a href="{% url 'add_update' animal.id %}" class="btn btn-primary">Add Update</a>
-
-      {% elif user.profile.role == 'user' and animal.adoption_status == 'Available' %}
-
-      <a href="{% url 'select_sprite' animal.id %}" class="btn btn-primary">Foster</a>
-
-      {% endif %}
     </div>
+
+    {% elif user.profile.role == 'user' and animal.adoption_status == 'Available' %}
+
+    <div class="col-md-2 d-flex flex-md-column justify-content-center">
+      <a href="{% url 'select_sprite' animal.id %}" class="btn btn-primary">Foster</a>
+    </div>
+
+    {% endif %}
   </div>
   <hr>
 </div>
