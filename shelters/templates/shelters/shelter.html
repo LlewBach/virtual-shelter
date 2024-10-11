@@ -69,7 +69,11 @@
       <a href="{% url 'animal_profile' animal.id %}">
         <h3 class="text-center">{{ animal.name }}</h3>
       </a>
+      {% if animal.breed %}
       <p>{{ animal.age }} year old {{ animal.breed }}</p>
+      {% else %}
+      <p>{{ animal.age }} year old {{ animal.species }}</p>
+      {% endif %}
       <p>Foster status: <strong>{{ animal.adoption_status }}</strong></p>
       {% if request.user == shelter.admin %}
       <div class="d-flex">
