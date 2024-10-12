@@ -8,17 +8,26 @@ from .models import Profile, RoleChangeRequest
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
+    """
+    Create a Profile instance when a new User is created.
+    """
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User) # is this active yet?
 def save_profile(sender, instance, **kwargs):
+    """
+    Save the Profile instance whenever the User is saved.
+    """
     instance.profile.save()
 
 
 @receiver(post_save, sender=RoleChangeRequest)
 def notify_superuser_on_role_change_request(sender, instance, created, **kwargs):
+    """
+    Notify superusers via email when a new RoleChangeRequest is created.
+    """
     if created:  
         # Fetch the superuser
         User = get_user_model() # Pam?

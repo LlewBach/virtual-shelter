@@ -5,13 +5,16 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from .models import Profile
 from .forms import ProfileForm, RoleChangeRequestForm
 
 
 @login_required
 def profile(request):
+    """
+    View to display user's profile and associated animals.
+    """
     user_profile = Profile.objects.get(user=request.user)
     animals = user_profile.animals.all()
     return render(request, 'profiles/profile.html', {'profile': user_profile, 'animals': animals})
@@ -19,6 +22,9 @@ def profile(request):
 
 @login_required
 def edit_profile(request):
+    """
+    View for editing the user's profile.
+    """
     try:
         user_profile = Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
@@ -41,6 +47,9 @@ def edit_profile(request):
 
 @login_required
 def delete_profile(request):
+    """
+    View for deleting the user's account.
+    """
     if request.method == 'POST':
         try:
             user = request.user
@@ -57,6 +66,9 @@ def delete_profile(request):
 
 @login_required
 def apply_for_role_change(request):
+    """
+    View for submitting a role change request to become a shelter admin.
+    """
     if request.method == 'POST':
         form = RoleChangeRequestForm(request.POST)
         if form.is_valid():
@@ -74,13 +86,19 @@ def apply_for_role_change(request):
 
 @login_required
 def tokens(request):
+    """
+    View for displaying pre-checkout tokens page.
+    """
     profile = Profile.objects.get(user=request.user)
     return render(request, 'profiles/tokens.html', {'profile': profile})
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 def create_checkout_session(request):
-    token_cost = 500
+    """
+    View for the Stripe checkout session to purchase virtual tokens.
+    """
+    token_cost = 499
     domain = request.build_absolute_uri('/').strip('/')
 
     try:
@@ -88,7 +106,7 @@ def create_checkout_session(request):
             payment_method_types=['card'],
             line_items=[
                 {'price_data': {
-                    'currency': 'usd',
+                    'currency': 'gbp',
                     'product_data': {
                         'name': '100 Virtual Shelter Tokens',
                     },
@@ -112,6 +130,10 @@ def create_checkout_session(request):
     
 @csrf_exempt
 def stripe_webhook(request):
+    """
+    View for the stripe webhook to update user's token count if payment
+    successful.
+    """
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     endpoint_secret = settings.STRIPE_WH_SECRET
