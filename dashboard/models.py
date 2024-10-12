@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 from animals.models import Animal
 
 class Sprite(models.Model):
+    """
+    Model representing a virtual sprite associated with an animal.
+
+    Includes breed, color, status, and timing information for standing or running states.
+    Each sprite is tied to a user and an animal.
+    """
     class BreedChoices(models.TextChoices):
         HUSKY = 'husky', 'Husky'
         AFGHAN = 'afghan', 'Afghan'
@@ -35,10 +41,17 @@ class Sprite(models.Model):
 
 
     def __str__(self):
+        """
+        Returns a string representation of the sprite, including the associated animal's name.
+        """
         return f"Sprite {self.id} for {self.animal.name}"
 
     def update_status(self):
-        """Update the status based on time elapsed since last check."""
+        """
+        Updates the sprite's status based on time elapsed since last checked.
+        Adjusts the sprite's satiation, state (standing or running), and time spent in each state.
+        Resets daily time counters if a new day has begun.
+        """
         now = timezone.now()
         delta = now - self.last_checked
         mins_passed = delta.seconds // 60

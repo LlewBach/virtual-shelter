@@ -10,6 +10,10 @@ from profiles.models import Profile
 
 @login_required
 def dashboard(request):
+    """
+    Display the user's dashboard with their profile and sprites.
+    Also handles messages related to payment status (success or cancel).
+    """
     profile = Profile.objects.get(user=request.user)
     sprites = Sprite.objects.filter(user=request.user)
     context = {
@@ -30,6 +34,11 @@ def dashboard(request):
 
 
 def select_sprite(request, id):
+    """
+    View that handles selecting and fostering a sprite for a specific animal.
+    Prevents shelter admins and existing fosterers from fostering the animal.
+    On successful form submission, assigns the sprite to the user and updates the animal's status.
+    """
     animal = get_object_or_404(Animal, id=id)
     if request.user.profile.role == 'shelter_admin' or animal.fosterer == request.user.profile:
         messages.warning(request, "You cannot foster this animal")
@@ -63,6 +72,11 @@ def select_sprite(request, id):
 
 
 def delete_sprite(request, id):
+    """
+    View to delete a sprite and return the associated animal to the shelter.
+    Ensures only the user who fostered the sprite can delete it.
+    On success, the animal's adoption status is updated to 'Available'.
+    """
     sprite = get_object_or_404(Sprite, id=id)
 
     if sprite.user != request.user:
@@ -84,6 +98,11 @@ def delete_sprite(request, id):
 
 
 def update_status(request, sprite_id):
+    """
+    View to update the status of a sprite and return its current stats as JSON.
+    Retrieves the sprite by its ID, updates its status, and returns a JSON
+    response with the updated satiation, current state, time standing, and time running.
+    """
     sprite = get_object_or_404(Sprite, id=sprite_id)
     sprite.update_status()
     return JsonResponse({
@@ -95,6 +114,11 @@ def update_status(request, sprite_id):
 
 
 def feed_sprite(request, sprite_id):
+    """
+    View to feed a sprite. Deducts 1 token from the user's profile if they have enough tokens,
+    increases the sprite's satiation by 5 (capped at 100), and returns a JSON response 
+    with the updated satiation and token count. Returns an error if the user has insufficient tokens.
+    """
     sprite = get_object_or_404(Sprite, id=sprite_id)
     profile = request.user.profile
 
