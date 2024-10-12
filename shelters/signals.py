@@ -5,6 +5,13 @@ from profiles.models import RoleChangeRequest
 
 @receiver(post_save, sender=RoleChangeRequest)
 def create_shelter_on_approval(sender, instance, created, **kwargs):
+    """
+    Creates a Shelter instance when a RoleChangeRequest is approved and no shelter already exists 
+    for the user. This function listens for the post_save signal from the RoleChangeRequest model.
+    
+    If the request's status is 'approved', it checks if the user already has an associated shelter. 
+    If not, a new shelter is created with the details from the role change request.
+    """
     if instance.status == 'approved':
         # Check if a shelter already exists for this user
         if not Shelter.objects.filter(admin=instance.user).exists():
