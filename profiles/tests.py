@@ -387,7 +387,7 @@ class ProfileModelTest(TestCase):
         Test the __str__ method of the Profile model.
         """
         profile = Profile.objects.get(user=self.user)
-        self.assertEqual(str(profile), 'testuser Profile')
+        self.assertEqual(str(profile), 'Profile of testuser')
 
 
 class RoleChangeRequestModelTest(TestCase):
