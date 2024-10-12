@@ -7,6 +7,13 @@ from shelters.models import Shelter
 
 @login_required
 def add_animal(request):
+    """
+    Allows a shelter admin to add a new animal to their shelter.
+
+    If the user is not a shelter admin, they are redirected with an error message.
+    If a valid form is submitted, the animal is saved and the user is redirected to the shelter profile.
+    If the form is invalid, an error message is shown and the form is re-rendered.
+    """
     try:
         shelter = Shelter.objects.get(admin=request.user)
     except Shelter.DoesNotExist:
@@ -30,6 +37,13 @@ def add_animal(request):
 
 
 def profile(request, id):
+    """
+    Displays the profile page for a specific animal.
+
+    Attempts to retrieve the animal by its ID. If the animal does not exist,
+    an error message is shown and the user is redirected to the homepage.
+    Otherwise, the animal's profile page is rendered.
+    """
     try:
         animal = Animal.objects.get(id=id)
     except Animal.DoesNotExist:
@@ -41,8 +55,15 @@ def profile(request, id):
 
 @login_required
 def edit_profile(request, id):
+    """
+    Allows the shelter admin to edit an animal's profile.
+
+    Retrieves the animal by its ID and checks if the logged-in user is the admin of the animal's shelter.
+    If not, an error message is shown and the user is redirected to the homepage.
+    If the form is valid on POST, the animal is updated and the user is redirected to the animal's profile.
+    If the form is invalid, an error message is shown and the form is re-rendered.
+    """
     animal = get_object_or_404(Animal, id=id)
-    # Check for animal shelter's admin
     if animal.shelter.admin != request.user:
         messages.error(request, "Only shelter admin can edit animal")
         return redirect('home')
@@ -63,6 +84,14 @@ def edit_profile(request, id):
 
 @login_required
 def delete_profile(request, id):
+    """
+    Allows the shelter admin to delete an animal's profile.
+
+    Retrieves the animal by its ID and checks if the logged-in user is the admin of the animal's shelter.
+    If not, an error message is shown and the user is redirected to their profile page.
+    If a POST request is made and the animal is successfully deleted, a success message is shown.
+    If the deletion fails, an error message is displayed and the user is redirected to the shelter profile.
+    """
     animal = get_object_or_404(Animal, id=id)
     if animal.shelter.admin != request.user:
         messages.error(request, "Only shelter admin can delete animal")
@@ -80,12 +109,25 @@ def delete_profile(request, id):
 
 
 def view_animals(request):
+    """
+    Displays a list of all animals.
+
+    Retrieves all Animal objects and renders them on the 'view_animals' template.
+    """
     animals = Animal.objects.all()
     return render(request, 'animals/view_animals.html', {'animals': animals})
 
 
 @login_required
 def add_update(request, id):
+    """
+    Allows the shelter admin to add an update for a specific animal.
+
+    Retrieves the animal by its ID and checks if the logged-in user is the admin of the animal's shelter.
+    If not, an error message is shown, and the user is redirected to the animal's profile.
+    On a valid form submission, the update is saved and linked to the animal, and the user is redirected to the animal's profile.
+    If the form is invalid, an error message is displayed and the form is re-rendered.
+    """
     animal = get_object_or_404(Animal, id=id)
 
     if animal.shelter.admin != request.user:
@@ -110,6 +152,14 @@ def add_update(request, id):
 
 @login_required
 def edit_update(request, id):
+    """
+    Allows the shelter admin to edit an existing update for an animal.
+
+    Retrieves the update by its ID and checks if the logged-in user is the admin of the animal's shelter.
+    If not, an error message is shown, and the user is redirected to the animal's profile.
+    If the form is valid on POST, the update is saved and the user is redirected to the animal's profile.
+    If the form is invalid, an error message is displayed and the form is re-rendered with errors.
+    """
     update = get_object_or_404(Update, id=id)
 
     if update.animal.shelter.admin != request.user:
@@ -132,6 +182,14 @@ def edit_update(request, id):
 
 @login_required
 def delete_update(request, id):
+    """
+    Allows the shelter admin to delete an update for an animal.
+
+    Retrieves the update by its ID and checks if the logged-in user is the admin of the animal's shelter.
+    If not, an error message is shown, and the user is redirected to the animal's profile.
+    If the request is a POST and the update is successfully deleted, a success message is shown.
+    If an error occurs during deletion, an error message is displayed.
+    """
     update = get_object_or_404(Update, id=id)
 
     if update.animal.shelter.admin != request.user:

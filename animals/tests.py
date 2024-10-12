@@ -13,12 +13,24 @@ from datetime import datetime
 
 # Views
 class AddAnimalViewTest(TestCase):
+    """
+    Test cases for the Add Animal view.
+    
+    Ensures correct behavior when adding a new animal, including handling 
+    redirects for users without shelters and validation for valid/invalid POST requests.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and logging the user in.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
         self.client.login(username='testuser', password='12345')
     
     def test_redirect_if_no_shelter(self):
+        """
+        Test redirect behavior when the user has no associated shelter.
+        """
         self.shelter.delete()
         response = self.client.get('/animals/add/')
         self.assertRedirects(response, '/')
@@ -29,6 +41,9 @@ class AddAnimalViewTest(TestCase):
         self.assertEqual(messages[0].tags, 'error')
     
     def test_add_animal_post_request(self):
+        """
+        Test adding an animal with a valid POST request.
+        """
         data = {
             'name': 'Test Animal',
             'species': 'Dog',
@@ -48,7 +63,7 @@ class AddAnimalViewTest(TestCase):
 
     def test_invalid_add_animal_post_request(self):
         """
-        Test an invalid POST request (e.g., missing required fields) to ensure the form is re-rendered with errors.
+        Test an invalid POST request to ensure the form re-renders with errors.
         """
         data = {
             'name': '',
@@ -68,7 +83,15 @@ class AddAnimalViewTest(TestCase):
 
 
 class ProfileViewTest(TestCase):
+    """
+    Test cases for the Animal profile view.
+    
+    Ensures correct behavior when accessing the animal's profile page with valid and invalid IDs.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, animal, and uploading an image.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.client.login(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
@@ -83,6 +106,9 @@ class ProfileViewTest(TestCase):
         )
 
     def test_profile_view_with_valid_id(self):
+        """
+        Test accessing the animal's profile page with a valid animal ID.
+        """
         url = f'/animals/profile/{self.animal.id}/'
         response = self.client.get(url)
 
@@ -91,6 +117,9 @@ class ProfileViewTest(TestCase):
         self.assertContains(response, self.animal.name)
 
     def test_profile_view_with_invalid_id(self):
+        """
+        Test accessing the animal's profile page with an invalid animal ID, expecting a redirect.
+        """
         url = f'/animals/profile/999/'
         response = self.client.get(url)
 
@@ -103,7 +132,9 @@ class ProfileViewTest(TestCase):
         self.assertEqual(messages[0].level_tag, 'error')
 
     def tearDown(self):
-        # Delete the file after test
+        """
+        Clean up by deleting the uploaded image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
@@ -111,7 +142,15 @@ class ProfileViewTest(TestCase):
 
 
 class EditProfileViewTest(TestCase):
+    """
+    Test cases for the Edit Animal Profile view.
+    
+    Ensures proper behavior for authorized and unauthorized users, as well as handling of valid and invalid form submissions.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and animal, and logging in the user.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
         self.image = SimpleUploadedFile(name='test_image.jpg', content=b"dummy image data", content_type='image/jpeg')
@@ -127,7 +166,9 @@ class EditProfileViewTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_edit_profile_view_unauthorized_user(self):
-        # Test that a user who is not the admin cannot edit the profile
+        """
+        Test that a user who is not the shelter admin cannot edit the animal's profile.
+        """        
         other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         
@@ -139,7 +180,9 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Only shelter admin can edit animal")
     
     def test_edit_profile_view_get(self):
-        # Test that the edit profile page renders correctly
+        """
+        Test that the edit profile page renders correctly for authorized users.
+        """
         url = f'/animals/edit-profile/{self.animal.id}/'
         response = self.client.get(url)
         
@@ -149,7 +192,9 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(response.context['form'].instance, self.animal)
     
     def test_edit_profile_view_post_valid(self):
-        # Test POST request with valid data
+        """
+        Test submitting a valid POST request to update the animal's profile.
+        """
         data = {
             'name': 'Updated Animal Name',
             'species': 'Dog',
@@ -172,7 +217,9 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Animal saved")
     
     def test_edit_profile_view_with_invalid_data(self):
-        # Test POST request with invalid data
+        """
+        Test submitting an invalid POST request and ensuring the form is re-rendered with errors.
+        """
         data = {
             'name': '', # Name is required
             'species': 'Dog',
@@ -191,14 +238,24 @@ class EditProfileViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Error saving animal - Check the form")
     
     def tearDown(self):
-        # Delete the file after test
+        """
+        Clean up by deleting the uploaded image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
         super().tearDown()
 
 class DeleteProfileViewTest(TestCase):
+    """
+    Test cases for deleting an animal profile.
+    
+    Ensures only the shelter admin can delete an animal and handles attempts by unauthorized users or invalid animal IDs.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and animal.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
         self.animal = Animal.objects.create(
@@ -211,6 +268,9 @@ class DeleteProfileViewTest(TestCase):
         )
     
     def test_delete_animal_profile_as_admin(self):
+        """
+        Test that a shelter admin can delete an animal profile successfully.
+        """
         self.client.login(username='testuser', password='12345')
         response = self.client.post(f'/animals/delete-profile/{self.animal.id}/')
         self.assertRedirects(response, '/')
@@ -220,6 +280,9 @@ class DeleteProfileViewTest(TestCase):
         self.assertEqual(str(messages[0]), f"Animal '{self.animal.name}' deleted.")
 
     def test_delete_animal_profile_as_non_admin(self):
+        """
+        Test that a user who is not the shelter admin cannot delete an animal profile.
+        """
         other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.post(f'/animals/delete-profile/{self.animal.id}/')
@@ -230,13 +293,24 @@ class DeleteProfileViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Only shelter admin can delete animal")
 
     def test_delete_animal_profile_invalid_id(self):
+        """
+        Test attempting to delete an animal profile with an invalid ID, expecting a 404 response.
+        """
         self.client.login(username='testuser', password='12345')
         response = self.client.post('/animals/delete-profile/999/')
         self.assertEqual(response.status_code, 404)
 
 
 class ViewAnimalsViewTest(TestCase):
+    """
+    Test cases for the View Animals page.
+    
+    Ensures that animals are correctly displayed on the view animals page.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and animal.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(
             admin=self.user,
@@ -256,6 +330,9 @@ class ViewAnimalsViewTest(TestCase):
         )
     
     def test_view(self):
+        """
+        Test that the view animals page loads correctly and displays the animals.
+        """
         response = self.client.get('/animals/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'animals/view_animals.html')
@@ -264,7 +341,15 @@ class ViewAnimalsViewTest(TestCase):
 
 
 class AddUpdateViewTest(TestCase):
+    """
+    Test cases for the Add Update view.
+    
+    Ensures proper behavior when adding updates for animals, including valid and invalid form submissions, and unauthorized access.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, animal, and logging in the user.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(
             admin=self.user,
@@ -288,12 +373,18 @@ class AddUpdateViewTest(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_add_update_view_get(self):
+        """
+        Test accessing the Add Update view with a GET request.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'animals/add_update.html')
         self.assertIsInstance(response.context['form'], UpdateForm)
 
     def test_add_update_view_post_valid_data(self):
+        """
+        Test submitting valid data via a POST request to add an update.
+        """
         data = {
             'text': 'The animal is healthy and doing well.',
         }
@@ -310,7 +401,9 @@ class AddUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), f"Update added for '{self.animal.name}'.")
 
     def test_add_update_view_post_invalid_data(self):
-        # Test POST request with invalid data
+        """
+        Test submitting invalid data via a POST request to add an update.
+        """
         data = {
             'text': '',
         }
@@ -322,6 +415,9 @@ class AddUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Error adding update - Check the form")
 
     def test_add_update_view_unauthorized_user(self):
+        """
+        Test that an unauthorized user cannot add an update.
+        """
         other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.get(self.url)
@@ -332,6 +428,9 @@ class AddUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Only shelter admin can add update")
 
     def tearDown(self):
+        """
+        Clean up by deleting the uploaded test image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
@@ -339,7 +438,15 @@ class AddUpdateViewTest(TestCase):
 
 
 class EditUpdateViewTest(TestCase):
+    """
+    Test cases for the Edit Update view.
+    
+    Ensures proper behavior when editing an update for an animal, including handling authorized and unauthorized access, and valid and invalid form submissions.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, animal, and update.
+        """
         self.user = User.objects.create_user(username='admin', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name='Test Shelter', registration_number='123456789', description='A test shelter')
         self.image = SimpleUploadedFile(name='test_image.jpg', content=b"dummy image data", content_type='image/jpeg')
@@ -348,6 +455,9 @@ class EditUpdateViewTest(TestCase):
         self.url = f'/animals/edit-update/{self.update.id}/'
 
     def test_edit_update_view_get(self):
+        """
+        Test accessing the Edit Update view with a GET request.
+        """
         self.client.login(username='admin', password='12345')
         response = self.client.get(self.url)
 
@@ -356,6 +466,9 @@ class EditUpdateViewTest(TestCase):
         self.assertContains(response, 'Initial update')
 
     def test_edit_update_view_as_other_user(self):
+        """
+        Test that a user who is not the shelter admin cannot access the Edit Update view.
+        """
         self.other_user = User.objects.create_user(username='other', password='12345')
         self.client.login(username='other', password='12345')
         response = self.client.get(self.url)
@@ -366,6 +479,9 @@ class EditUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Only shelter admin can edit this update")
 
     def test_edit_update_post_valid(self):
+        """
+        Test submitting valid data via a POST request to edit the update.
+        """
         self.client.login(username='admin', password='12345')
         response = self.client.post(self.url, {'text': 'Updated text'})
 
@@ -378,6 +494,9 @@ class EditUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), f"Update for '{self.animal.name}' edited")
 
     def test_edit_update_post_invalid(self):
+        """
+        Test submitting invalid data (empty text) via a POST request to edit the update.
+        """
         self.client.login(username='admin', password='12345')
         response = self.client.post(self.url, {'text': ''})  # Invalid data
 
@@ -391,6 +510,9 @@ class EditUpdateViewTest(TestCase):
         self.assertEqual(str(messages[0]), "Error editing update - Check the form")
     
     def tearDown(self):
+        """
+        Clean up by deleting the uploaded test image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
@@ -398,7 +520,15 @@ class EditUpdateViewTest(TestCase):
 
 
 class DeleteUpdateViewTest(TestCase):
+    """
+    Test cases for deleting an animal update.
+    
+    Ensures that only the shelter admin can delete an update, and handles different request methods (POST and GET).
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a shelter admin, shelter, animal, and update.
+        """
         self.admin_user = User.objects.create_user(username='adminuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.admin_user, name='Test Shelter', registration_number='12345', description='Test Shelter Description')
         self.image = SimpleUploadedFile(name='test_image.jpg', content=b"dummy image data", content_type='image/jpeg')
@@ -407,6 +537,9 @@ class DeleteUpdateViewTest(TestCase):
         self.url = f'/animals/delete-update/{self.update.id}/'
 
     def test_delete_update_as_admin(self):
+        """
+        Test that the shelter admin can successfully delete an update.
+        """
         self.client.login(username='adminuser', password='12345')
         response = self.client.post(self.url)
 
@@ -419,6 +552,9 @@ class DeleteUpdateViewTest(TestCase):
         self.assertEqual(messages[0].level_tag, 'success')
 
     def test_delete_update_as_non_admin(self):
+        """
+        Test that a non-admin user cannot delete an update.
+        """
         self.other_user = User.objects.create_user(username='otheruser', password='12345')
         self.client.login(username='otheruser', password='12345')
         response = self.client.post(self.url)
@@ -432,6 +568,9 @@ class DeleteUpdateViewTest(TestCase):
         self.assertEqual(messages[0].level_tag, 'error')
 
     def test_delete_update_with_get_request(self):
+        """
+        Test that accessing the delete update view via a GET request does not delete the update.
+        """
         self.client.login(username='adminuser', password='12345')
         response = self.client.get(self.url)
 
@@ -439,6 +578,9 @@ class DeleteUpdateViewTest(TestCase):
         self.assertTrue(Update.objects.filter(id=self.update.id).exists())
     
     def tearDown(self):
+        """
+        Clean up by deleting the uploaded test image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
@@ -447,12 +589,23 @@ class DeleteUpdateViewTest(TestCase):
 
 # Models
 class AnimalModelTest(TestCase):
+    """
+    Test cases for the Animal model.
+    
+    Ensures proper behavior for creating and managing Animal instances, including optional fields and string representation.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and initializing the animal instance to None.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
         self.animal = None
     
     def test_animal_creation(self):
+        """
+        Test creating an Animal instance with all fields, including the image.
+        """
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name="Test Animal",
@@ -474,6 +627,9 @@ class AnimalModelTest(TestCase):
         self.assertTrue(self.animal.image)
 
     def test_string_representation(self):
+        """
+        Test the string representation of an Animal instance.
+        """
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name="Test Animal",
@@ -484,23 +640,24 @@ class AnimalModelTest(TestCase):
         self.assertEqual(str(self.animal), expected_string)
     
     def test_animal_without_optional_fields(self):
-        # Animal instance without optional fields
+        """
+        Test creating an Animal instance without optional fields (breed, description, fosterer).
+        """
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name="Test Animal",
-            species="Cat",
+            species="Dog",
             age=2
         )
         self.assertIsNone(self.animal.fosterer)
         self.assertIsNone(self.animal.breed)
         self.assertIsNone(self.animal.description)
         self.assertEqual(self.animal.adoption_status, "Available")  # Default status
-
-    # def test_animal_missing_required_fields(self):
-    #     with self.assertRaises(IntegrityError):
-    #         Animal.objects.create(shelter=self.shelter)
     
     def tearDown(self):
+        """
+        Clean up by deleting the uploaded test image after the test.
+        """
         if self.animal.image:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.animal.image.name))
 
@@ -508,7 +665,15 @@ class AnimalModelTest(TestCase):
 
 
 class UpdateModelTest(TestCase):
+    """
+    Test cases for the Update model.
+    
+    Ensures that updates can be created, the string representation is correct, and updates are properly related to animals.
+    """
     def setUp(self):
+        """
+        Set up the test environment by creating a user, shelter, and animal.
+        """
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(
             admin=self.user,
@@ -524,6 +689,9 @@ class UpdateModelTest(TestCase):
         )
 
     def test_update_creation(self):
+        """
+        Test creating an update for an animal.
+        """
         update = Update.objects.create(
             animal=self.animal,
             text="This is a test update."
@@ -533,6 +701,9 @@ class UpdateModelTest(TestCase):
         self.assertTrue(isinstance(update.created_at, datetime))
 
     def test_str_method(self):
+        """
+        Test the string representation of an Update instance.
+        """
         update = Update.objects.create(
             animal=self.animal,
             text="This is a test update."
@@ -541,6 +712,9 @@ class UpdateModelTest(TestCase):
         self.assertEqual(str(update), expected_str)
 
     def test_related_name(self):
+        """
+        Test that updates are correctly related to the animal using the related_name 'updates'.
+        """
         update1 = Update.objects.create(
             animal=self.animal,
             text="First update."

@@ -19,6 +19,7 @@ class Profile(models.Model):
     profile_picture: 
         Optional image field for the user's profile.
     """
+    
     USER_ROLES = (
         ('user', 'User'),
         ('shelter_admin', 'Shelter Admin'),
