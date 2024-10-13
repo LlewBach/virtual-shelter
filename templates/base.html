@@ -18,6 +18,11 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
   <link rel="manifest" href="{% static 'images/favicon/site.webmanifest' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rock+Salt&display=swap"
+    rel="stylesheet">
   <link href="{% static 'css/base.css' %}" rel="stylesheet">
   {% endblock %}
 </head>
@@ -27,7 +32,7 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <!-- Logo -->
-      <a class="navbar-brand" href="{% url 'home' %}">
+      <a class="navbar-brand rock-salt" href="{% url 'home' %}">
         <img src="{% static 'images/logo-compressed.png' %}" alt="Virtual Shelter logo" width="30" height="30" class="">
         Virtual Shelter
       </a>
