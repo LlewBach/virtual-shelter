@@ -1,9 +1,9 @@
 # Milestone 4 Project - Virtual Shelter
 By Gareth Llewelyn
 
-[View deployed Heroku site]()
+[View deployed Heroku site](https://virtual-shelter-0dec942891ea.herokuapp.com/)
 
-![Am I Responsive]()
+![capture-11](static/images/captures/capture-11.PNG)
 
 # Table of contents
 
@@ -171,6 +171,22 @@ As the dashboard needs to update itself 'live' and when accessed after extended 
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+### Logo and favicon
+
+I asked GPT-4 to create the logo. The then used a favicon generator to create the favicon images and link tags.
+
+![Logo](static/images/logo-compressed.png)
+
+### Colour palette
+
+This is the colour palette I chose.
+
+![Colour palette](static/images/palette.PNG)
+
+### Fonts
+
+The fonts are from Google Fonts. The logo text and home page title use Rock Salt, and the rest is Open Sans.
+
 # Features
 
 [Back to top](#milestone-4-project---virtual-shelter)
@@ -189,17 +205,35 @@ Account management is enabled by the django-allauth package. This handles regist
 
 When a User is created, a signal is sent to create a Profile for that user. Profiles hold information such as role (User or Shelter Admin) and token count.
 
-The user can view, update and delete their profile. On the Profile page, there is a link to 'Apply to Register Shelter'. This provides a form to collect information about the charity. Upon submission, a signal triggers an email to the Superuser informing them of the request. The Superuser can then navigate to the site admin interface, review the request information and decide whether to approve or reject it. If approved, the user's profile role will be updated to that of Shelter Admin, and a signal will trigger an email to inform the request sender.
+![capture-1](static/images/captures/capture-1.PNG)
 
-A Shelter Admin will see a navbar option of 'My Shelter' in place of 'Profile'. The Shelter Admin can 'Edit Profile', 'Delete Profile' and 'Add Animal' to the shelter profile.
+The user can view, update and delete their profile. On the Profile page, there is a link to 'Register Shelter'. This provides a form to collect information about the charity. Upon submission, a signal triggers an email to the Superuser informing them of the request. The Superuser can then navigate to the site admin interface, review the request information and decide whether to approve or reject it. If approved, the user's profile role will be updated to that of Shelter Admin, and a signal will trigger an email to inform the request sender!!!!
 
-An animal profile can be added to a shelter, and collect information such as a picture upload, name, species, breed, age, description and adoption status. Animal profiles can be edited and deleted. The Shelter Admin can also 'Add Update' about the dog to its profile. Users can choose to 'Foster' the animal.
+![capture-2](static/images/captures/capture-2.PNG)
+
+A Shelter Admin will see a navbar option of 'My Shelter' in place of 'Profile'. 
+
+![capture-3](static/images/captures/capture-3.PNG)
+
+The Shelter Admin can 'Edit Profile', 'Delete Profile' and 'Add Animal' to the shelter profile.
+
+![capture-4](static/images/captures/capture-4.PNG)
+
+An animal profile can be added to a shelter, and collect information such as a picture upload, name, species, breed, age, description and adoption status. Animal profiles can be edited and deleted. The Shelter Admin can also 'Add Update' about the dog to its profile. 
+
+![capture-5](static/images/captures/capture-5.PNG)
+
+Users can choose to 'Foster' the animal.
+
+![capture-6](static/images/captures/capture-6.PNG)
 
 ### Sprite Creation and Customization
 
 If the user chooses to foster an animal, they will be taken to a sprite creation page. Here a the user will be able to select the breed and colour of the animal from the available options.
 
-The user can edit and delete the sprite.
+![capture-7](static/images/captures/capture-7.PNG)
+
+The user can delete the sprite or 'return to shelter'.
 
 ### Dashboard
 
@@ -211,13 +245,21 @@ The sprite's state will change depending on its satiation level. (Below 50 => st
 
 The user can feed the sprite if enough tokens are available.
 
+![capture-8](static/images/captures/capture-8.PNG)
+
 ### Tokens
 
-Tokens can be bought via a link to a Stripe hosted checkout page. Upon successful 'payment', the user will be redirected to a 'success' page (otherwise a 'cancel' page) and a webhook will update the number of tokens associated with a user's profile.
+Tokens can be bought via a link to a Stripe hosted checkout page. Upon successful 'payment', the user will be redirected to the dashboard with a toast message informing the user of the outcome. 
+
+![capture-9](static/images/captures/capture-9.PNG)
+
+A webhook will update the number of tokens associated with a user's profile.
 
 ### Shelters and Animals Pages
 
 Users will be able to browse through shelter and animals profiles on these pages.
+
+![capture-10](static/images/captures/capture-10.PNG)
 
 ## Future Feature Considerations
 
@@ -420,6 +462,7 @@ Helped with / taught me about the following:
 - Formatting the Chart.js pie chart
 - Setting up the Stripe webhook view
 - Testing
+- Writing docstrings
 
 ### YouTube
 
@@ -432,10 +475,10 @@ Helped with / taught me about the following:
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
-
+I would like to thank my mentor Ben Kavanagh for his guidance and support with this project and my year on this Web Application Development diploma with Code Institute.
 
 # Disclaimer
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
-This website is for educational purposes only. The Stripe account will therefore remain in Test Mode.
+This website is for educational purposes only. The Stripe account will therefore remain in Test Mode. The animal profiles are fictitious.
