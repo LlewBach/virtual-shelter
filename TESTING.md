@@ -198,7 +198,7 @@ Test result: Pass
 
 US3e - "As a shelter admin, I want to send updates about the animals to their fosterers, so that I can keep them connected and informed".
 
-AC3e - Shelter admin must be able to add update to an animal's profile".
+AC3e - "Shelter admin must be able to add update to an animal's profile".
 
 1. Log in as a Shelter Admin.
 2. Navigate to the 'My Shelter' page.
@@ -211,11 +211,90 @@ AC3e - Shelter admin must be able to add update to an animal's profile".
 
 Test result: Pass
 
+US4a - "As a user, I want to browse animals available for virtual fostering, so that I can choose one to support".
+
+AC4a - "User can browse through all animals and view individual profiles".
+
+1) As a logged out user, click on the 'Animals' navbar option.
+2) Choose an animal and click on its name.
+3) User should be taken to that animal's profile.
+
+Test result: Pass
+
+ US4b - "As a user, I want to virtually foster an animal, so that I can support it through the platform".
+
+ AC4b - "User can foster an animal and be able to manage it on the dashboard".
+
+ 1. As a logged in User (not Shelter Admin), navigate to the 'Animals' page.
+ 2. Choose an animal whose status is 'Available' and click its name.
+ 3. Click 'Foster'.
+ 4. On the Select Sprite page, choose a Breed and Colour then click 'Submit'.
+ 5. A toast message should confirm that the animal is fostered.
+ 6. On the dashboard, the animal and associated sprite should be visible.
+ 7. After approximately one minute, the chart should display.
+
+Test result: Pass
+
+US4c - "As a user, I want to interact with a virtual animal, so that I can simulate taking care of it".
+
+AC4c - "User can 'feed' the sprite, view state change and stats on activity times".
+
+1. Click the 'Top Up' button at the top of the dashboard.
+2. On the Tokens page, click 'Buy'.
+3. On the Stripe-hosted checkout page, fill out following information:
+  - Email - test@test.com
+  - Card information - 4242 4242 4242 4242, 12/34, 123
+  - Cardholder name - Test
+  - Postcode SA5 8AR
+4. Click 'Pay'.
+5. On the dashboard, choose an animal to 'feed'.
+6. Click on the 'Feed' button below its sprite.
+7. Feed the sprite until it has a satiation of 50 or just above.
+8. The sprite should be running.
+9. Wait until the satiation drops below fifty. (1% = 1 min)
+10. The sprite should be standing.
+11. The state tracker chart should automatically update live to reflect the time spent in each state.
+
+Test result: Pass
+
+US4d - "As a user, I want to receive updates on the real animal I am fostering, so that I can be informed about its well-being.
+
+AC4d - "A shelter admin has to be able to upload updates about the animal which are visible on its profile page".
+
+1. Having logged in as a shelter admin, click on the My Shelter navbar option.
+2. Click on an animal's profile. If none exist, create an animal profile.
+3. Select 'Add Update'.
+4. Write a brief test text in the textbox.
+5. Click 'Add Update'.
+6. On the animal's profile, the update should be visible on the animal's profile page, under the 'Updates' section.
+
+Test result: Pass
+
+US5a - "As a user, I want to make secure payments, so that I can support the shelter".
+
+AC5a - "User can buy tokens from a Stripe-hosted checkout page".
+
+This was also tested in test 4c.
+
+Test result: Pass
+
 # Unit Testing
 
 [Back to top](#virtual-shelter---testing-documentation)
 
-xxx
+This project was developed with unit testing.
+
+## Python
+
+![capture-12](static/images/captures/capture-12.PNG)
+
+### Python test coverage
+
+## JavaScript
+
+![capture-13](static/images/captures/capture-13.PNG)
+
+### JavaScript test coverage
 
 # Responsiveness Testing
 

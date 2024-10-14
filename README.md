@@ -74,15 +74,9 @@ User's goals...
 | 4a                                   | User          | Browse animals available for virtual fostering         | Choose one to support.                            |
 | 4b                                   | User          | Virtually foster an animal                             | Support it through the platform.                  |
 | 4c                                   | User          | Interact with a virtual animal                         | Simulate taking care of it.                       |
-| 4d                                   | User          | Be notified when my pet needs attention                | Keep on top of its care.                          |
-| 4e                                   | User          | Receive rewards for maintaining healthy pets           | Be encouraged to continue fostering.              |
-| 4f                                   | User          | Receive updates on the real animal I am fostering      | Be informed about its well-being.                 |
+| 4d                                   | User          | Receive updates on the real animal I am fostering      | Be informed about its well-being.                 |
 | **Payments and Sponsorship**         |               |                                                        |                                                   |
-| 5a                                   | User          | Choose a sponsorship plan / animal                     | Foster according to my financial capability.      |
-| 5b                                   | User          | Make secure payments                                   | Support the shelter.                              |
-| 5c                                   | User          | Receive confirmation of payments                       | Have a record of my support.                      |
-| **Social and Community Features**    |               |                                                        |                                                   |
-| 6a                                   | User          | See a leaderboard or community board of top fosterers  | Engage with the community.                        |
+| 5a                                   | User          | Make secure payments                                   | Support the shelter.                              |
 
 ## Scope
 

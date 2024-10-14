@@ -28,7 +28,7 @@ def dashboard(request):
         messages.success(request, "Payment successful! Received 100 tokens.")
     
     elif payment_status == 'cancel':
-        messages.error(request, "Payment canceled. No tokens added.")
+        messages.error(request, "Payment cancelled. No tokens added.")
 
     return render(request, 'dashboard/dashboard.html', context)
 
