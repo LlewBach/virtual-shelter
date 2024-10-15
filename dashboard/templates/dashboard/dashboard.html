@@ -30,12 +30,12 @@
           data-bs-target="#deleteSpriteModal{{ sprite.id }}">End
           Foster</a>
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteSpriteModal{{ sprite.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-          aria-hidden="true">
+        <div class="modal fade" id="deleteSpriteModal{{ sprite.id }}" tabindex="-1"
+          aria-labelledby="deleteSpriteLabel{{ sprite.id }}" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5 text-dark" id="deleteModalLabel">Are you sure?</h1>
+                <h1 class="modal-title fs-5 text-dark" id="deleteSpriteLabel{{ sprite.id }}">Are you sure?</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
