@@ -127,8 +127,6 @@ img {
 }
 
 .toast.success {
-  /* --color: #0abf31;
-  background-image: linear-gradient(to right, #0abf31c9, #22242f 30%); */
   --color: #0abf30;
   background-image:
     linear-gradient(to right, #0abf3055, #22242f 30%);
