@@ -300,19 +300,116 @@ This project was developed with unit testing.
 
 [Back to top](#virtual-shelter---testing-documentation)
 
-xxx
+This is my testing procedure:
+
+Setup
+
+1. Open the website in the Chrome browser.
+2. Right-click and click 'Inspect'.
+3. Click the toggle device toolbar.
+
+Testing function
+
+4. From the device menu, select the one being tested.
+5. Check that there is no overlapping of page components.
+6. Check that the page does not scroll horizontally.
+7. Check that the page items align in an aesthetic manner.
+8. Check that the headings and text are clearly visible.
+9. Repeat steps 5-8 for every page visible in the navbar, as a logged out user.
+10. Log in as a User and repeat steps 5-8 for the following pages:
+
+- Dashboard
+- Profile
+- Edit Profile
+- Sprite Selector
+- Register Shelter
+
+11. Log out and back in as a Shelter Admin. Repeat steps 5-8 for the following pages:
+
+- My Shelter
+- Edit Profile
+- Add Animal
+
+| Device | Resolution | Test Result |
+| :-----: | :-----: | :-----: |
+| iPhone SE | 375 x 667 | Pass |
+| iPhone XR | 414 x 896 | Pass |
+| iPhone 12 Pro | 390 x 844 | Pass |
+| iPhone 14 Pro Max | 430 x 932 | Pass |
+| Samsung Galaxy S8+ | 360 x 740 | Pass |
+| Samsung Galaxy S20 Ultra | 412 x 915 | Pass |
+| iPad Mini | 768 x 1024 | Pass |
+| iPad Air | 820 x 1180 | Pass |
+| iPad Pro | 1024 x 1366 | Pass |
+| Laptop | 1280 x 720 | Pass |
+| Monitor | 1920 x 1080 | Pass |
 
 # Browser Testing
 
 [Back to top](#virtual-shelter---testing-documentation)
 
-xxx
+To test the site on different browsers, I repeated the testing function in the previous section, without trying different devices, only on a lg-breakpoint+ laptop screen. In addition, I logged in and reset my password to test email functionality, and then logging in the with new password.
+
+- Chrome: Pass
+- Edge: Pass
+- Firefox: Pass
+
+I don't own a Safari device.
 
 # Code Validation
 
 [Back to top](#virtual-shelter---testing-documentation)
 
-xxx
+## HTML
+
+[https://validator.w3.org/](https://validator.w3.org/)
+
+The procedure I used was to go to the relevant webpage, right click, click 'View page source' then copy and paste the code into the validator. This was to avoid issues with the use of Jinja2 and templates.
+
+| Template tested | Test result |
+| :-------------: | :---: |
+| home/index.html | Pass |
+| Register page | Pass |
+| Verify email page | Pass |
+| Confirm email page | Pass |
+| Log In page | Pass |
+| Log Out page | Pass |
+| Forgot password page | Pass |
+| profiles/profile.html | Pass |
+| profiles/edit_profile.html | Pass |
+| profiles/apply_role_change.html | Pass |
+| profiles/tokens.html | Pass |
+| animals/view_animals.html | Pass |
+| animals/add_animal.html | Pass |
+| animals/profile.html | Pass |
+| animals/edit_profile.html | Pass |
+| animals/add_update.html | Pass |
+| animals/edit_update.html | Pass |
+| shelters/view_shelters.html | Pass |
+| shelters/shelter.html | Pass |
+| shelters/edit_shelter.html | Pass |
+| dashboard/dashboard.html | Pass |
+| dashboard/select_sprite.html | Pass |
+
+## CSS
+
+[https://jigsaw.w3.org/css-validator/](https://jigsaw.w3.org/css-validator/)
+
+Result: Pass
+
+## JavaScript
+
+[https://jshint.com/](https://jshint.com/)
+
+
+
+## Python
+
+[https://pep8ci.herokuapp.com/](https://pep8ci.herokuapp.com/)
+
+| Python file tested | Test result |
+| :----------------: | :---------: |
+| animals/admin.py   | Pass        |
 
 # Significant Bugs
 
