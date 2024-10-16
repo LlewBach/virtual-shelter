@@ -3,9 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import site
 from django.contrib.messages import get_messages
-from django.utils import timezone
 from django.core import mail
-from django.conf import settings
 from unittest.mock import patch, Mock
 import stripe
 import json
@@ -20,17 +18,25 @@ from .forms import ProfileForm, RoleChangeRequestForm
 class ProfileViewTest(TestCase):
     """
     Test cases for the profile view.
-    
+
     Ensures that the profile page is rendered correctly and requires login.
     """
     def setUp(self):
         """
-        Set up the test environment by creating a user, logging in, 
-        and creating a shelter and an animal associated with the user's profile.
+        Set up the test environment by creating a user, logging in, and
+        creating a shelter and an animal associated with the user's profile.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+            )
         self.client.login(username='testuser', password='12345')
-        self.shelter = Shelter.objects.create(admin=self.user, name="Test Shelter", registration_number="123456789", description="A test shelter")
+        self.shelter = Shelter.objects.create(
+            admin=self.user,
+            name="Test Shelter",
+            registration_number="123456789",
+            description="A test shelter"
+            )
         self.animal = Animal.objects.create(
             shelter=self.shelter,
             name='Buddy',
@@ -43,7 +49,8 @@ class ProfileViewTest(TestCase):
 
     def test_profile_view(self):
         """
-        Test that the profile page loads correctly with the user's profile and associated animals.
+        Test that the profile page loads correctly with the user's profile and
+        associated animals.
         """
         response = self.client.get('/profiles/')
         self.assertEqual(response.status_code, 200)
@@ -65,14 +72,18 @@ class ProfileViewTest(TestCase):
 class EditProfileViewTest(TestCase):
     """
     Test cases for the edit profile view.
-    
-    Ensures correct behavior when accessing or submitting data to the edit profile page.
+
+    Ensures correct behavior when accessing or submitting data to the edit
+    profile page.
     """
     def setUp(self):
         """
         Set up the test environment by creating and logging in a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+            )
         self.client.login(username='testuser', password='12345')
 
     def test_edit_profile_get(self):
@@ -108,7 +119,7 @@ class EditProfileViewTest(TestCase):
         self.user.profile.delete()
         response = self.client.get('/profiles/edit/')
         self.assertRedirects(response, '/')
-        
+
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Profile not found")
@@ -117,14 +128,17 @@ class EditProfileViewTest(TestCase):
 class DeleteProfileViewTest(TestCase):
     """
     Test cases for the delete profile view.
-    
+
     Ensures correct behavior when a user requests to delete their profile.
     """
     def setUp(self):
         """
         Set up the test environment by creating a user and logging them in.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+            )
         self.client.login(username='testuser', password='12345')
         self.user.profile.bio = 'Test bio'
 
@@ -140,21 +154,23 @@ class DeleteProfileViewTest(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Profile deleted")
-    
+
     def test_delete_profile_post_request_error(self):
         """
         Test error handling during profile deletion.
         """
         # Simulate an error in deletion by mocking the delete method
-        with patch('django.contrib.auth.models.User.delete', side_effect=Exception('Deletion error')):
+        with patch(
+            'django.contrib.auth.models.User.delete',
+            side_effect=Exception('Deletion error')
+        ):
             response = self.client.post('/profiles/delete/')
             self.assertRedirects(response, '/profiles/')
-            
+
             # Check if error message was added
             messages = list(get_messages(response.wsgi_request))
             self.assertEqual(len(messages), 1)
             self.assertEqual(str(messages[0]), "Error deleting profile")
-
 
     def test_delete_profile_get_request(self):
         """
@@ -169,14 +185,18 @@ class DeleteProfileViewTest(TestCase):
 class ApplyForRoleChangeViewTest(TestCase):
     """
     Test cases for the apply for role change view.
-    
-    Ensures the correct behavior when accessing and submitting the role change request form.
+
+    Ensures the correct behavior when accessing and submitting the role change
+    request form.
     """
     def setUp(self):
         """
         Set up the test environment by creating and logging in a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+            )
         self.client.login(username='testuser', password='12345')
 
     def test_apply_for_role_change_requires_login(self):
@@ -187,7 +207,7 @@ class ApplyForRoleChangeViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.client.logout()
         response = self.client.get('/profiles/apply-role-change/')
-        self.assertNotEqual(response.status_code, 200)        
+        self.assertNotEqual(response.status_code, 200)
 
     def test_apply_for_role_change_valid_submission(self):
         """
@@ -202,8 +222,10 @@ class ApplyForRoleChangeViewTest(TestCase):
         response = self.client.post('/profiles/apply-role-change/', form_data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/dashboard/')
-   
-        self.assertTrue(RoleChangeRequest.objects.filter(user=self.user).exists())
+
+        self.assertTrue(
+            RoleChangeRequest.objects.filter(user=self.user).exists()
+            )
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
@@ -221,7 +243,9 @@ class ApplyForRoleChangeViewTest(TestCase):
         }
         response = self.client.post('/profiles/apply-role-change/', form_data)
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(RoleChangeRequest.objects.filter(user=self.user).exists())  
+        self.assertFalse(
+            RoleChangeRequest.objects.filter(user=self.user).exists()
+        )
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
@@ -231,14 +255,17 @@ class ApplyForRoleChangeViewTest(TestCase):
 class TokensViewTest(TestCase):
     """
     Test cases for the tokens view.
-    
+
     Ensures correct behavior when accessing the tokens page.
     """
     def setUp(self):
         """
         Set up the test environment by creating and logging in a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+        )
         self.client.login(username='testuser', password='12345')
 
     def test_tokens_view(self):
@@ -254,21 +281,24 @@ class TokensViewTest(TestCase):
 class CheckoutSessionTest(TestCase):
     """
     Test case for creating a Stripe checkout session.
-    
-    Ensures that the checkout session is correctly created and the user is 
+
+    Ensures that the checkout session is correctly created and the user is
     redirected to the Stripe checkout page.
     """
     def setUp(self):
         """
         Set up the test environment by creating and logging in a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+            )
         self.client.login(username='testuser', password='12345')
-    
+
     @patch('stripe.checkout.Session.create')
     def test_create_checkout_session(self, mock_stripe_create):
         """
-        Test creating a Stripe checkout session and ensure the user is 
+        Test creating a Stripe checkout session and ensure the user is
         redirected to the mock Stripe checkout URL.
         """
         mock_stripe_create.return_value = Mock(
@@ -304,21 +334,25 @@ class CheckoutSessionTest(TestCase):
 class StripeWebhookTest(TestCase):
     """
     Test cases for handling Stripe webhook events.
-    
-    Ensures that the webhook endpoint correctly processes valid events 
-    and handles errors such as invalid signatures.
+
+    Ensures that the webhook endpoint correctly processes valid events and
+    handles errors such as invalid signatures.
     """
     def setUp(self):
         """
         Set up the test environment by creating and logging in a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+        )
         self.client.login(username='testuser', password='12345')
 
     @patch('stripe.Webhook.construct_event')
     def test_valid_webhook_event(self, mock_construct_event):
         """
-        Test processing a valid Stripe webhook event (checkout.session.completed).
+        Test processing a valid Stripe webhook event
+        (checkout.session.completed).
         """
         mock_event = {
             'type': 'checkout.session.completed',
@@ -349,7 +383,12 @@ class StripeWebhookTest(TestCase):
         """
         Test handling of an invalid Stripe webhook signature.
         """
-        mock_construct_event.side_effect = stripe.error.SignatureVerificationError('Invalid signature', 'some_header')
+        mock_construct_event.side_effect = (
+            stripe.error.SignatureVerificationError(
+                'Invalid signature',
+                'some_header'
+            )
+        )
 
         response = self.client.post(
             '/profiles/stripe-webhook/',
@@ -367,21 +406,25 @@ class StripeWebhookTest(TestCase):
 class ProfileModelTest(TestCase):
     """
     Test cases for the Profile model.
-    
-    Ensures that the Profile is created correctly and the __str__ method functions as expected.
+
+    Ensures that the Profile is created correctly and the __str__ method
+    functions as expected.
     """
     def setUp(self):
         """
         Set up the test environment by creating a user.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+        )
 
     def test_profile_creation(self):
         """
         Test that a Profile is automatically created when a User is created.
         """
         self.assertTrue(Profile.objects.filter(user=self.user).exists())
-    
+
     def test_profile_str(self):
         """
         Test the __str__ method of the Profile model.
@@ -393,15 +436,18 @@ class ProfileModelTest(TestCase):
 class RoleChangeRequestModelTest(TestCase):
     """
     Test cases for the RoleChangeRequest model.
-    
-    Ensures that RoleChangeRequest objects are created correctly and the 
+
+    Ensures that RoleChangeRequest objects are created correctly and the
     __str__ method returns the expected string.
     """
     def setUp(self):
         """
         Set up the test environment by creating a user and a RoleChangeRequest.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+        )
         self.role_change_request = RoleChangeRequest.objects.create(
             user=self.user,
             charity_name='Test Charity',
@@ -417,9 +463,18 @@ class RoleChangeRequestModelTest(TestCase):
         """
         self.assertEqual(self.role_change_request.user, self.user)
         self.assertEqual(self.role_change_request.charity_name, 'Test Charity')
-        self.assertEqual(self.role_change_request.charity_registration_number, '123456')
-        self.assertEqual(self.role_change_request.charity_website, 'https://testcharity.org')
-        self.assertEqual(self.role_change_request.charity_description, 'A test charity.')
+        self.assertEqual(
+            self.role_change_request.charity_registration_number,
+            '123456'
+        )
+        self.assertEqual(
+            self.role_change_request.charity_website,
+            'https://testcharity.org'
+        )
+        self.assertEqual(
+            self.role_change_request.charity_description,
+            'A test charity.'
+        )
         self.assertEqual(self.role_change_request.status, 'pending')
 
     def test_str(self):
@@ -434,8 +489,8 @@ class RoleChangeRequestModelTest(TestCase):
 class ProfileAdminTest(TestCase):
     """
     Test cases for the Profile model's admin configuration.
-    
-    Ensures that the Profile model is correctly registered in the admin site 
+
+    Ensures that the Profile model is correctly registered in the admin site
     and that the list display is properly configured.
     """
     def test_profile_admin_registration(self):
@@ -446,7 +501,8 @@ class ProfileAdminTest(TestCase):
 
     def test_profile_admin_list_display(self):
         """
-        Test that the list display in the ProfileAdmin includes 'user' and 'role'.
+        Test that the list display in the ProfileAdmin includes 'user' and
+        'role'.
         """
         profile_admin = ProfileAdmin(Profile, site)
         self.assertEqual(profile_admin.list_display, ('user', 'role'))
@@ -455,16 +511,20 @@ class ProfileAdminTest(TestCase):
 class RoleChangeRequestAdminTest(TestCase):
     """
     Test cases for the RoleChangeRequest model's admin configuration.
-    
-    Ensures that the RoleChangeRequest model is registered in the admin site, 
-    checks list display settings, and tests custom admin actions for approving 
+
+    Ensures that the RoleChangeRequest model is registered in the admin site,
+    checks list display settings, and tests custom admin actions for approving
     and rejecting requests.
     """
     def setUp(self):
         """
-        Set up the test environment by creating a user, profile, and role change request.
+        Set up the test environment by creating a user, profile, and role
+        change request.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='12345'
+        )
         self.profile = Profile.objects.get(user=self.user)
         self.role_change_request = RoleChangeRequest.objects.create(
             user=self.user,
@@ -477,25 +537,42 @@ class RoleChangeRequestAdminTest(TestCase):
 
     def test_role_change_request_admin_registration(self):
         """
-        Test that the RoleChangeRequest model is registered with the admin site.
+        Test that the RoleChangeRequest model is registered with the admin
+        site.
         """
         self.assertIn(RoleChangeRequest, site._registry)
 
     def test_role_change_request_admin_list_display(self):
         """
-        Test that the list display in RoleChangeRequestAdmin includes the correct fields.
+        Test that the list display in RoleChangeRequestAdmin includes the
+        correct fields.
         """
-        role_change_request_admin = RoleChangeRequestAdmin(RoleChangeRequest, site)
-        self.assertEqual(role_change_request_admin.list_display, 
-                         ('user', 'charity_name', 'charity_registration_number', 
-                          'charity_website', 'charity_description', 'status'))
+        role_change_request_admin = RoleChangeRequestAdmin(
+            RoleChangeRequest,
+            site
+        )
+        self.assertEqual(
+            role_change_request_admin.list_display,
+            (
+                'user',
+                'charity_name',
+                'charity_registration_number',
+                'charity_website',
+                'charity_description',
+                'status'
+            )
+        )
 
     def test_approve_requests_action(self):
         """
         Test the custom admin action for approving role change requests.
         """
-        role_change_request_admin = RoleChangeRequestAdmin(RoleChangeRequest, site)
-        queryset = RoleChangeRequest.objects.filter(id=self.role_change_request.id)
+        role_change_request_admin = RoleChangeRequestAdmin(
+            RoleChangeRequest, site
+        )
+        queryset = RoleChangeRequest.objects.filter(
+            id=self.role_change_request.id
+        )
         role_change_request_admin.approve_requests(None, queryset)
 
         # Refresh from the database
@@ -510,8 +587,12 @@ class RoleChangeRequestAdminTest(TestCase):
         """
         Test the custom admin action for rejecting role change requests.
         """
-        role_change_request_admin = RoleChangeRequestAdmin(RoleChangeRequest, site)
-        queryset = RoleChangeRequest.objects.filter(id=self.role_change_request.id)
+        role_change_request_admin = RoleChangeRequestAdmin(
+            RoleChangeRequest, site
+        )
+        queryset = RoleChangeRequest.objects.filter(
+            id=self.role_change_request.id
+        )
         role_change_request_admin.reject_requests(None, queryset)
 
         # Refresh from the database
@@ -527,8 +608,9 @@ class RoleChangeRequestAdminTest(TestCase):
 class RoleChangeRequestFormTest(TestCase):
     """
     Test cases for the RoleChangeRequestForm.
-    
-    Ensures proper initialization, validation, and widget configuration of the form.
+
+    Ensures proper initialization, validation, and widget configuration of the
+    form.
     """
     def test_form_initialization(self):
         """
@@ -571,15 +653,20 @@ class RoleChangeRequestFormTest(TestCase):
         Test the widget configuration for charity_description field
         """
         form = RoleChangeRequestForm()
-        self.assertEqual(form.fields['charity_description'].widget.attrs['rows'], 4)
+        self.assertEqual(
+            form.fields['charity_description'].widget.attrs['rows'],
+            4
+        )
 
 
 # Signals
 class RoleChangeRequestSignalTest(TestCase):
     """
-    Test cases for the signal that notifies superusers when a role change request is created.
-    
-    Ensures that an email notification is sent to superusers when a RoleChangeRequest is created.
+    Test cases for the signal that notifies superusers when a role change
+    request is created.
+
+    Ensures that an email notification is sent to superusers when a
+    RoleChangeRequest is created.
     """
     def setUp(self):
         """
@@ -598,11 +685,12 @@ class RoleChangeRequestSignalTest(TestCase):
 
     def test_notify_superuser_on_role_change_request(self):
         """
-        Test that an email is sent to superusers when a role change request is created.
+        Test that an email is sent to superusers when a role change request is
+        created.
         """
         # Before creating request, check no emails sent
         self.assertEqual(len(mail.outbox), 0)
-        
+
         # Create a role change request
         RoleChangeRequest.objects.create(
             user=self.user,
@@ -611,14 +699,20 @@ class RoleChangeRequestSignalTest(TestCase):
             charity_website='http://testcharity.org',
             charity_description='A test charity'
         )
-        
+
         # Check that an email has been sent
         self.assertEqual(len(mail.outbox), 1)
 
         # Verify the contents of the email
         email = mail.outbox[0]
-        self.assertEqual(email.subject, 'New Shelter Admin Role Change Request')
-        self.assertIn('A new role change request has been submitted by testuser.', email.body)
+        self.assertEqual(
+            email.subject,
+            'New Shelter Admin Role Change Request'
+        )
+        self.assertIn(
+            'A new role change request has been submitted by testuser.',
+            email.body
+        )
         self.assertIn('Test Charity', email.body)
         self.assertIn('123456', email.body)
         self.assertIn('http://testcharity.org', email.body)

@@ -426,6 +426,14 @@ Result: Pass
 | home/tests.py       | Pass        |
 | home/urls.py        | Pass        |
 | home/views.py       | Pass        |
+| profiles/admin.py   | Pass        |
+| profiles/apps.py    | Pass        |
+| profiles/forms.py   | Pass        |
+| profiles/models.py  | Pass        |
+| profiles/signals.py | Pass        |
+| profiles/tests.py   | Pass        |
+| profiles/urls.py    | Pass        |
+| profiles/views.py   | Pass        |
 
 # Significant Bugs
 

@@ -17,7 +17,11 @@ def profile(request):
     """
     user_profile = Profile.objects.get(user=request.user)
     animals = user_profile.animals.all()
-    return render(request, 'profiles/profile.html', {'profile': user_profile, 'animals': animals})
+    return render(
+        request,
+        'profiles/profile.html',
+        {'profile': user_profile, 'animals': animals}
+    )
 
 
 @login_required
@@ -94,6 +98,8 @@ def tokens(request):
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 def create_checkout_session(request):
     """
     View for the Stripe checkout session to purchase virtual tokens.
@@ -105,19 +111,20 @@ def create_checkout_session(request):
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[
-                {'price_data': {
-                    'currency': 'gbp',
-                    'product_data': {
-                        'name': '100 Virtual Shelter Tokens',
+                {
+                    'price_data': {
+                        'currency': 'gbp',
+                        'product_data': {
+                            'name': '100 Virtual Shelter Tokens',
+                        },
+                        'unit_amount': token_cost,
                     },
-                    'unit_amount': token_cost,
-                },
-                'quantity': 1,
+                    'quantity': 1,
                 }
             ],
             mode='payment',
-            success_url = f'{domain}/dashboard/?payment_status=success',
-            cancel_url = f'{domain}/dashboard/?payment_status=cancel',
+            success_url=f'{domain}/dashboard/?payment_status=success',
+            cancel_url=f'{domain}/dashboard/?payment_status=cancel',
             metadata={
                 'user_id': request.user.id
             }
@@ -127,7 +134,7 @@ def create_checkout_session(request):
         print("Stripe session creation error:", e)
         return JsonResponse({'error': str(e)}, status=500)
 
-    
+
 @csrf_exempt
 def stripe_webhook(request):
     """
@@ -161,6 +168,9 @@ def stripe_webhook(request):
                 profile.tokens += 100
                 profile.save()
             except Profile.DoesNotExist:
-                return JsonResponse({'status': 'User profile not found'}, status=404)
+                return JsonResponse(
+                    {'status': 'User profile not found'},
+                    status=404
+                )
 
     return JsonResponse({'status': 'success'}, status=200)

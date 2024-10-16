@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 class Profile(models.Model):
     """
@@ -8,18 +9,18 @@ class Profile(models.Model):
 
     Attributes:
     -----------
-    user: 
+    user:
         A one-to-one relationship with Django User model.
-    role: 
+    role:
         Either 'user', 'shelter_admin', or 'superuser'.
-    tokens: 
+    tokens:
         Number of virtual tokens the user has.
-    bio: 
+    bio:
         Optional text field for user's bio.
-    profile_picture: 
+    profile_picture:
         Optional image field for the user's profile.
     """
-    
+
     USER_ROLES = (
         ('user', 'User'),
         ('shelter_admin', 'Shelter Admin'),
@@ -43,23 +44,26 @@ class RoleChangeRequest(models.Model):
     """
     Model for role change requests.
 
-    Stores information about a user's request to change their role to become a shelter admin. This includes details about the charity the user represents, such as name, registration 
-    number, website, and description. The status of the request (pending, approved, or rejected) is tracked as well.
+    Stores information about a user's request to change their role to become a
+    shelter admin. This includes details about the charity the user represents,
+    such as name, registration number, website, and description. The status of
+    the request (pending, approved, or rejected) is tracked as well.
 
     Attributes:
     -----------
-        user: 
+        user:
             The user making the role change request.
-        charity_name: 
+        charity_name:
             The name of the charity.
-        charity_registration_number: 
+        charity_registration_number:
             The registration number of the charity.
-        charity_website: 
+        charity_website:
             Optional field for the charity's website URL.
-        charity_description: 
+        charity_description:
             A description of the charity.
-        status: 
-            The status of the request, which can be 'pending', 'approved', or 'rejected'.
+        status:
+            The status of the request, which can be 'pending', 'approved', or
+            'rejected'.
     """
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -72,7 +76,11 @@ class RoleChangeRequest(models.Model):
     charity_registration_number = models.CharField(max_length=100)
     charity_website = models.URLField(blank=True, null=True)
     charity_description = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+        )
 
     def __str__(self):
         """
