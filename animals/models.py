@@ -5,41 +5,60 @@ from profiles.models import Profile
 
 class Animal(models.Model):
     """
-    Represents an animal in the system, associated with a shelter and optionally a fosterer.
+    Represents an animal in the system, associated with a shelter and
+    optionally a fosterer.
 
     Attributes:
-        shelter (ForeignKey): 
+        shelter (ForeignKey):
             The shelter that the animal belongs to.
-        fosterer (ForeignKey): 
+        fosterer (ForeignKey):
             The profile of the fosterer, if applicable.
-        image: 
+        image:
             Optional image of the animal.
-        name: 
+        name:
             The name of the animal.
-        species : 
+        species:
             The species of the animal, with 'Dog' as a default choice.
-        breed: 
+        breed:
             The breed of the animal, which is optional.
-        age: 
+        age:
             The age of the animal.
-        description: 
+        description:
             Optional description of the animal.
-        adoption_status: 
+        adoption_status:
             The current adoption status of the animal.
     """
 
     class SpeciesChoices(models.TextChoices):
         DOG = 'Dog', 'Dog'
 
-    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='animals')
-    fosterer = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='animals', blank=True, null=True)
+    shelter = models.ForeignKey(
+        Shelter,
+        on_delete=models.CASCADE,
+        related_name='animals'
+        )
+    fosterer = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        related_name='animals',
+        blank=True,
+        null=True
+        )
     image = models.ImageField(upload_to='', blank=True, null=True)
     name = models.CharField(max_length=255)
-    species = models.CharField(max_length=25, choices=SpeciesChoices.choices, default=SpeciesChoices.DOG)
+    species = models.CharField(
+        max_length=25,
+        choices=SpeciesChoices.choices,
+        default=SpeciesChoices.DOG
+        )
     breed = models.CharField(max_length=100, blank=True, null=True)
     age = models.IntegerField()
     description = models.TextField(blank=True, null=True)
-    adoption_status = models.CharField(max_length=20, choices=[('Available', 'Available'), ('Fostered', 'Fostered')], default='Available')
+    adoption_status = models.CharField(
+        max_length=20,
+        choices=[('Available', 'Available'), ('Fostered', 'Fostered')],
+        default='Available'
+        )
 
     def __str__(self):
         """
@@ -55,12 +74,17 @@ class Update(models.Model):
     Attributes:
         animal (ForeignKey):
             The animal that this update is associated with.
-        text: 
+        text:
             The content of the update.
-        created_at: 
-            The date and time when the update was created, automatically set on creation.
+        created_at:
+            The date and time when the update was created, automatically set on
+            creation.
     """
-    animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name='updates')
+    animal = models.ForeignKey(
+        Animal,
+        on_delete=models.CASCADE,
+        related_name='updates'
+        )
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -68,4 +92,6 @@ class Update(models.Model):
         """
         Returns string representation of Update object.
         """
-        return f'Update for {self.animal.name} on {self.created_at.strftime("%Y-%m-%d")}'
+        return f'Update for {self.animal.name} on {
+            self.created_at.strftime("%Y-%m-%d")
+            }'

@@ -410,8 +410,12 @@ Result: Pass
 | Python file tested | Test result |
 | :----------------: | :---------: |
 | animals/admin.py   | Pass        |
-| animals/apps.py   | Pass        |
+| animals/apps.py    | Pass        |
 | animals/forms.py   | Pass        |
+| animals/models.py  | Pass        |
+| animals/tests.py   | Pass        |
+| animals/urls.py    | Pass        |
+| animals/views.py   | Pass        |
 
 # Significant Bugs
 
