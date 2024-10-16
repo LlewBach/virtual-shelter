@@ -422,6 +422,10 @@ Result: Pass
 | dashboard/tests.py  | Pass        |
 | dashboard/urls.py   | Pass        |
 | dashboard/views.py  | Pass        |
+| home/apps.py        | Pass        |
+| home/tests.py       | Pass        |
+| home/urls.py        | Pass        |
+| home/views.py       | Pass        |
 
 # Significant Bugs
 
