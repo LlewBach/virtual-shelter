@@ -710,7 +710,7 @@ class RoleChangeRequestSignalTest(TestCase):
             'New Shelter Admin Role Change Request'
         )
         self.assertIn(
-            'A new role change request has been submitted by testuser.',
+            'A new role change request by testuser.',
             email.body
         )
         self.assertIn('Test Charity', email.body)
