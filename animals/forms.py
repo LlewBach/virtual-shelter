@@ -1,10 +1,11 @@
 from django import forms
 from .models import Animal, Update
 
+
 class AnimalForm(forms.ModelForm):
     """
     Form for creating or updating an Animal instance.
-    
+
     Includes a custom age field with specific choices for age ranges.
     """
     AGE_CHOICES = [
@@ -34,16 +35,23 @@ class AnimalForm(forms.ModelForm):
 
     age = forms.ChoiceField(choices=AGE_CHOICES, label="Age")
 
-
     class Meta:
         model = Animal
-        fields = ['image', 'name', 'species', 'breed', 'age', 'description', 'adoption_status']
+        fields = [
+            'image',
+            'name',
+            'species',
+            'breed',
+            'age',
+            'description',
+            'adoption_status'
+            ]
 
 
 class UpdateForm(forms.ModelForm):
     """
     Form for creating or updating an Update instance.
-    
+
     Only includes a field for the update text.
     """
     class Meta:
