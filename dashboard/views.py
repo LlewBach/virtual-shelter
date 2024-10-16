@@ -8,6 +8,7 @@ from .models import Sprite
 from animals.models import Animal
 from profiles.models import Profile
 
+
 @login_required
 def dashboard(request):
     """
@@ -26,7 +27,7 @@ def dashboard(request):
 
     if payment_status == 'success':
         messages.success(request, "Payment successful! Received 100 tokens.")
-    
+
     elif payment_status == 'cancel':
         messages.error(request, "Payment cancelled. No tokens added.")
 
@@ -37,10 +38,13 @@ def select_sprite(request, id):
     """
     View that handles selecting and fostering a sprite for a specific animal.
     Prevents shelter admins and existing fosterers from fostering the animal.
-    On successful form submission, assigns the sprite to the user and updates the animal's status.
+    On successful form submission, assigns the sprite to the user and updates
+    the animal's status.
     """
     animal = get_object_or_404(Animal, id=id)
-    if request.user.profile.role == 'shelter_admin' or animal.fosterer == request.user.profile:
+    if request.user.profile.role == 'shelter_admin' or (
+        animal.fosterer == request.user.profile
+    ):
         messages.warning(request, "You cannot foster this animal")
         return redirect('view_animals')
 
@@ -92,7 +96,10 @@ def delete_sprite(request, id):
             sprite.delete()
             messages.success(request, f"'{animal.name}' returned to shelter")
         except Exception as e:
-            messages.error(request, f"Error removing '{animal.name}' from foster")
+            messages.error(
+                request,
+                f"Error removing '{animal.name}' from foster"
+            )
 
     return redirect('dashboard')
 
@@ -101,7 +108,8 @@ def update_status(request, sprite_id):
     """
     View to update the status of a sprite and return its current stats as JSON.
     Retrieves the sprite by its ID, updates its status, and returns a JSON
-    response with the updated satiation, current state, time standing, and time running.
+    response with the updated satiation, current state, time standing, and time
+    running.
     """
     sprite = get_object_or_404(Sprite, id=sprite_id)
     sprite.update_status()
@@ -115,9 +123,10 @@ def update_status(request, sprite_id):
 
 def feed_sprite(request, sprite_id):
     """
-    View to feed a sprite. Deducts 1 token from the user's profile if they have enough tokens,
-    increases the sprite's satiation by 5 (capped at 100), and returns a JSON response 
-    with the updated satiation and token count. Returns an error if the user has insufficient tokens.
+    View to feed a sprite. Deducts 1 token from the user's profile if they have
+    enough tokens, increases the sprite's satiation by 5 (capped at 100), and
+    returns a JSON response with the updated satiation and token count. Returns
+    an error if the user has insufficient tokens.
     """
     sprite = get_object_or_404(Sprite, id=sprite_id)
     profile = request.user.profile
@@ -130,7 +139,7 @@ def feed_sprite(request, sprite_id):
             'success': False,
             'error': 'Not enough tokens to feed the sprite.'
         }, status=400)
-    
+
     profile.tokens -= token_cost
     profile.save()
 
@@ -142,4 +151,3 @@ def feed_sprite(request, sprite_id):
         'satiation': sprite.satiation,
         'tokens': profile.tokens
     })
-

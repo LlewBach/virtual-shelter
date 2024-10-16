@@ -407,15 +407,21 @@ Result: Pass
 
 [https://pep8ci.herokuapp.com/](https://pep8ci.herokuapp.com/)
 
-| Python file tested | Test result |
-| :----------------: | :---------: |
-| animals/admin.py   | Pass        |
-| animals/apps.py    | Pass        |
-| animals/forms.py   | Pass        |
-| animals/models.py  | Pass        |
-| animals/tests.py   | Pass        |
-| animals/urls.py    | Pass        |
-| animals/views.py   | Pass        |
+| Python file tested  | Test result |
+| :----------------:  | :---------: |
+| animals/admin.py    | Pass        |
+| animals/apps.py     | Pass        |
+| animals/forms.py    | Pass        |
+| animals/models.py   | Pass        |
+| animals/tests.py    | Pass        |
+| animals/urls.py     | Pass        |
+| animals/views.py    | Pass        |
+| dashboard/apps.py   | Pass        |
+| dashboard/forms.py  | Pass        |
+| dashboard/models.py | Pass        |
+| dashboard/tests.py  | Pass        |
+| dashboard/urls.py   | Pass        |
+| dashboard/views.py  | Pass        |
 
 # Significant Bugs
 

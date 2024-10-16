@@ -1,6 +1,7 @@
 from django import forms
 from .models import Sprite
 
+
 class SpriteForm(forms.ModelForm):
     """
     Form for creating or updating a Sprite instance.
@@ -10,4 +11,3 @@ class SpriteForm(forms.ModelForm):
     class Meta:
         model = Sprite
         fields = ['breed', 'colour']
-
