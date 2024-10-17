@@ -290,6 +290,10 @@ This project was developed with unit testing.
 
 ### Python test coverage
 
+![capture-15](static/images/captures/capture-15.PNG)
+
+![capture-16](static/images/captures/capture-16.PNG)
+
 ## JavaScript
 
 ### Jest installation
