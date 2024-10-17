@@ -324,6 +324,8 @@ I also added the node_modules folder to the gitignore to not overload the git sy
 
 ![capture-14](static/images/captures/capture-14.PNG)
 
+JavaScript relating to event handlers were not Jest-tested. However, the functionality for this code has already been tested in the User Story testing section.
+
 # Responsiveness Testing
 
 [Back to top](#virtual-shelter---testing-documentation)
