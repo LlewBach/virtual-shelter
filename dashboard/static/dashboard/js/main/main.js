@@ -1,6 +1,6 @@
 import { UserInterface } from '../userInterface/userInterface.js';
 import { Sprite } from '../sprite/sprite.js';
-import { feedSprite, getCSRFToken } from '../AJAX/button1.js';
+import { feedSprite } from '../AJAX/button1.js';
 import { ChartClass } from '../chart/chart.js';
 
 export class Game {
@@ -12,7 +12,7 @@ export class Game {
     this.userInterface = new UserInterface(this);
     this.sprite = new Sprite(this);
     this.satiation = 55;
-    this.chartObj = new ChartClass(this.id, this.satiation);
+    this.chartObj = new ChartClass(this.id);
 
     this.fetchStatus();
     this.statusInterval = setInterval(() => this.fetchStatus(), 61000);
@@ -24,11 +24,8 @@ export class Game {
         this.satiation = data.satiation;
         this.sprite.setState(data.current_state);
         this.chartObj.updateChart(data);
-      })
+      });
   }
-  // destroy() {
-  //   clearInterval(this.statusInterval);
-  // }
   update(deltaTime) {
     this.sprite.update(deltaTime);
   }

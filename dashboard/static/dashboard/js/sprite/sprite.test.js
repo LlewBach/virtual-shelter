@@ -2,7 +2,7 @@ import { Sprite } from './sprite.js';
 import { Standing } from '../states/states.js';
 
 describe('Sprite class', () => {
-  let game, sprite, mockContext
+  let game, sprite, mockContext;
   let mockImage = {};
 
   beforeEach(() => {

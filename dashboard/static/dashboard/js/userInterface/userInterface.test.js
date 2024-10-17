@@ -6,11 +6,11 @@ describe('UserInterface class', () => {
   beforeEach(() => {
     game = {
       satiation: 75
-    }
+    };
     mockContext = {
       fillText: jest.fn(),
       fillRect: jest.fn(),
-    }
+    };
     userInterface = new UserInterface(game);
   });
 

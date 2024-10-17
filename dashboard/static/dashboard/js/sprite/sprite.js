@@ -4,7 +4,7 @@ import { Standing, Running } from '../states/states.js';
 const states = {
   STANDING: 0,
   RUNNING: 1,
-}
+};
 
 export class Sprite {
   constructor(game) {

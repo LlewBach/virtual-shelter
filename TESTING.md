@@ -401,7 +401,13 @@ Result: Pass
 
 [https://jshint.com/](https://jshint.com/)
 
+I downloaded JSHint as a dev dependency and tested each .js file, including test.js files, with the linter.
 
+I had to add variables from Jest and Chart.js to ignore these in .jshintrc file.
+
+I also tested the script tag at the bottom of select_sprite.html. The only errors came from inteference from the HTML.
+
+All tests pass.
 
 ## Python
 

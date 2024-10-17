@@ -1,0 +1,16 @@
+{
+  "esversion": 8,
+  "undef": true,
+  "unused": true,
+  "node": true,
+  "browser": true,
+  "globals": {
+    "jest": true,
+    "describe": true,
+    "test": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "expect": true,
+    "Chart": true
+  }
+}

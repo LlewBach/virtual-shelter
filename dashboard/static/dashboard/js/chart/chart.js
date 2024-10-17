@@ -1,5 +1,5 @@
 export class ChartClass {
-  constructor(id, initialSatiation) {
+  constructor(id) {
     this.chartCanvas = document.querySelector(`#chart-canvas-${id}`);
     if (!this.chartCanvas) return;
 
@@ -23,7 +23,7 @@ export class ChartClass {
     });
   }
   updateChart(data) {
-    if (!this.chart) return;  // gonna delete
+    if (!this.chart) return;
 
     this.chart.data.datasets[0].data = [data.time_standing, data.time_running];
     this.chart.update();
