@@ -11,14 +11,18 @@ from .forms import ShelterForm
 class ShelterViewTest(TestCase):
     """
     Unit tests for the Shelter view.
-    Tests the shelter profile page for valid and invalid shelter IDs and ensures
-    the correct template is used and animals are displayed.
+
+    Tests the shelter profile page for valid and invalid shelter IDs and
+    ensures the correct template is used and animals are displayed.
     """
     def setUp(self):
         """
         Setup a test user and shelter, and log in the user before each test.
         """
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
         self.shelter = Shelter.objects.create(
             admin=self.user,
             name='Test Shelter',
@@ -40,11 +44,24 @@ class ShelterViewTest(TestCase):
 
     def test_shelter_view_with_animals(self):
         """
-        Test that the shelter view displays animals associated with the shelter.
-        """      
-        Animal.objects.create(shelter=self.shelter, name="Test Animal 1", species="Dog", age=5, adoption_status="Available")
-        Animal.objects.create(shelter=self.shelter, name="Test Animal 2", species="Cat", age=1, adoption_status="Fostered")
-        
+        Test that the shelter view displays animals associated with the
+        shelter.
+        """
+        Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal 1",
+            species="Dog",
+            age=5,
+            adoption_status="Available"
+        )
+        Animal.objects.create(
+            shelter=self.shelter,
+            name="Test Animal 2",
+            species="Cat",
+            age=1,
+            adoption_status="Fostered"
+        )
+
         response = self.client.get(f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Animal 1")
@@ -52,7 +69,8 @@ class ShelterViewTest(TestCase):
 
     def test_shelter_view_shelter_does_not_exist(self):
         """
-        Test that the shelter view redirects when a non-existent shelter is requested.
+        Test that the shelter view redirects when a non-existent shelter is
+        requested.
         """
         non_existent_id = 999
         response = self.client.get(f'/shelters/profile/{non_existent_id}/')
@@ -61,20 +79,27 @@ class ShelterViewTest(TestCase):
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "The shelter you are looking for does not exist.")
+        self.assertEqual(
+            str(messages[0]),
+            "The shelter you are looking for does not exist."
+        )
 
 
 class EditMyShelterViewTest(TestCase):
     """
     Unit tests for the Edit My Shelter view.
-    Ensures the shelter information can be edited, with proper handling of 
+
+    Ensures the shelter information can be edited, with proper handling of
     valid and invalid form submissions, as well as when no shelter exists.
     """
     def setUp(self):
         """
         Setup test user and shelter, and log in the user before each test.
         """
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass'
+        )
         self.shelter = Shelter.objects.create(
             admin=self.user,
             name='Test Shelter',
@@ -86,10 +111,13 @@ class EditMyShelterViewTest(TestCase):
 
     def test_edit_shelter_view_get(self):
         """
-        Test GET request to the edit shelter view, ensuring the form is loaded with existing shelter data.
+        Test GET request to the edit shelter view, ensuring the form is loaded
+        with existing shelter data.
         """
-        response = self.client.get(f'/shelters/profile/edit/{self.shelter.id}/')
-        
+        response = self.client.get(
+            f'/shelters/profile/edit/{self.shelter.id}/'
+        )
+
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shelters/edit_shelter.html')
         self.assertIsInstance(response.context['form'], ShelterForm)
@@ -97,7 +125,8 @@ class EditMyShelterViewTest(TestCase):
 
     def test_edit_shelter_view_post_valid(self):
         """
-        Test POST request with valid form data, ensuring shelter details are updated.
+        Test POST request with valid form data, ensuring shelter details are
+        updated.
         """
         data = {
             'name': 'Updated Test Shelter',
@@ -105,13 +134,17 @@ class EditMyShelterViewTest(TestCase):
             'website': 'https://www.updatedshelter.com',
             'description': 'An updated description.'
         }
-        response = self.client.post(f'/shelters/profile/edit/{self.shelter.id}/', data)
+        response = self.client.post(
+            f'/shelters/profile/edit/{self.shelter.id}/', data
+        )
 
         self.shelter.refresh_from_db()
         self.assertRedirects(response, f'/shelters/profile/{self.shelter.id}/')
         self.assertEqual(self.shelter.name, 'Updated Test Shelter')
         self.assertEqual(self.shelter.registration_number, '987654321')
-        self.assertEqual(self.shelter.website, 'https://www.updatedshelter.com')
+        self.assertEqual(
+            self.shelter.website, 'https://www.updatedshelter.com'
+        )
         self.assertEqual(self.shelter.description, 'An updated description.')
 
         messages = list(get_messages(response.wsgi_request))
@@ -120,7 +153,8 @@ class EditMyShelterViewTest(TestCase):
 
     def test_edit_shelter_view_post_invalid(self):
         """
-        Test POST request with invalid form data, ensuring error messages and form re-rendering.
+        Test POST request with invalid form data, ensuring error messages and
+        form re-rendering.
         """
         data = {
             'name': '',  # Name is required
@@ -128,7 +162,9 @@ class EditMyShelterViewTest(TestCase):
             'website': 'https://www.updatedshelter.com',
             'description': 'An updated description.'
         }
-        response = self.client.post(f'/shelters/profile/edit/{self.shelter.id}/', data)
+        response = self.client.post(
+            f'/shelters/profile/edit/{self.shelter.id}/', data
+        )
 
         # Should rerender page
         self.assertEqual(response.status_code, 200)
@@ -138,7 +174,9 @@ class EditMyShelterViewTest(TestCase):
 
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "Error updating shelter - Check the form")
+        self.assertEqual(
+            str(messages[0]), "Error updating shelter - Check the form"
+        )
 
     def test_edit_shelter_view_no_shelter(self):
         """
@@ -153,16 +191,20 @@ class EditMyShelterViewTest(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Shelter not found")
 
+
 class DeleteMyShelterViewTest(TestCase):
     """
-    Unit tests for the Delete My Shelter view, ensuring proper functionality when
-    deleting a shelter and its associated user account, along with error handling.
+    Unit tests for the Delete My Shelter view, ensuring proper functionality
+    when deleting a shelter and its associated user account, along with error
+    handling.
     """
     def setUp(self):
         """
         Set up a test user and shelter, and log in the user before each test.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345'
+        )
         self.client.login(username='testuser', password='12345')
         self.shelter = Shelter.objects.create(
             admin=self.user,
@@ -174,7 +216,8 @@ class DeleteMyShelterViewTest(TestCase):
 
     def test_delete_shelter_post_request(self):
         """
-        Test the deletion of a shelter and associated user account via POST request.
+        Test the deletion of a shelter and associated user account via POST
+        request.
         """
         response = self.client.post('/shelters/profile/delete/')
         self.assertRedirects(response, '/')
@@ -187,11 +230,14 @@ class DeleteMyShelterViewTest(TestCase):
 
     def test_delete_shelter_error(self):
         """
-        Test error handling when an exception occurs while deleting the user or shelter.
+        Test error handling when an exception occurs while deleting the user or
+        shelter.
         """
         # Simulate an error by overriding the delete method temporarily
         original_delete = User.delete
-        User.delete = lambda self: (_ for _ in ()).throw(Exception("Deletion error"))
+        User.delete = lambda self: (
+            (_ for _ in ()).throw(Exception("Deletion error"))
+        )
 
         response = self.client.post('/shelters/profile/delete/')
 
@@ -208,13 +254,16 @@ class DeleteMyShelterViewTest(TestCase):
 
 class ViewSheltersViewTest(TestCase):
     """
-    Unit tests for the View Shelters page to ensure shelters are properly displayed.
+    Unit tests for the View Shelters page to ensure shelters are properly
+    displayed.
     """
     def setUp(self):
         """
         Set up a test user and a shelter before each test.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345'
+        )
         self.shelter = Shelter.objects.create(
             admin=self.user,
             name="Test Shelter1",
@@ -225,7 +274,8 @@ class ViewSheltersViewTest(TestCase):
 
     def test_view(self):
         """
-        Test that the shelters view displays the correct template and context data.
+        Test that the shelters view displays the correct template and context
+        data.
         """
         response = self.client.get('/shelters/')
         self.assertEqual(response.status_code, 200)
@@ -243,7 +293,9 @@ class ShelterModelTest(TestCase):
         """
         Set up a test user and shelter before each test.
         """
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345'
+        )
         self.shelter = Shelter.objects.create(
             admin=self.user,
             name='Test Shelter',
@@ -259,7 +311,9 @@ class ShelterModelTest(TestCase):
         self.assertEqual(self.shelter.name, 'Test Shelter')
         self.assertEqual(self.shelter.registration_number, '12345')
         self.assertEqual(self.shelter.website, 'https://testshelter.com')
-        self.assertEqual(self.shelter.description, 'This is a test shelter description.')
+        self.assertEqual(
+            self.shelter.description, 'This is a test shelter description.'
+        )
         self.assertEqual(self.shelter.admin, self.user)
 
     def test_str(self):
@@ -278,13 +332,16 @@ class ShelterModelTest(TestCase):
 # Signals
 class CreateShelterOnApprovalTest(TestCase):
     """
-    Tests the functionality of the signal that creates a Shelter when a RoleChangeRequest is approved.
+    Tests the functionality of the signal that creates a Shelter when a
+    RoleChangeRequest is approved.
     """
     def setUp(self):
         """
         Set up a test user for the tests.
         """
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass'
+        )
 
     def test_shelter_creation_on_role_approval(self):
         """
@@ -310,7 +367,8 @@ class CreateShelterOnApprovalTest(TestCase):
 
     def test_no_shelter_created_on_non_approved_status(self):
         """
-        Test that no Shelter is created when a RoleChangeRequest is not approved.
+        Test that no Shelter is created when a RoleChangeRequest is not
+        approved.
         """
         role_change_request = RoleChangeRequest.objects.create(
             user=self.user,
@@ -327,7 +385,8 @@ class CreateShelterOnApprovalTest(TestCase):
 
     def test_no_duplicate_shelter_created(self):
         """
-        Test that no duplicate Shelter is created if one already exists for the user.
+        Test that no duplicate Shelter is created if one already exists for the
+        user.
         """
         # Create a Shelter for the user first
         existing_shelter = Shelter.objects.create(

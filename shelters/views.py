@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
 from .models import Shelter
 from .forms import ShelterForm
 
@@ -17,19 +16,25 @@ def profile(request, id):
     try:
         shelter = Shelter.objects.get(id=id)
     except Shelter.DoesNotExist:
-        messages.error(request, "The shelter you are looking for does not exist.")
+        messages.error(
+            request, "The shelter you are looking for does not exist."
+        )
         return redirect('view_shelters')
-    
+
     animals = shelter.animals.all()
-    
-    return render(request, 'shelters/shelter.html', {'shelter': shelter, 'animals': animals})
+
+    return render(
+        request,
+        'shelters/shelter.html',
+        {'shelter': shelter, 'animals': animals}
+    )
 
 
 @login_required
 def edit_shelter(request, id):
     """
     View for editing an existing shelter. Loads the shelter by ID.
-    Displays a form pre-filled with the shelter's current data. 
+    Displays a form pre-filled with the shelter's current data.
     Handles POST requests to update shelter information if the form is valid.
     If the shelter does not exist, redirects with an error message.
     """
@@ -38,7 +43,7 @@ def edit_shelter(request, id):
     except Shelter.DoesNotExist:
         messages.error(request, "Shelter not found")
         return redirect('view_shelters')
-    
+
     if request.method == 'POST':
         form = ShelterForm(request.POST, request.FILES, instance=shelter)
         if form.is_valid():
@@ -49,8 +54,12 @@ def edit_shelter(request, id):
             messages.error(request, "Error updating shelter - Check the form")
     else:
         form = ShelterForm(instance=shelter)
-    
-    return render(request, 'shelters/edit_shelter.html', {'form': form, 'shelter': shelter})
+
+    return render(
+        request,
+        'shelters/edit_shelter.html',
+        {'form': form, 'shelter': shelter}
+    )
 
 
 @login_required
@@ -58,7 +67,8 @@ def delete_shelter(request):
     """
     Handles the deletion of the user's shelter and account.
     Deletes the user's account and logs them out on a successful POST request.
-    If there's an error during deletion, an error message is shown, and the user is redirected to the shelter profile.
+    If there's an error during deletion, an error message is shown, and the
+    user is redirected to the shelter profile.
     """
     if request.method == 'POST':
         try:
@@ -75,7 +85,11 @@ def delete_shelter(request):
 def view_shelters(request):
     """
     Renders a view displaying all shelters.
-    Retrieves all Shelter objects and passes them to the 'view_shelters' template.
+
+    Retrieves all Shelter objects and passes them to the 'view_shelters'
+    template.
     """
     shelters = Shelter.objects.all()
-    return render(request, 'shelters/view_shelters.html', {'shelters': shelters})
+    return render(
+        request, 'shelters/view_shelters.html', {'shelters': shelters}
+    )

@@ -434,6 +434,13 @@ Result: Pass
 | profiles/tests.py   | Pass        |
 | profiles/urls.py    | Pass        |
 | profiles/views.py   | Pass        |
+| shelters/apps.py    | Pass        |
+| shelters/forms.py   | Pass        |
+| shelters/models.py  | Pass        |
+| shelters/signals.py | Pass        |
+| shelters/tests.py   | Pass        |
+| shelters/urls.py    | Pass        |
+| shelters/views.py   | Pass        |
 
 # Significant Bugs
 
