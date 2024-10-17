@@ -366,30 +366,30 @@ I don't own a Safari device.
 
 The procedure I used was to go to the relevant webpage, right click, click 'View page source' then copy and paste the code into the validator. This was to avoid issues with the use of Jinja2 and templates.
 
-| Template tested | Test result |
-| :-------------: | :---: |
-| home/index.html | Pass |
-| Register page | Pass |
-| Verify email page | Pass |
-| Confirm email page | Pass |
-| Log In page | Pass |
-| Log Out page | Pass |
-| Forgot password page | Pass |
-| profiles/profile.html | Pass |
-| profiles/edit_profile.html | Pass |
-| profiles/apply_role_change.html | Pass |
-| profiles/tokens.html | Pass |
-| animals/view_animals.html | Pass |
-| animals/add_animal.html | Pass |
-| animals/profile.html | Pass |
-| animals/edit_profile.html | Pass |
-| animals/add_update.html | Pass |
-| animals/edit_update.html | Pass |
-| shelters/view_shelters.html | Pass |
-| shelters/shelter.html | Pass |
-| shelters/edit_shelter.html | Pass |
-| dashboard/dashboard.html | Pass |
-| dashboard/select_sprite.html | Pass |
+| Template tested                 | Test result |
+| :-----------------------------: | :---------: |
+| home/index.html                 | Pass        |
+| Register page                   | Pass        |
+| Verify email page               | Pass        |
+| Confirm email page              | Pass        |
+| Log In page                     | Pass        |
+| Log Out page                    | Pass        |
+| Forgot password page            | Pass        |
+| profiles/profile.html           | Pass        |
+| profiles/edit_profile.html      | Pass        |
+| profiles/apply_role_change.html | Pass        |
+| profiles/tokens.html            | Pass        |
+| animals/view_animals.html       | Pass        |
+| animals/add_animal.html         | Pass        |
+| animals/profile.html            | Pass        |
+| animals/edit_profile.html       | Pass        |
+| animals/add_update.html         | Pass        |
+| animals/edit_update.html        | Pass        |
+| shelters/view_shelters.html     | Pass        |
+| shelters/shelter.html           | Pass        |
+| shelters/edit_shelter.html      | Pass        |
+| dashboard/dashboard.html        | Pass        |
+| dashboard/select_sprite.html    | Pass        |
 
 ## CSS
 
