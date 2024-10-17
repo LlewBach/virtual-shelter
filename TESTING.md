@@ -407,40 +407,42 @@ Result: Pass
 
 [https://pep8ci.herokuapp.com/](https://pep8ci.herokuapp.com/)
 
-| Python file tested  | Test result |
-| :----------------:  | :---------: |
-| animals/admin.py    | Pass        |
-| animals/apps.py     | Pass        |
-| animals/forms.py    | Pass        |
-| animals/models.py   | Pass        |
-| animals/tests.py    | Pass        |
-| animals/urls.py     | Pass        |
-| animals/views.py    | Pass        |
-| dashboard/apps.py   | Pass        |
-| dashboard/forms.py  | Pass        |
-| dashboard/models.py | Pass        |
-| dashboard/tests.py  | Pass        |
-| dashboard/urls.py   | Pass        |
-| dashboard/views.py  | Pass        |
-| home/apps.py        | Pass        |
-| home/tests.py       | Pass        |
-| home/urls.py        | Pass        |
-| home/views.py       | Pass        |
-| profiles/admin.py   | Pass        |
-| profiles/apps.py    | Pass        |
-| profiles/forms.py   | Pass        |
-| profiles/models.py  | Pass        |
-| profiles/signals.py | Pass        |
-| profiles/tests.py   | Pass        |
-| profiles/urls.py    | Pass        |
-| profiles/views.py   | Pass        |
-| shelters/apps.py    | Pass        |
-| shelters/forms.py   | Pass        |
-| shelters/models.py  | Pass        |
-| shelters/signals.py | Pass        |
-| shelters/tests.py   | Pass        |
-| shelters/urls.py    | Pass        |
-| shelters/views.py   | Pass        |
+| Python file tested          | Test result |
+| :------------------------:  | :---------: |
+| animals/admin.py            | Pass        |
+| animals/apps.py             | Pass        |
+| animals/forms.py            | Pass        |
+| animals/models.py           | Pass        |
+| animals/tests.py            | Pass        |
+| animals/urls.py             | Pass        |
+| animals/views.py            | Pass        |
+| dashboard/apps.py           | Pass        |
+| dashboard/forms.py          | Pass        |
+| dashboard/models.py         | Pass        |
+| dashboard/tests.py          | Pass        |
+| dashboard/urls.py           | Pass        |
+| dashboard/views.py          | Pass        |
+| home/apps.py                | Pass        |
+| home/tests.py               | Pass        |
+| home/urls.py                | Pass        |
+| home/views.py               | Pass        |
+| profiles/admin.py           | Pass        |
+| profiles/apps.py            | Pass        |
+| profiles/forms.py           | Pass        |
+| profiles/models.py          | Pass        |
+| profiles/signals.py         | Pass        |
+| profiles/tests.py           | Pass        |
+| profiles/urls.py            | Pass        |
+| profiles/views.py           | Pass        |
+| shelters/apps.py            | Pass        |
+| shelters/forms.py           | Pass        |
+| shelters/models.py          | Pass        |
+| shelters/signals.py         | Pass        |
+| shelters/tests.py           | Pass        |
+| shelters/urls.py            | Pass        |
+| shelters/views.py           | Pass        |
+| custom_storages.py          | Pass        |
+| virtual_shelter/settings.py | Pass        |
 
 # Significant Bugs
 
