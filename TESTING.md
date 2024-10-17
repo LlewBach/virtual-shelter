@@ -292,9 +292,33 @@ This project was developed with unit testing.
 
 ## JavaScript
 
+### Jest installation
+
+Getting [Jest](https://jestjs.io/) set up so that it would work with VSC and modules actually proved to be quite difficult, but in the end I managed it by following these steps:
+
+- Console command: npm init
+- Console command: npm install --save-dev jest
+- Console command: npm install --save-dev @babel/preset-env babel-jest
+- Add to package.json: 
+"babel": {
+  "presets": ["@babel/preset-env"]
+},
+"type": "module"
+- Console command: npm install --save-dev jest-environment-jsdom
+- Add to package.json:
+"jest": {
+  "testEnvironment": "jsdom"
+}
+
+I also added the node_modules folder to the gitignore to not overload the git system.
+
+### Running Tests
+
 ![capture-13](static/images/captures/capture-13.PNG)
 
 ### JavaScript test coverage
+
+![capture-14](static/images/captures/capture-14.PNG)
 
 # Responsiveness Testing
 
@@ -450,6 +474,12 @@ All tests pass.
 | custom_storages.py          | Pass        |
 | virtual_shelter/settings.py | Pass        |
 
+## WAVE
+
+[https://wave.webaim.org/](https://wave.webaim.org/)
+
+Using this accessibility validator and its Chrome extension, I saw that the default link text colour needed better colour contrast, which I duly adjusted.
+
 # Significant Bugs
 
 [Back to top](#virtual-shelter---testing-documentation)
@@ -459,3 +489,9 @@ All tests pass.
 Fixed: Yes
 
 The spritesheet frame dimensions vary not only between dogs and colours, but also states within the same dog and colour! The consequence of this if left unresolved would be glitchy sprite animations. After contacting the creator to ask if the frames could be made a consistent size, she told me that this was her first time making spritesheets and that the answer was basically no. After consideration, I realised I could solve this by setting sprite.width by conditional statements based on the url passed into the Game class instantiation. See dashboard/static/dashboard/js/states/states.js.
+
+## On the deployed site, sometimes need hard screen refresh to get dashboard canvas elements to load properly
+
+Fixed: No
+
+I have not had time to look into this issue.

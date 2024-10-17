@@ -5,3 +5,4 @@ __pycache__/
 virtual_shelter/env.py
 node_modules/
 media/
+coverage/
