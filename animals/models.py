@@ -52,7 +52,7 @@ class Animal(models.Model):
         default=SpeciesChoices.DOG
         )
     breed = models.CharField(max_length=100, blank=True, null=True)
-    age = models.IntegerField()
+    age = models.CharField(max_length=15)
     description = models.TextField(blank=True, null=True)
     adoption_status = models.CharField(
         max_length=20,

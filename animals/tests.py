@@ -56,7 +56,7 @@ class AddAnimalViewTest(TestCase):
         data = {
             'name': 'Test Animal',
             'species': 'Dog',
-            'age': 4,
+            'age': '4 year',
             'adoption_status': 'Available',
         }
         response = self.client.post('/animals/add/', data)
@@ -198,7 +198,7 @@ class EditProfileViewTest(TestCase):
             shelter=self.shelter,
             name="Test Animal",
             species="Dog",
-            age=4,
+            age='4 year',
             description="A friendly dog",
             adoption_status='Available',
             image=self.image
@@ -245,7 +245,7 @@ class EditProfileViewTest(TestCase):
         data = {
             'name': 'Updated Animal Name',
             'species': 'Dog',
-            'age': 5,
+            'age': '5 year',
             'description': 'A friendly dog',
             'adoption_status': 'Fostered'
         }
@@ -257,7 +257,7 @@ class EditProfileViewTest(TestCase):
         self.assertRedirects(response, f'/animals/profile/{self.animal.id}/')
         self.assertEqual(self.animal.name, 'Updated Animal Name')
         self.assertEqual(self.animal.species, 'Dog')
-        self.assertEqual(self.animal.age, 5)
+        self.assertEqual(self.animal.age, '5 year')
         self.assertEqual(self.animal.description, 'A friendly dog')
         self.assertEqual(self.animal.adoption_status, 'Fostered')
 
