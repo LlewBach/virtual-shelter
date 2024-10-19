@@ -6,7 +6,6 @@ from .models import Shelter
 from .forms import ShelterForm
 
 
-@login_required
 def profile(request, id):
     """
     Renders the profile page for a specific shelter by its ID.
