@@ -159,6 +159,10 @@ As the dashboard needs to update itself 'live' and when accessed after extended 
 
 ### Database
 
+Drawn with [Lucid Chart](www.lucidchart.com)
+
+![capture-17](static/images/captures/capture-17.PNG)
+
 ## Surface
 
 [Back to top](#milestone-4-project---virtual-shelter)
