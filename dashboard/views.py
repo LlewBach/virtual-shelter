@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from .forms import SpriteForm
 from .models import Sprite
 from animals.models import Animal
@@ -15,6 +14,10 @@ def dashboard(request):
     Display the user's dashboard with their profile and sprites.
     Also handles messages related to payment status (success or cancel).
     """
+    if request.user.profile.role == 'shelter_admin':
+        messages.warning(request, "The dashboard is not available for admins")
+        return redirect('home')
+
     profile = Profile.objects.get(user=request.user)
     sprites = Sprite.objects.filter(user=request.user)
     context = {
