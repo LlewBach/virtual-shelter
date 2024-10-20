@@ -7,7 +7,7 @@ export class Standing {
     this.sprite.spriteWidth = 64;
     if (["husky/one", "husky/two", "husky/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 4;
-    } else if (["afghan/one", "afghan/two", "afghan/three", "shiba/one", "shiba/two", "shiba/three"].includes(this.game.url)) {
+    } else if (["afghan/one", "afghan/two", "afghan/three", "shiba/one", "shiba/two", "shiba/three", "doberman/one", "doberman/two", "doberman/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 2;
     } else if (["bloodhound/one", "bloodhound/two", "bloodhound/three", "greyhound/one", "greyhound/two", "greyhound/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 3;
@@ -32,7 +32,7 @@ export class Running {
       this.sprite.spriteWidth = 65
     } else if (["shiba/one", "shiba/two", "shiba/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 71;
-    } else if (["dalamtian/one"]) {
+    } else if (["dalmatian/one"].includes(this.game.url)) {
       this.sprite.spriteWidth = 72;
     } else if (["husky/one", "husky/two"].includes(this.game.url)) {
       this.sprite.spriteWidth = 74;
@@ -42,7 +42,7 @@ export class Running {
       this.sprite.spriteWidth = 76;
     } else if (["bloodhound/one", "bloodhound/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 77;
-    } else if (["bloodhound/two"].includes(this.game.url)) {
+    } else if (["bloodhound/two", "doberman/one", "doberman/two", "doberman/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 78;
     } else if (["alsatian/one", "alsatian/two", "alsatian/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 80;
