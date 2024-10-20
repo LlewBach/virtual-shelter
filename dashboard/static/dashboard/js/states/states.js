@@ -8,7 +8,7 @@ export class Standing {
       this.sprite.maxFrame = 4;
     } else if (["afghan/one", "afghan/two", "afghan/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 2;
-    } else if (["bloodhound/one", "bloodhound/two", "bloodhound/three"].includes(this.game.url)) {
+    } else if (["bloodhound/one", "bloodhound/two", "bloodhound/three", "greyhound/one", "greyhound/two", "greyhound/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 3;
     }
     this.sprite.spriteWidth = 64;
@@ -25,6 +25,8 @@ export class Running {
   enter() {
     if (["husky/one", "husky/two"].includes(this.game.url)) {
       this.sprite.spriteWidth = 74;
+    } else if (["greyhound/one", "greyhound/two", "greyhound/three"]) {
+      this.sprite.spriteWidth = 75;
     } else if (["husky/three", "afghan/one", "afghan/two", "afghan/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 76;
     } else if (["bloodhound/one", "bloodhound/three"].includes(this.game.url)) {
