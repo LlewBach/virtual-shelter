@@ -21,6 +21,7 @@ class Sprite(models.Model):
         DALMATIAN = 'dalmatian', 'Dalmatian'
         DOBERMAN = 'doberman', 'Doberman'
         GREATDANE = 'greatdane', 'Greatdane'
+        MOUNTAIN = 'mountain', 'Mountain'
 
     class ColourChoices(models.TextChoices):
         ONE = 'one', 'Colour 1'

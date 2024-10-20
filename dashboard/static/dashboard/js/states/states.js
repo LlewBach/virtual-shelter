@@ -16,7 +16,7 @@ export class Standing {
     } else if (["alsatian/one", "alsatian/two", "alsatian/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 4;
       this.sprite.spriteWidth = 67;
-    } else if (["greatdane/two"].includes(this.game.url)) {
+    } else if (["greatdane/two", "mountain/one", "mountain/two", "mountain/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 3;
       this.sprite.spriteWidth = 65;
     }
@@ -49,6 +49,8 @@ export class Running {
       this.sprite.spriteWidth = 78;
     } else if (["alsatian/one", "alsatian/two", "alsatian/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 80;
+    } else if (["mountain/one", "mountain/two", "mountain/three"].includes(this.game.url)) {
+      this.sprite.spriteWidth = 91;
     } else if (["greatdane/two"].includes(this.game.url)) {
       this.sprite.spriteWidth = 94;
     } else if (["greatdane/one", "greatdane/three"].includes(this.game.url)) {
