@@ -18,6 +18,7 @@ class Sprite(models.Model):
         GREYHOUND = 'greyhound', 'Greyhound'
         SHIBA = 'shiba', 'Shiba'
         ALSATIAN = 'alsatian', 'Alsatian'
+        DALMATIAN = 'dalmatian', 'Dalmatian'
 
     class ColourChoices(models.TextChoices):
         ONE = 'one', 'Colour 1'

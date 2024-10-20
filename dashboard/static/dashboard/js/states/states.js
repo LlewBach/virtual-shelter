@@ -11,6 +11,8 @@ export class Standing {
       this.sprite.maxFrame = 2;
     } else if (["bloodhound/one", "bloodhound/two", "bloodhound/three", "greyhound/one", "greyhound/two", "greyhound/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 3;
+    } else if (["dalmatian/one", "dalmatian/two", "dalmatian/three"].includes(this.game.url)) {
+      this.sprite.maxFrame = 7;
     } else if (["alsatian/one", "alsatian/two", "alsatian/three"].includes(this.game.url)) {
       this.sprite.maxFrame = 4;
       this.sprite.spriteWidth = 67;
@@ -26,8 +28,12 @@ export class Running {
     this.game = game;
   }
   enter() {
-    if (["shiba/one", "shiba/two", "shiba/three"].includes(this.game.url)) {
+    if (["dalmatian/two", "dalmatian/three"].includes(this.game.url)) {
+      this.sprite.spriteWidth = 65
+    } else if (["shiba/one", "shiba/two", "shiba/three"].includes(this.game.url)) {
       this.sprite.spriteWidth = 71;
+    } else if (["dalamtian/one"]) {
+      this.sprite.spriteWidth = 72;
     } else if (["husky/one", "husky/two"].includes(this.game.url)) {
       this.sprite.spriteWidth = 74;
     } else if (["greyhound/one", "greyhound/two", "greyhound/three"].includes(this.game.url)) {
