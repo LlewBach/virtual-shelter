@@ -6,7 +6,7 @@
 <div class="container mb-4">
   <div class="row">
     {% for shelter in shelters %}
-    <div class="col-md-4 d-flex flex-column align-items-center">
+    <div class="col-md-4 d-flex flex-column align-items-center mb-3">
       {% if shelter.image %}
       <a href="{% url 'shelter_profile' shelter.id %}">
         <img src="{{ shelter.image.url }}" alt="Image of {{ shelter.name }}" class="sub-profile-image">

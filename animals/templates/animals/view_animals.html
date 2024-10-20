@@ -6,7 +6,7 @@
 <div class="container mb-4">
   <div class="row">
     {% for animal in animals %}
-    <div class="col-md-4 d-flex flex-column align-items-center">
+    <div class="col-md-4 d-flex flex-column align-items-center mb-3">
       {% if animal.image %}
       <a href="{% url 'animal_profile' animal.id %}">
         <img src="{{ animal.image.url }}" alt="Image of {{ animal.name }}" class="sub-profile-image">
