@@ -203,7 +203,7 @@ When a User is created, a signal is sent to create a Profile for that user. Prof
 
 ![capture-1](static/images/captures/capture-1.PNG)
 
-The user can view, update and delete their profile. On the Profile page, there is a link to 'Register Shelter'. This provides a form to collect information about the charity. Upon submission, a signal triggers an email to the Superuser informing them of the request. The Superuser can then navigate to the site admin interface, review the request information and decide whether to approve or reject it. If approved, the user's profile role will be updated to that of Shelter Admin, and a signal will trigger an email to inform the request sender!!!!
+The user can view, update and delete their profile. On the Profile page, there is a link to 'Register Shelter'. This provides a form to collect information about the charity. Upon submission, a signal triggers an email to the Superuser informing them of the request. The Superuser can then navigate to the site admin interface, review the request information and decide whether to approve or reject it. If approved, the user's profile role will be updated to that of Shelter Admin.
 
 ![capture-2](static/images/captures/capture-2.PNG)
 
@@ -261,70 +261,120 @@ Users will be able to browse through shelter and animals profiles on these pages
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
+### Increase sprite game complexity
+
+#### Additional states
+
+The respective spritesheets accomodate a range of possible states which could be added to make the game more complex, less predictable and more responsive in a way that may mimick an actual pet. Such states could include Walking, Sitting, Barking, Sleeping, Jumping, Biting, Headbutt and Dying.
+
+#### Additional stats
+
+The state change handler function could depend on additional stats such as 'happiness', 'health', 'BMI', 'obedience'. 
+
+The game could include more specific behaviour probability stats such as 'sit probability' that would increase with training so that a better trained dog would be more likely to sit after the first command.
+
+#### Additional activities
+
+Additional activities could include training games and then using your dog to complete challenges, such as guiding a dog through a course or sheep herding, where a more obedient and happy dog will be more likely to follow the user's commands.
+
+Another idea could be to be able to 'throw a ball' and have the sprite run after it and maybe bring it back, maybe not, allowing the user to 'reward' upon good behaviour that will increase the 'fetch probability' stat.
+
+#### Leader boards
+
+Such additional activities would allow for competition and leader boards.
+
+### Shelter scope
+
+#### Accommodate different species of animals
+
+This would require spritesheets of a similar style for other animals such as cats, which are available from the same artist as the dog sprites. The main challenge with this would be to have a separate state change handler that would specifically mimick the behaviour of cats. Different species would also require different additional activities to engage with.
+
+### Business aspects
+
+#### Allow dogs to be fostered by multiple users
+
+This would prevent an unnecessary income bottleneck that's directly proportional to the number of animals the shelter can accommodate.
+
+#### Allow for different price ranges
+
+One idea to address this was to make it cheaper to take care of smaller animals as each meal would require less food.
+
+#### Create a dashboard for shelters
+
+Such a dashboard could allow shelter admins to view stats such as income and engagement. Based on such information, a shelter may be able to reward top performers.
+
 # Technologies Used
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
 ## Development
 
-- VSCode - Development environment
-- Google Chrome Dev Tools - Debugging and analysis
-- GitHub - Code repository and version control
-- Windows PowerShell - Terminal
+- [VSCode](https://code.visualstudio.com/) - Development environment
+- [Google Chrome Dev
+    Tools](https://developers.google.com/web/tools/chrome-devtools) - Debugging and analysis
+- [GitHub](https://github.com/) - Code repository and version control
+- [Windows PowerShell](https://learn.microsoft.com/en-us/powershell/) - Terminal
 - Virtual environment
-- GPT-4 - Debugging, guidance
+- [GPT-4](https://chat.openai.com/) - Debugging, guidance
 
 ## HTML/CSS
 
 - HTML5
 - CSS3
-- Bootstrap 5
-- FontAwesome
-- Google Fonts
+- [Bootstrap 5](https://getbootstrap.com/) - Styling and layout framework
+- [FontAwesome](https://fontawesome.com/) - Icons
+- [Google Fonts](https://fonts.google.com/) - Fonts
+- [Coolors.co](https://coolors.co/) - To consider different colour palettes
 
 ## Python
 
-- Python 3.12.1
-- Django 5.1 - Framework
+- Python 3.12.1 - Programming language
+- Django 5.1 - Framework for rapid development
 - Django-allauth - Authentication
 - Stripe - Payment service
 - Pillow - Image tool
 - Boto3 - AWS management
+- django-storages - works with Boto3
 - gunicorn - WSGI HTTP server
-- Psycopg2 - Postgres DB adapter
+- Psycopg2 - Postgres DB adapter for Python
+- crispy-bootstrap5 - Enhances Django forms
 
-List of packages
+See [requirements.txt](./requirements.txt) for full dependency list.
 
 ## JavaScript
 
-- JavaScript ES6
-- Jest - Testing
-- Chart.js - Dynamic charts
+- JavaScript ES2023
+- [Jest](https://jestjs.io/) - Testing
+- [Chart.js](https://www.chartjs.org/) - Dynamic charts
 
 ## Testing Technologies
 
-- W3C HTML Markup Validator
-- W3C Jigsaw CSS Validator
-- JSHint - JS validator
-- Pylint - Python validator
-- WebAIM - Accessibility
-- Chrome Dev Tools Lighthouse - Performance, accessibility, SEO, best practices
+- [W3C HTML Markup
+    Validator](https://validator.w3.org/)
+- [W3C Jigsaw CSS
+    Validator](https://jigsaw.w3.org/css-validator/)
+- [JSHint](https://jshint.com/) - JS validator
+- [CI Python Linter](https://pep8ci.herokuapp.com/) - Python validator
+- [W.A.V.E](https://wave.webaim.org/) - Accessibility
+- [Lighthouse](https://developers.google.com/web/tools/lighthouse) - Performance, accessibility, SEO, best practices
 
 ## Hosting
 
 - CDNs (Bootstrap, Chart.js)
-- Heroku - App deployment platform
-- AWS S3 - Media file hosting
+- [Heroku](https://www.heroku.com/what) - App deployment platform
+- [AWS S3](https://aws.amazon.com/s3/) - Media file hosting
 
 ## Images
 
 - [Font Awesome](https://fontawesome.com/) - Icons
 - [ImageResizer.com](https://imageresizer.com/image-compressor) - Image compressor
 - [favicon.io](https://favicon.io/favicon-converter/) - png to favicon generator
+- [Figma](https://www.figma.com/) - To compile individual state sprites into one spritesheet
 
 ## Database
 
-- PostgreSQL - Relational database
+- [PosteSQL](https://www.postgresql.org/) - Relational database
+- [Lucid Chart](https://www.lucidchart.com) - Database schema
 
 # Testing
 
@@ -472,6 +522,8 @@ Helped with / taught me about the following:
 [Back to top](#milestone-4-project---virtual-shelter)
 
 I would like to thank my mentor Ben Kavanagh for his guidance and support with this project and my year on this Web Application Development diploma with Code Institute.
+
+I would also like to thank Oisín from Code Institute's tech support for helping me set up AWS.
 
 # Disclaimer
 
