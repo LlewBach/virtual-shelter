@@ -518,6 +518,36 @@ Using this accessibility validator and its Chrome extension, I saw that the defa
 
 ![lighthouse-7](static/images/captures/lighthouse-7.PNG)
 
+### Mobile
+
+#### Home Page
+
+![lighthouse-8](static/images/captures/lighthouse-8.PNG)
+
+#### Shelters Page
+
+![lighthouse-9](static/images/captures/lighthouse-9.PNG)
+
+#### Animals Page
+
+![lighthouse-10](static/images/captures/lighthouse-10.PNG)
+
+#### Shelter Profile Page
+
+![lighthouse-11](static/images/captures/lighthouse-11.PNG)
+
+#### Animal Profile Page
+
+![lighthouse-12](static/images/captures/lighthouse-12.PNG)
+
+#### User Profile Page
+
+![lighthouse-13](static/images/captures/lighthouse-13.PNG)
+
+#### Dashboard Page
+
+![lighthouse-14](static/images/captures/lighthouse-14.PNG)
+
 # Significant Bugs
 
 [Back to top](#virtual-shelter---testing-documentation)
@@ -528,8 +558,10 @@ Fixed: Yes
 
 The spritesheet frame dimensions vary not only between dogs and colours, but also states within the same dog and colour! The consequence of this if left unresolved would be glitchy sprite animations. After contacting the creator to ask if the frames could be made a consistent size, she told me that this was her first time making spritesheets and that the answer was basically no. After consideration, I realised I could solve this by setting sprite.width by conditional statements based on the url passed into the Game class instantiation. See dashboard/static/dashboard/js/states/states.js.
 
-## On the deployed site, sometimes need hard screen refresh to get dashboard canvas elements to load properly
+## On the deployed site, dashboard canvas elements not loading first time
 
-Fixed: ?
+Fixed: Yes
 
-Since I initially noticed this, I have not been able to replicate it, as the dashboard loads straight away. This may be something to do with my own slow internet connection and dying laptop, but it is an issue I am keeping an eye on.
+Putting this to GPT-4, I was informed that I should adjust my AWS CORS JSON settings to set "AllowedHeaders" to all.
+
+![capture-18](static/images/captures/capture-18.PNG)
