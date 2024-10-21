@@ -135,7 +135,7 @@ US2h - "As the site admin, I want to manage user accounts and shelter profiles, 
 AC2h - "Superuser can log into the Django admin panel".
 
 1. Log in as the super user.
-2. Navigate to https://virtual-shelter-0dec942891ea.herokuapp.com/admin/
+2. Navigate to /admin/
 3. The Django administraion panel should be visible.
 
 Test result: Pass
@@ -486,6 +486,38 @@ All tests pass.
 
 Using this accessibility validator and its Chrome extension, I saw that the default link text colour needed better colour contrast, which I duly adjusted.
 
+## Lighthouse
+
+### Desktop
+
+#### Home Page
+
+![lighthouse-1](static/images/captures/lighthouse-1.PNG)
+
+#### Shelters Page
+
+![lighthouse-2](static/images/captures/lighthouse-2.PNG)
+
+#### Animals Page
+
+![lighthouse-3](static/images/captures/lighthouse-3.PNG)
+
+#### Shelter Profile Page
+
+![lighthouse-4](static/images/captures/lighthouse-4.PNG)
+
+#### Animal Profile Page
+
+![lighthouse-5](static/images/captures/lighthouse-5.PNG)
+
+#### User Profile Page
+
+![lighthouse-6](static/images/captures/lighthouse-6.PNG)
+
+#### Dashboard Page
+
+![lighthouse-7](static/images/captures/lighthouse-7.PNG)
+
 # Significant Bugs
 
 [Back to top](#virtual-shelter---testing-documentation)
@@ -498,6 +530,6 @@ The spritesheet frame dimensions vary not only between dogs and colours, but als
 
 ## On the deployed site, sometimes need hard screen refresh to get dashboard canvas elements to load properly
 
-Fixed: No
+Fixed: ?
 
-I have not had time to look into this issue.
+Since I initially noticed this, I have not been able to replicate it, as the dashboard loads straight away. This may be something to do with my own slow internet connection and dying laptop, but it is an issue I am keeping an eye on.
