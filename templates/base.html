@@ -31,47 +31,59 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <!-- Logo -->
-      <a class="navbar-brand rock-salt" href="{% url 'home' %}">
-        <img src="{% static 'images/logo-compressed.png' %}" alt="Virtual Shelter logo" width="30" height="30" class="">
-        Virtual Shelter
-      </a>
-      <!-- Toggle Btn -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-        aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Sidebar -->
-      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <!-- Sidebar Header -->
-        <div class="offcanvas-header text-center">
-          <h5 class="offcanvas-title rock-salt" id="offcanvasNavbarLabel">Virtual Shelter</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <!-- Sidebar Body -->
-        <div class="offcanvas-body d-flex flex-column justify-content-between flex-lg-row">
-          <div></div>
-          <div class="d-flex flex-column align-items-center justify-content-center flex-lg-row gap-3">
-            {% if user.profile.role == 'user' %}
-            <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
-            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-            {% endif %}
-            {% if user.profile.role == 'shelter_admin' %}
-            <a class="nav-link" href="{% url 'shelter_profile' user.shelter.id %}">My Shelter</a>
-            {% endif %}
-            <a class="nav-link" href="{% url 'view_shelters' %}">Shelters</a>
-            <a class="nav-link" href="{% url 'view_animals' %}">Animals</a>
+      <div class="col-4">
+        <!-- Logo -->
+        <a class="navbar-brand rock-salt" href="{% url 'home' %}">
+          <img src="{% static 'images/logo-compressed.png' %}" alt="Virtual Shelter logo" width="30" height="30"
+            class="">
+          Virtual Shelter
+        </a>
+      </div>
+      <div class="col-8 d-flex justify-content-end">
+        <!-- Toggle Btn -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Sidebar -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel">
+          <!-- Sidebar Header -->
+          <div class="offcanvas-header text-center">
+            <h5 class="offcanvas-title rock-salt" id="offcanvasNavbarLabel">Virtual Shelter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="d-flex flex-column align-items-center justify-content-center gap-3 flex-lg-row">
-            {% if request.user.is_authenticated %}
-            <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
-            {% else %}
-            <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
-            <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
-            {% endif %}
+          <!-- Sidebar Body -->
+          <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between">
+            <div></div>
+            <div class="col-12 col-lg-6">
+              <div class="d-flex flex-column align-items-center justify-content-center flex-lg-row gap-3">
+                {% if user.profile.role == 'user' %}
+                <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                {% endif %}
+                {% if user.profile.role == 'shelter_admin' %}
+                <a class="nav-link" href="{% url 'shelter_profile' user.shelter.id %}">My Shelter</a>
+                {% endif %}
+                <a class="nav-link" href="{% url 'view_shelters' %}">Shelters</a>
+                <a class="nav-link" href="{% url 'view_animals' %}">Animals</a>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="d-flex flex-column align-items-center justify-content-end gap-3 flex-lg-row">
+                {% if request.user.is_authenticated %}
+                <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
+                <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
+                {% endif %}
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
+
     </div>
   </nav>
 
