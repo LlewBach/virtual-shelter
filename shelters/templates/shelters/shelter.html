@@ -15,7 +15,7 @@
     <div class="col-md-6">
       {% if shelter %}
       <p><strong>Registration Number:</strong> {{ shelter.registration_number }}</p>
-      <p><strong>Website:</strong> <a href="{{ shelter.charity_website }}">{{ shelter.website }}</a></p>
+      <p><strong>Website:</strong> <a href="{{ shelter.website }}" target="_blank">{{ shelter.website }}</a></p>
       <p><strong>Description:</strong> {{ shelter.description }}</p>
       {% else %}
       <p>No Shelter</p>
