@@ -1,4 +1,3 @@
-// const husky = document.getElementById('husky');
 import { Standing, Running } from '../states/states.js';
 
 const states = {
@@ -10,7 +9,6 @@ export class Sprite {
   constructor(game) {
     this.game = game;
     this.sheet = document.getElementById(this.game.id);
-    // this.sheet = husky;
     this.spriteWidth = 64;
     this.spriteHeight = 64;
     this.sizeFactor = 2;

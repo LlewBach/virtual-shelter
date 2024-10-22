@@ -16,7 +16,6 @@ def create_shelter_on_approval(sender, instance, created, **kwargs):
     the role change request.
     """
     if instance.status == 'approved':
-        # Check if a shelter already exists for this user
         if not Shelter.objects.filter(admin=instance.user).exists():
             Shelter.objects.create(
                 admin=instance.user,

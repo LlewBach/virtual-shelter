@@ -3,7 +3,6 @@ export async function feedSprite(spriteId) {
     method: 'POST',
     headers: {
       'X-CSRFToken': getCSRFToken(),
-      // 'Content-Type': 'application/json'
     },
   });
 

@@ -46,7 +46,6 @@ window.addEventListener('load', function () {
     const game = new Game(canvas.width, canvas.height, id, url);
     let lastTimeAnimate = 0;
 
-    // Manual test
     function animate(timestamp) {
       ctx.clearRect(0, 0, game.width, game.height);
       const deltaTime = timestamp - lastTimeAnimate;
@@ -58,7 +57,6 @@ window.addEventListener('load', function () {
 
     animate(0);
 
-    // Manual test
     const feedButton = document.querySelector(`#button1-${id}`);
     feedButton.addEventListener('click', async () => {
       await feedSprite(id);
