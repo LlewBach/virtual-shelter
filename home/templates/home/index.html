@@ -25,35 +25,63 @@
 
     <div class="row mb-5 mt-5">
       {% if user.is_authenticated %}
-      <div class="col-6 text-center">
+      <div class="col-4 text-center">
         <a class="btn btn-warning" href="{% url 'view_shelters' %}">View Shelters</a>
       </div>
-      <div class="col-6 text-center">
+      <div class="col-4 text-center">
         <a class="btn btn-primary" href="{% url 'view_animals' %}">View Animals</a>
       </div>
       {% else %}
-      <div class="col-6 text-center">
+      <div class="col-4 text-center">
         <a class="btn btn-primary" href="{% url 'account_login' %}">Log In</a>
       </div>
-      <div class="col-6 text-center">
+      <div class="col-4 text-center">
         <a class="btn btn-primary" href="{% url 'account_signup' %}">Register</a>
       </div>
       {% endif %}
+      <div class="col-4 text-center">
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#homeModal"
+          href="{% url 'account_signup' %}">How to Play</a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="homeModal" tabindex="-1" aria-labelledby="homeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content text-dark">
+              <div class="modal-header text-center">
+                <h1 class="modal-title w-100 fs-3" id="homeModalLabel">How to Play</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-dark">
+                <p class="mb-4">Browse real shelters and animals</p>
+                <hr>
+                <p class="mb-4">Choose which animals to foster</p>
+                <hr>
+                <p class="mb-4">Buy tokens to spend on your virtual pets</p>
+                <hr>
+                <p class="mb-4">Your donations go to the animals' shelter</p>
+                <hr>
+                <p class="mb-4">Keep track of your pets' stats in the dashboard</p>
+                <hr>
+                <p class="mb-4">Get updates on your animals from the shelter</p>
+                <hr>
+                <p class="mb-4">Play to make a real difference</p>
+                <hr>
+                <p>If you run a shelter, you can sign up and request a Shelter Admin profile</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="container home-section">
   <div class="text-center">
-    <h2 class="text-center">Features</h2>
-    <p class="mb-4">Browse real shelters and animals</p>
-    <p class="mb-4">Choose which animals to foster</p>
-    <p class="mb-4">Buy tokens to spend on your virtual pets</p>
-    <p class="mb-4">Your donations go to the animals' shelter</p>
-    <p class="mb-4">Keep track of your pets' stats in the dashboard</p>
-    <p class="mb-4">Get updates on your animals from the shelter</p>
-    <p class="mb-4">Play to make a real difference</p>
-    <p>If you run a shelter, you can sign up and request a Shelter Admin profile</p>
+
   </div>
 </section>
 

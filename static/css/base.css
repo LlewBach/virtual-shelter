@@ -158,6 +158,15 @@ img {
   border-radius: 20px;
 }
 
+.modal-header h1,
+.modal-content p {
+  color: #212529;
+}
+
+.modal-body hr {
+  color: #0b0b32;
+}
+
 /* SPRITE SELECTOR */
 
 .carousel {
