@@ -521,7 +521,11 @@ Helped with / taught me about the following:
 
 [Back to top](#milestone-4-project---virtual-shelter)
 
-I would like to thank my mentor Ben Kavanagh for his guidance and support with this project and my year on this Web Application Development diploma with Code Institute.
+I would like to thank my mentor Ben Kavanagh for his guidance and support with this project and my year on this Web Application Development diploma with Code Institute. I will treasure his words of encouragement for the rest of my days.
+
+> <span style="font-size: 1.5em; font-style: italic;">"Sometimes you just need your finger pulling out of your arse."</span>
+>
+> Ben Kavanagh
 
 I would also like to thank Oisín from Code Institute's tech support for helping me set up AWS.
 
