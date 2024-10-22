@@ -42,7 +42,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <form action="{% url 'delete_animal_profile' animal.id %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Delete Profile</button>
+                <button type="submit" class="btn btn-danger">Delete Profile</button>
               </form>
             </div>
           </div>
@@ -99,7 +99,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <form action="{% url 'delete_update' update.id %}" method="POST">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Confirm</button>
+                  <button type="submit" class="btn btn-danger">Confirm</button>
                 </form>
               </div>
             </div>
