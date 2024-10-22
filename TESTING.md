@@ -22,7 +22,8 @@ AC1a - "User must be able to identify the website's name, understand its purpose
 1. Navigate to the website in the Chrome browser.
 2. Check that the site name (Virtual Shelter) and navbar are clearly visible.
 3. Check that the main message ("Foster a virtual animal...to help a real one") is visible.
-4. Check that the site info below is visible.
+4. Click on the 'How to Play' button.
+5. A modal should appear providing more information on how to use the site and what is possible.
 
 Test result: Pass
 
