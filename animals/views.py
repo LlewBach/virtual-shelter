@@ -35,7 +35,11 @@ def add_animal(request):
     else:
         form = AnimalForm()
 
-    return render(request, 'animals/add_animal.html', {'form': form})
+    return render(
+        request,
+        'animals/add_animal.html',
+        {'form': form, 'shelter': shelter}
+    )
 
 
 def profile(request, id):

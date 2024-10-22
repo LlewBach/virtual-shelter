@@ -11,9 +11,9 @@
         <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form|crispy }}
-          <div class="text-center">
+          <div class="text-center d-flex justify-content-between">
+            <a href="{% url 'shelter_profile' id=shelter.id %}" class="btn btn-secondary mb-3">Cancel</a>
             <button type="submit" class="btn btn-primary mb-3">Save Changes</button>
-            <a href="{% url 'shelter_profile' id=shelter.id %}" class="btn btn-primary mb-3">Cancel</a>
           </div>
         </form>
       </div>
