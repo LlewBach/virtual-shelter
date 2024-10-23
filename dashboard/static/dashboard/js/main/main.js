@@ -24,6 +24,9 @@ export class Game {
         this.satiation = data.satiation;
         this.sprite.setState(data.current_state);
         this.chartObj.updateChart(data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch status:', error);
       });
   }
   update(deltaTime) {
