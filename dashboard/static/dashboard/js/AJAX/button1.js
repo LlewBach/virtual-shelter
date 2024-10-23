@@ -1,16 +1,21 @@
 export async function feedSprite(spriteId) {
-  const response = await fetch(`/dashboard/sprite/${spriteId}/feed/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': getCSRFToken(),
-    },
-  });
+  try {
+    const response = await fetch(`/dashboard/sprite/${spriteId}/feed/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCSRFToken(),
+      },
+    });
 
-  const data = await response.json();
-  if (data.success) {
-    updateTokenCount(data.tokens);
+    const data = await response.json();
+    if (data.success) {
+      updateTokenCount(data.tokens);
+    }
+    return data;
+  } catch (error) {
+    console.error('Failed to feed sprite:', error);
+    return { success: false, error: 'An error occurred while feeding the sprite.' };
   }
-  return data;
 }
 
 
